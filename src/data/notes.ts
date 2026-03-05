@@ -1,0 +1,177 @@
+// src/utils/fakeData/notes.ts
+
+import { Note } from "../utils/types/data";
+
+
+export const notes: Note[] = [
+  // 1er Trimestre
+  {
+    id: "note_001",
+    inscriptionId: "ins_2023_001",
+    matiereId: "mat_002",
+    matiere: "Français",
+    periodeId: "periode_1",
+    periode: "1er Trimestre",
+    note: 15.5,
+    coefficient: 4,
+    enseignantId: "ens_002",
+    evaluationId: "eval_001",
+    evaluation: "Devoir",
+    createdAt: "2023-11-15T10:00:00.000Z"
+  },
+  {
+    id: "note_002",
+    inscriptionId: "ins_2023_001",
+    matiereId: "mat_001",
+    matiere: "Mathématiques",
+    periodeId: "periode_1",
+    periode: "1er Trimestre",
+    note: 12,
+    coefficient: 3,
+    enseignantId: "ens_006",
+    evaluationId: "eval_001",
+    evaluation: "Devoir",
+    createdAt: "2023-11-15T10:00:00.000Z"
+  },
+  {
+    id: "note_003",
+    inscriptionId: "ins_2023_002",
+    matiereId: "mat_001",
+    matiere: "Mathématiques",
+    periodeId: "periode_1",
+    periode: "1er Trimestre",
+    note: 17,
+    coefficient: 3,
+    enseignantId: "ens_006",
+    evaluationId: "eval_001",
+    evaluation: "Devoir",
+    createdAt: "2023-11-15T10:00:00.000Z"
+  },
+  {
+    id: "note_004",
+    inscriptionId: "ins_2023_002",
+    matiereId: "mat_002",
+    matiere: "Français",
+    periodeId: "periode_1",
+    periode: "1er Trimestre",
+    note: 16,
+    coefficient: 4,
+    enseignantId: "ens_002",
+    evaluationId: "eval_001",
+    evaluation: "Devoir",
+    createdAt: "2023-11-15T10:00:00.000Z"
+  },
+  {
+    id: "note_005",
+    inscriptionId: "ins_2023_005",
+    matiereId: "mat_007",
+    matiere: "Mathématiques",
+    periodeId: "periode_1",
+    periode: "1er Trimestre",
+    note: 14,
+    coefficient: 4,
+    enseignantId: "ens_001",
+    evaluationId: "eval_002",
+    evaluation: "Examen",
+    createdAt: "2023-12-10T14:30:00.000Z"
+  },
+  {
+    id: "note_006",
+    inscriptionId: "ins_2023_005",
+    matiereId: "mat_008",
+    matiere: "Français",
+    periodeId: "periode_1",
+    periode: "1er Trimestre",
+    note: 13.5,
+    coefficient: 4,
+    enseignantId: "ens_002",
+    evaluationId: "eval_002",
+    evaluation: "Examen",
+    createdAt: "2023-12-10T14:30:00.000Z"
+  },
+  {
+    id: "note_007",
+    inscriptionId: "ins_2023_005",
+    matiereId: "mat_009",
+    matiere: "Anglais",
+    periodeId: "periode_1",
+    periode: "1er Trimestre",
+    note: 15,
+    coefficient: 2,
+    enseignantId: "ens_004",
+    evaluationId: "eval_001",
+    evaluation: "Devoir",
+    createdAt: "2023-11-20T09:15:00.000Z"
+  },
+  {
+    id: "note_008",
+    inscriptionId: "ins_2023_009",
+    matiereId: "mat_012",
+    matiere: "Mathématiques",
+    periodeId: "periode_1",
+    periode: "1er Trimestre",
+    note: 11,
+    coefficient: 5,
+    enseignantId: "ens_001",
+    evaluationId: "eval_002",
+    evaluation: "Examen",
+    createdAt: "2023-12-12T11:45:00.000Z"
+  },
+  {
+    id: "note_009",
+    inscriptionId: "ins_2023_009",
+    matiereId: "mat_005",
+    matiere: "Histoire-Géographie",
+    periodeId: "periode_1",
+    periode: "1er Trimestre",
+    note: 14,
+    coefficient: 2,
+    enseignantId: "ens_003",
+    evaluationId: "eval_001",
+    evaluation: "Devoir",
+    createdAt: "2023-11-18T08:30:00.000Z"
+  },
+  // 2ème Trimestre
+  {
+    id: "note_010",
+    inscriptionId: "ins_2023_001",
+    matiereId: "mat_002",
+    matiere: "Français",
+    periodeId: "periode_2",
+    periode: "2ème Trimestre",
+    note: 16,
+    coefficient: 4,
+    enseignantId: "ens_002",
+    evaluationId: "eval_003",
+    evaluation: "Devoir",
+    createdAt: "2024-02-15T10:00:00.000Z"
+  },
+  {
+    id: "note_011",
+    inscriptionId: "ins_2023_005",
+    matiereId: "mat_007",
+    matiere: "Mathématiques",
+    periodeId: "periode_2",
+    periode: "2ème Trimestre",
+    note: 12.5,
+    coefficient: 4,
+    enseignantId: "ens_001",
+    evaluationId: "eval_003",
+    evaluation: "Devoir",
+    createdAt: "2024-02-16T09:30:00.000Z"
+  },
+  {
+    id: "note_012",
+    inscriptionId: "ins_2023_009",
+    matiereId: "mat_012",
+    matiere: "Mathématiques",
+    periodeId: "periode_2",
+    periode: "2ème Trimestre",
+    note: 13,
+    coefficient: 5,
+    enseignantId: "ens_001",
+    evaluationId: "eval_003",
+    evaluation: "Devoir",
+    createdAt: "2024-02-16T11:15:00.000Z"
+  }
+];
