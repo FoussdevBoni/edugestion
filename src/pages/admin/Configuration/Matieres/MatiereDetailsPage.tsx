@@ -1,13 +1,20 @@
 // src/pages/admin/configuration/matieres/MatiereDetailsPage.tsx
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { 
-  ArrowLeft, Edit, Trash2, Calendar, BookOpen, 
-  ChevronRight, Layers, Hash
+import {
+  ArrowLeft, Edit, Trash2, Calendar, BookOpen, Layers, Hash
 } from "lucide-react";
 import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
+import { alertError } from "../../../../helpers/alertError";
+import { matiereService } from "../../../../services/matiereService";
 
-export default function MatiereDetailsPage() {
+
+interface PagesProps {
+  config?: boolean
+}
+
+
+export default function MatiereDetailsPage({config}: PagesProps) {
   const location = useLocation();
   const matiere = location.state;
   const navigate = useNavigate();
@@ -20,7 +27,7 @@ export default function MatiereDetailsPage() {
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Matière non trouvée</h2>
           <p className="text-gray-500 mb-4">Les informations de la matière sont introuvables.</p>
           <button
-            onClick={() => navigate("/admin/configuration/matieres")}
+            onClick={() => navigate(-1)}
             className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
             Retour à la liste
@@ -40,13 +47,29 @@ export default function MatiereDetailsPage() {
   };
 
   const handleUpdate = () => {
-    navigate("/admin/configuration/matieres/update", { state: matiere });
+    if (config) {
+          navigate("/admin/configuration/matieres/update", { state: matiere });
+
+    } else {
+    navigate("/admin/matieres/update", { state: matiere });
+
+    }
   };
 
-  const handleDelete = () => {
-    console.log("Suppression de la matière:", matiere);
-    setOpenDeleteModal(false);
-    navigate("/admin/configuration/matieres");
+  const handleDelete = async () => {
+    if (!matiere.id) {
+      alertError()
+
+      return
+    }
+    try {
+      await matiereService.delete(matiere.id)
+      setOpenDeleteModal(false);
+      navigate(-1);
+    } catch (error) {
+      alertError()
+
+    }
   };
 
   return (
@@ -57,7 +80,7 @@ export default function MatiereDetailsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => navigate("/admin/configuration/matieres")}
+                onClick={() => navigate(-1)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <ArrowLeft size={20} className="text-gray-600" />
@@ -88,22 +111,6 @@ export default function MatiereDetailsPage() {
             </div>
           </div>
 
-          {/* Fil d'Ariane */}
-          <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
-            <span onClick={() => navigate("/admin")} className="hover:text-primary cursor-pointer">
-              Dashboard
-            </span>
-            <ChevronRight size={14} />
-            <span onClick={() => navigate("/admin/parametres")} className="hover:text-primary cursor-pointer">
-              Paramètres
-            </span>
-            <ChevronRight size={14} />
-            <span onClick={() => navigate("/admin/configuration/matieres")} className="hover:text-primary cursor-pointer">
-              Matières
-            </span>
-            <ChevronRight size={14} />
-            <span className="text-gray-700">{matiere.nom}</span>
-          </div>
         </div>
       </div>
 
@@ -157,7 +164,8 @@ export default function MatiereDetailsPage() {
         onClose={() => setOpenDeleteModal(false)}
         onConfirm={handleDelete}
         title="Supprimer la matière"
-        message={`Êtes-vous sûr de vouloir supprimer la matière "${matiere.nom}" ? Cette action est irréversible.`}
+        message={`Êtes-vous sûr de vouloir supprimer la matière 
+          "${matiere.nom}" ? Cette action est irréversible.`}
         confirmText="Supprimer"
         cancelText="Annuler"
       />

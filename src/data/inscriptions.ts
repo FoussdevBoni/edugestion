@@ -27,7 +27,8 @@ export const inscriptions: Inscription[] = [
     contact: "778001122",
     createdAt: "2022-09-01T10:30:00.000Z",
     updatedAt: "2023-06-30T12:00:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'paye'
   },
   {
     id: "ins_2022_002",
@@ -50,7 +51,8 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Thiès",
     contact: "778003344",
     createdAt: "2022-09-02T09:15:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
 
   // Année 2023-2024 (inscriptions en cours)
@@ -76,7 +78,8 @@ export const inscriptions: Inscription[] = [
     contact: "778001122",
     createdAt: "2023-09-01T10:30:00.000Z",
     updatedAt: "2024-01-15T14:20:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
   {
     id: "ins_2023_002",
@@ -99,7 +102,8 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Thiès",
     contact: "778003344",
     createdAt: "2023-09-01T09:15:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
   {
     id: "ins_2023_003",
@@ -121,7 +125,8 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Saint-Louis",
     contact: "778005566",
     createdAt: "2023-09-03T11:00:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
   {
     id: "ins_2023_004",
@@ -144,7 +149,8 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Dakar",
     contact: "778007788",
     createdAt: "2023-09-01T14:30:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
   {
     id: "ins_2023_005",
@@ -167,7 +173,8 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Dakar",
     contact: "778011122",
     createdAt: "2023-09-01T09:00:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
   {
     id: "ins_2023_006",
@@ -189,7 +196,8 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Rufisque",
     contact: "778013344",
     createdAt: "2023-09-02T10:30:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
   {
     id: "ins_2023_007",
@@ -212,7 +220,8 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Dakar",
     contact: "778015566",
     createdAt: "2023-09-03T13:15:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
   {
     id: "ins_2023_008",
@@ -234,7 +243,8 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Thiès",
     contact: "778017788",
     createdAt: "2023-09-04T08:20:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
   {
     id: "ins_2023_009",
@@ -257,7 +267,8 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Saint-Louis",
     contact: "778021122",
     createdAt: "2023-09-01T11:20:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   },
   {
     id: "ins_2023_010",
@@ -280,6 +291,7 @@ export const inscriptions: Inscription[] = [
     lieuDeNaissance: "Dakar",
     contact: "778023344",
     createdAt: "2023-09-02T09:45:00.000Z",
-    payements: []
+    paiements: [],
+    statutPayement: 'partiellement'
   }
 ];

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, AlertCircle } from "lucide-react";
 import EnseignantForm, { EnseignantFormData } from "../../../components/admin/forms/EnseignantForm";
+import { alertError, alertServerError } from "../../../helpers/alertError";
+import { enseignantService } from "../../../services/enseignantService";
 
 
 export default function UpdateEnseignantPage() {
@@ -14,14 +16,19 @@ export default function UpdateEnseignantPage() {
 
   const handleSubmit = async (data: EnseignantFormData) => {
     setIsSubmitting(true);
+    if (!data.id) {
+      alertError()
+      return
+    }
     try {
       // Simulation d'appel API
       console.log("Mise à jour de l'enseignant:", data);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await enseignantService.update(data.id, data)
+
       // Rediriger vers la liste des enseignants
       navigate("/admin/enseignants");
     } catch (error) {
+      alertServerError(error)
       console.error("Erreur lors de la mise à jour:", error);
     } finally {
       setIsSubmitting(false);

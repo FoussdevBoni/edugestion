@@ -2,40 +2,43 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { v4 as uuidv4 } from 'uuid';
 import MatiereForm, { MatiereFormData } from "../../../../components/admin/forms/MatiereForm";
+import { matiereService } from "../../../../services/matiereService";
+import { BaseMatiere } from "../../../../utils/types/base";
 
-export default function NewMatierePage() {
+
+interface PagesProps {
+  config?: boolean
+}
+
+
+export default function NewMatierePage({}: PagesProps) {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (data: MatiereFormData) => {
-    setIsSubmitting(true);
-    try {
-      // Simulation d'appel API
-      const newMatiere = {
-        id: uuidv4(),
-        nom: data.nom,
-        coefficient: data.coefficient,
-        niveauClasseId: data.niveauClasseId,
-        niveauClasse: data.niveauClasse,
-        createdAt: new Date().toISOString()
+  const handleSubmit = async (dataArray: MatiereFormData[]) => {
+  setIsSubmitting(true);
+  try {
+    const promises = dataArray.map(item => {
+      const newMatiere: BaseMatiere = {
+        nom: item.nom,
+        coefficient: item.coefficient,
+        niveauClasseId: item.niveauClasseId,
       };
-      
-      console.log("Création d'une matière:", newMatiere);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Rediriger vers la liste
-      navigate("/admin/configuration/matieres");
-    } catch (error) {
-      console.error("Erreur lors de la création:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+      return matiereService.create(newMatiere);
+    });
+
+    await Promise.all(promises);
+    navigate(-1);
+  } catch (error) {
+    console.error("Erreur création matières:", error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const handleCancel = () => {
-    navigate("/admin/configuration/matieres");
+    navigate(-1);
   };
 
   return (
@@ -43,7 +46,7 @@ export default function NewMatierePage() {
       {/* En-tête */}
       <div className="flex items-center gap-4">
         <button
-          onClick={() => navigate("/admin/configuration/matieres")}
+          onClick={() => navigate(-1)}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           title="Retour à la liste"
         >

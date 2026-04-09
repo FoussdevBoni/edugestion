@@ -1,0 +1,5141 @@
+{
+  "licence": {
+    "key": "D11BCD87AC711A27|2026-04-20|229AB806",
+    "machineId": "D11BCD87AC711A27",
+    "expirationDate": "2026-04-20T00:00:00.000Z",
+    "activatedAt": "2026-03-25T20:48:33.465Z",
+    "lastChecked": "2026-04-09T10:12:35.791Z"
+  },
+  "ecoleInfos": {
+    "id": "40097770-e29f-4164-bfa0-23e64c30918c",
+    "nom": "Holla School",
+    "adresse": "",
+    "telephone": "",
+    "email": "",
+    "anneeScolaire": "2026-2027",
+    "createdAt": "2026-04-03T18:38:08.563Z",
+    "updatedAt": "2026-04-03T18:38:08.563Z"
+  },
+  "niveauxScolaires": [
+    {
+      "id": "4c9c6cd5-ff8e-44a9-a3f1-4db43ef6db51",
+      "nom": "Moyen",
+      "ordre": 3,
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "d59eaff9-362a-4c7c-a39b-b9aec6ac2e5f",
+      "nom": "Secondaire Général",
+      "ordre": 4,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "bc1eb77e-3d6e-45c8-a526-4c0972be8fd9",
+      "nom": "Préscolaire",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "33a7e7e1-0542-46fd-8a94-fcc88330b4e1",
+      "nom": "Élémentaire",
+      "ordre": 2,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "d7207c38-1254-4b04-935f-d6c32bff0c40",
+      "nom": "Secondaire Technique",
+      "ordre": 5,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    }
+  ],
+  "periodes": [
+    {
+      "id": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "nom": "1er semestre",
+      "niveauScolaireId": "4c9c6cd5-ff8e-44a9-a3f1-4db43ef6db51",
+      "ordre": 1,
+      "coefficient": 1,
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "2699afb2-1283-4b1c-a3a7-3ddfb21861ba",
+      "nom": "2ème semestre",
+      "niveauScolaireId": "4c9c6cd5-ff8e-44a9-a3f1-4db43ef6db51",
+      "ordre": 2,
+      "coefficient": 1,
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "2968ba10-934d-4ea6-ae27-b601d1ee185c",
+      "nom": "1er semestre",
+      "niveauScolaireId": "d59eaff9-362a-4c7c-a39b-b9aec6ac2e5f",
+      "ordre": 1,
+      "coefficient": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "edb11aaa-6b38-4c85-8736-148de21413ea",
+      "nom": "2ème semestre",
+      "niveauScolaireId": "d59eaff9-362a-4c7c-a39b-b9aec6ac2e5f",
+      "ordre": 2,
+      "coefficient": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ff5d5b4b-f4b1-490b-96ba-02976055c788",
+      "nom": "1er semestre",
+      "niveauScolaireId": "bc1eb77e-3d6e-45c8-a526-4c0972be8fd9",
+      "ordre": 1,
+      "coefficient": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "889117e3-a155-4aa4-b1e6-106080d926f7",
+      "nom": "2ème semestre",
+      "niveauScolaireId": "bc1eb77e-3d6e-45c8-a526-4c0972be8fd9",
+      "ordre": 2,
+      "coefficient": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "01c61dd7-cf0b-469b-8957-a2f5101dd86d",
+      "nom": "1er semestre",
+      "niveauScolaireId": "33a7e7e1-0542-46fd-8a94-fcc88330b4e1",
+      "ordre": 1,
+      "coefficient": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "196d0f14-1918-4bc4-9bf5-65e423d4d697",
+      "nom": "2ème semestre",
+      "niveauScolaireId": "33a7e7e1-0542-46fd-8a94-fcc88330b4e1",
+      "ordre": 2,
+      "coefficient": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "b5163279-96f5-4d24-8b7e-01238d20471c",
+      "nom": "1er semestre",
+      "niveauScolaireId": "d7207c38-1254-4b04-935f-d6c32bff0c40",
+      "ordre": 1,
+      "coefficient": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "92f6ac88-864f-4303-9d91-dc48e2042998",
+      "nom": "2ème semestre",
+      "niveauScolaireId": "d7207c38-1254-4b04-935f-d6c32bff0c40",
+      "ordre": 2,
+      "coefficient": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    }
+  ],
+  "evaluations": [
+    {
+      "id": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "nom": "Devoir",
+      "abreviation": "DEV",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "niveauScolaireId": "4c9c6cd5-ff8e-44a9-a3f1-4db43ef6db51",
+      "type": "devoir",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "be63d9a6-3823-4111-9255-96a999d53790",
+      "nom": "Composition",
+      "abreviation": "COMP",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "niveauScolaireId": "4c9c6cd5-ff8e-44a9-a3f1-4db43ef6db51",
+      "type": "composition",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "c90af48e-7ef5-4a67-845d-70573752c6d0",
+      "nom": "Devoir",
+      "abreviation": "DEV",
+      "periodeId": "2699afb2-1283-4b1c-a3a7-3ddfb21861ba",
+      "niveauScolaireId": "4c9c6cd5-ff8e-44a9-a3f1-4db43ef6db51",
+      "type": "devoir",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "8ffb0d50-9d2e-48fc-bac7-c747b695ba3f",
+      "nom": "Composition",
+      "abreviation": "COMP",
+      "periodeId": "2699afb2-1283-4b1c-a3a7-3ddfb21861ba",
+      "niveauScolaireId": "4c9c6cd5-ff8e-44a9-a3f1-4db43ef6db51",
+      "type": "composition",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "10cdbf93-f66e-49f5-8536-a7268867d244",
+      "nom": "Devoir",
+      "abreviation": "DEV",
+      "periodeId": "2968ba10-934d-4ea6-ae27-b601d1ee185c",
+      "niveauScolaireId": "d59eaff9-362a-4c7c-a39b-b9aec6ac2e5f",
+      "type": "devoir",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a664cac5-76ee-4e64-bee1-a0f4882fe743",
+      "nom": "Composition",
+      "abreviation": "COMP",
+      "periodeId": "2968ba10-934d-4ea6-ae27-b601d1ee185c",
+      "niveauScolaireId": "d59eaff9-362a-4c7c-a39b-b9aec6ac2e5f",
+      "type": "composition",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "d6eabd80-d257-4bfd-83d8-7a1507264fbc",
+      "nom": "Devoir",
+      "abreviation": "DEV",
+      "periodeId": "edb11aaa-6b38-4c85-8736-148de21413ea",
+      "niveauScolaireId": "d59eaff9-362a-4c7c-a39b-b9aec6ac2e5f",
+      "type": "devoir",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "45a868e5-ec71-4372-904a-057f574daf1f",
+      "nom": "Composition",
+      "abreviation": "COMP",
+      "periodeId": "edb11aaa-6b38-4c85-8736-148de21413ea",
+      "niveauScolaireId": "d59eaff9-362a-4c7c-a39b-b9aec6ac2e5f",
+      "type": "composition",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "aff05f79-85ab-4419-8ce0-3a707889017c",
+      "nom": "Appréciation",
+      "abreviation": "APP",
+      "periodeId": "ff5d5b4b-f4b1-490b-96ba-02976055c788",
+      "niveauScolaireId": "bc1eb77e-3d6e-45c8-a526-4c0972be8fd9",
+      "type": "devoir",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "f546ef2f-4983-4e6d-9063-de73153c448f",
+      "nom": "Appréciation",
+      "abreviation": "APP",
+      "periodeId": "889117e3-a155-4aa4-b1e6-106080d926f7",
+      "niveauScolaireId": "bc1eb77e-3d6e-45c8-a526-4c0972be8fd9",
+      "type": "devoir",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "00681b88-7e63-4d35-b4db-b8e0131ca0e4",
+      "nom": "Devoir",
+      "abreviation": "DEV",
+      "periodeId": "01c61dd7-cf0b-469b-8957-a2f5101dd86d",
+      "niveauScolaireId": "33a7e7e1-0542-46fd-8a94-fcc88330b4e1",
+      "type": "devoir",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "77b848e0-fe09-407b-b7e1-bc49744c7e1a",
+      "nom": "Composition",
+      "abreviation": "COMP",
+      "periodeId": "01c61dd7-cf0b-469b-8957-a2f5101dd86d",
+      "niveauScolaireId": "33a7e7e1-0542-46fd-8a94-fcc88330b4e1",
+      "type": "composition",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "e3422c07-1740-4753-ba11-81f284d7c555",
+      "nom": "Devoir",
+      "abreviation": "DEV",
+      "periodeId": "196d0f14-1918-4bc4-9bf5-65e423d4d697",
+      "niveauScolaireId": "33a7e7e1-0542-46fd-8a94-fcc88330b4e1",
+      "type": "devoir",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "cabbf693-1f46-460f-a24a-feb685e2297b",
+      "nom": "Composition",
+      "abreviation": "COMP",
+      "periodeId": "196d0f14-1918-4bc4-9bf5-65e423d4d697",
+      "niveauScolaireId": "33a7e7e1-0542-46fd-8a94-fcc88330b4e1",
+      "type": "composition",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "4ab25d57-8376-4a7e-a298-8ade363ee2f3",
+      "nom": "Devoir",
+      "abreviation": "DEV",
+      "periodeId": "b5163279-96f5-4d24-8b7e-01238d20471c",
+      "niveauScolaireId": "d7207c38-1254-4b04-935f-d6c32bff0c40",
+      "type": "devoir",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "254a1e1e-34b4-4872-a01d-cc01dd0a4994",
+      "nom": "Composition",
+      "abreviation": "COMP",
+      "periodeId": "b5163279-96f5-4d24-8b7e-01238d20471c",
+      "niveauScolaireId": "d7207c38-1254-4b04-935f-d6c32bff0c40",
+      "type": "composition",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "3acf22c0-9b56-454e-9c8c-f4d2e8dca808",
+      "nom": "Devoir",
+      "abreviation": "DEV",
+      "periodeId": "92f6ac88-864f-4303-9d91-dc48e2042998",
+      "niveauScolaireId": "d7207c38-1254-4b04-935f-d6c32bff0c40",
+      "type": "devoir",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "66328220-b4f0-45a4-9c4a-df954088d524",
+      "nom": "Composition",
+      "abreviation": "COMP",
+      "periodeId": "92f6ac88-864f-4303-9d91-dc48e2042998",
+      "niveauScolaireId": "d7207c38-1254-4b04-935f-d6c32bff0c40",
+      "type": "composition",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    }
+  ],
+  "cycles": [
+    {
+      "id": "a37e7beb-1169-4787-98ee-9d19364141f6",
+      "niveauScolaireId": "4c9c6cd5-ff8e-44a9-a3f1-4db43ef6db51",
+      "nom": "Moyen",
+      "ordre": 1,
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "niveauScolaireId": "d59eaff9-362a-4c7c-a39b-b9aec6ac2e5f",
+      "nom": "Lycée",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "6132cd05-6b3c-4748-aed8-38fa124fe959",
+      "niveauScolaireId": "bc1eb77e-3d6e-45c8-a526-4c0972be8fd9",
+      "nom": "Préscolaire",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "77bae61d-371c-4c95-8e7a-c11ebce30426",
+      "niveauScolaireId": "33a7e7e1-0542-46fd-8a94-fcc88330b4e1",
+      "nom": "Élémentaire",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "niveauScolaireId": "d7207c38-1254-4b04-935f-d6c32bff0c40",
+      "nom": "Lycée Technique",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    }
+  ],
+  "niveauxClasses": [
+    {
+      "id": "21e08b45-c977-4ffb-a574-97d1e21189e1",
+      "cycleId": "a37e7beb-1169-4787-98ee-9d19364141f6",
+      "nom": "6e",
+      "nomComplet": "6e",
+      "ordre": 1,
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "28210e05-0387-4ae2-a2b6-9087ee97a82a",
+      "cycleId": "a37e7beb-1169-4787-98ee-9d19364141f6",
+      "nom": "5e",
+      "nomComplet": "5e",
+      "ordre": 1,
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "f1ec7ebd-b1cc-48ab-9dfa-a404e1cb8260",
+      "cycleId": "a37e7beb-1169-4787-98ee-9d19364141f6",
+      "nom": "4e",
+      "nomComplet": "4e",
+      "ordre": 1,
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "f366037a-c131-4143-8acc-24e59b5c4664",
+      "cycleId": "a37e7beb-1169-4787-98ee-9d19364141f6",
+      "nom": "3e",
+      "nomComplet": "3e",
+      "ordre": 1,
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "2697a8ef-0b62-4129-a068-4db773343aa2",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "2de L",
+      "nomComplet": "2de L",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "d00f7c99-95bf-46fa-b6eb-79cb05959558",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "2de S",
+      "nomComplet": "2de S",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "5606a458-bcb1-43a0-8d9a-a12a10fec9ae",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e S1",
+      "nomComplet": "1e S1",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "c092aefd-5393-4cb5-8fc7-1ffed19990cb",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e S2",
+      "nomComplet": "1e S2",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "5eb683c1-60c0-4326-8929-d136ec1e9f66",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e S3",
+      "nomComplet": "1e S3",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e S4",
+      "nomComplet": "1e S4",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e S5",
+      "nomComplet": "1e S5",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a7f937da-66de-41f9-b526-e3e4d274b548",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e L1a",
+      "nomComplet": "1e L1a",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "df94feff-d4f3-4756-a4dc-57a12eec92e4",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e L1b",
+      "nomComplet": "1e L1b",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "c1d8a7a6-f9e9-457e-8920-708c9d2259d4",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e L2",
+      "nomComplet": "1e L2",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "8a0eb789-cb50-4cc2-9d1b-1641893f993f",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e L'",
+      "nomComplet": "1e L'",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "94328e95-c8ae-4a01-bd6e-9397609758bc",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e LA",
+      "nomComplet": "1e LA",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "2280ca37-b298-4144-a958-2171388dc9dd",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "1e ST2S",
+      "nomComplet": "1e ST2S",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "381e6754-88fb-410f-9dd0-6ab591fb166b",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle S1",
+      "nomComplet": "Tle S1",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a15adc6f-7abd-42f9-a1ad-b3636a243ed3",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle S2",
+      "nomComplet": "Tle S2",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle S3",
+      "nomComplet": "Tle S3",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle S4",
+      "nomComplet": "Tle S4",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle S5",
+      "nomComplet": "Tle S5",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b23b072e-12ed-4296-a24e-1e4f1925b208",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle L1a",
+      "nomComplet": "Tle L1a",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "4744947f-ed33-4d40-adee-2b8c33354954",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle L1b",
+      "nomComplet": "Tle L1b",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "f68bedff-e127-411f-a6f3-47ccc79f5d53",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle L2",
+      "nomComplet": "Tle L2",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "9e06dbec-5baa-4995-aaef-3fd6843747b3",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle L'",
+      "nomComplet": "Tle L'",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e3aa0c3c-6aaf-4efa-8ff2-3b8f1cb54e34",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle L-AR",
+      "nomComplet": "Tle L-AR",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "f49a718d-281a-4dfa-8298-5f52ce40cdba",
+      "cycleId": "dc9ab14d-5a1e-4d58-8836-e1f7458739b2",
+      "nom": "Tle ST2S",
+      "nomComplet": "Tle ST2S",
+      "ordre": 1,
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "97e452b4-b398-4ef8-9807-7565de3069b1",
+      "cycleId": "6132cd05-6b3c-4748-aed8-38fa124fe959",
+      "nom": "PS",
+      "nomComplet": "PS",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "45ba485c-5742-4127-b2a4-6809e819f0f2",
+      "cycleId": "6132cd05-6b3c-4748-aed8-38fa124fe959",
+      "nom": "MS",
+      "nomComplet": "MS",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "12d9c5cc-c13e-44a7-96b7-20e1b178745d",
+      "cycleId": "6132cd05-6b3c-4748-aed8-38fa124fe959",
+      "nom": "GS",
+      "nomComplet": "GS",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ff575b60-a13a-457e-97d2-df7e36bb32e6",
+      "cycleId": "77bae61d-371c-4c95-8e7a-c11ebce30426",
+      "nom": "CI",
+      "nomComplet": "CI",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "34e2e006-8610-4e1d-9893-e56217d85c28",
+      "cycleId": "77bae61d-371c-4c95-8e7a-c11ebce30426",
+      "nom": "CP",
+      "nomComplet": "CP",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "0a6de7f7-7848-4196-8498-f78d3624a8c9",
+      "cycleId": "77bae61d-371c-4c95-8e7a-c11ebce30426",
+      "nom": "CE1",
+      "nomComplet": "CE1",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "84e91628-65f9-43fc-a26d-3a0cd9990c6a",
+      "cycleId": "77bae61d-371c-4c95-8e7a-c11ebce30426",
+      "nom": "CE2",
+      "nomComplet": "CE2",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "457bb266-0a26-43c9-8afc-5f0d3a5deb11",
+      "cycleId": "77bae61d-371c-4c95-8e7a-c11ebce30426",
+      "nom": "CM1",
+      "nomComplet": "CM1",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "4d30c64d-a512-4279-a275-163c7b63f32b",
+      "cycleId": "77bae61d-371c-4c95-8e7a-c11ebce30426",
+      "nom": "CM2",
+      "nomComplet": "CM2",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "6deb9f10-1c33-43d6-a077-53946761321d",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "2de T",
+      "nomComplet": "2de T",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "08db8a82-d052-491f-b330-a4f8ab9243db",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "2de G",
+      "nomComplet": "2de G",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "71e023ce-ddb9-4f5c-afea-71b4163406c0",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "2de H",
+      "nomComplet": "2de H",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "1ddbf0bd-0db2-4e73-820c-0371401d0cfa",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "2de Adm",
+      "nomComplet": "2de Adm",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "05326332-4ade-4794-989a-a3616ded1d71",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "Tle F1",
+      "nomComplet": "Tle F1",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "5e4d2349-a37e-4bb7-9004-9de76e5d2511",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "Tle F2",
+      "nomComplet": "Tle F2",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "24cf3e57-e886-46ce-b2bc-aa139b62ef34",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "Tle F3",
+      "nomComplet": "Tle F3",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "d78a2920-9777-472f-aa97-96d0ec8e7cb4",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "Tle F4",
+      "nomComplet": "Tle F4",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ae6035ae-8c93-41ca-bf0e-c11c5f49fec6",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "Tle F6",
+      "nomComplet": "Tle F6",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "2ff45fe7-8d6c-4671-bdc2-eee8ed732602",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "Tle G",
+      "nomComplet": "Tle G",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "2bd8681c-07e6-4405-9c5a-6bdd92d81bec",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "Tle H",
+      "nomComplet": "Tle H",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "9d9be28c-f947-45d9-86b8-d022c55aff72",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "Tle Adm",
+      "nomComplet": "Tle Adm",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "1da9206e-fc77-4b6a-ae92-59a1007f6078",
+      "cycleId": "49fd4fa8-156b-4308-898f-65ebe5874d71",
+      "nom": "Tle T",
+      "nomComplet": "Tle T",
+      "ordre": 1,
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    }
+  ],
+  "matieres": [
+    {
+      "id": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "nom": "Français",
+      "coefficient": 5,
+      "niveauClasseId": "21e08b45-c977-4ffb-a574-97d1e21189e1",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "nom": "Mathématiques",
+      "coefficient": 4,
+      "niveauClasseId": "21e08b45-c977-4ffb-a574-97d1e21189e1",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "nom": "Anglais",
+      "coefficient": 3,
+      "niveauClasseId": "21e08b45-c977-4ffb-a574-97d1e21189e1",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "nom": "SVT",
+      "coefficient": 2,
+      "niveauClasseId": "21e08b45-c977-4ffb-a574-97d1e21189e1",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "21e08b45-c977-4ffb-a574-97d1e21189e1",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "21e08b45-c977-4ffb-a574-97d1e21189e1",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "9591334f-3b2f-4d23-b887-298194cd3c3b",
+      "nom": "Français",
+      "coefficient": 5,
+      "niveauClasseId": "28210e05-0387-4ae2-a2b6-9087ee97a82a",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "a6e868fc-6311-4559-a21d-7325e6935538",
+      "nom": "Mathématiques",
+      "coefficient": 4,
+      "niveauClasseId": "28210e05-0387-4ae2-a2b6-9087ee97a82a",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "b11364ae-9a90-419b-8de0-b93a40a1e21f",
+      "nom": "Anglais",
+      "coefficient": 3,
+      "niveauClasseId": "28210e05-0387-4ae2-a2b6-9087ee97a82a",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "a596eb0b-795e-4384-b0c8-c205904ed811",
+      "nom": "SVT",
+      "coefficient": 2,
+      "niveauClasseId": "28210e05-0387-4ae2-a2b6-9087ee97a82a",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "1892fc34-42c2-453e-b3bf-4eba600a10d9",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "28210e05-0387-4ae2-a2b6-9087ee97a82a",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "e937dd93-e754-4ab1-a5f7-1d02b00f92c9",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "28210e05-0387-4ae2-a2b6-9087ee97a82a",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "fc368347-37e0-436d-ae72-89e5b5106449",
+      "nom": "Français",
+      "coefficient": 5,
+      "niveauClasseId": "f1ec7ebd-b1cc-48ab-9dfa-a404e1cb8260",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "ca11ac51-bb95-42d5-a970-0ca519b00fd2",
+      "nom": "Mathématiques",
+      "coefficient": 4,
+      "niveauClasseId": "f1ec7ebd-b1cc-48ab-9dfa-a404e1cb8260",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "ccd28f45-1a89-4f86-a578-a6e6a2beb932",
+      "nom": "Anglais",
+      "coefficient": 3,
+      "niveauClasseId": "f1ec7ebd-b1cc-48ab-9dfa-a404e1cb8260",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "f768f949-5a82-4b40-ad0c-27110a77b5bb",
+      "nom": "Sciences Physiques",
+      "coefficient": 2,
+      "niveauClasseId": "f1ec7ebd-b1cc-48ab-9dfa-a404e1cb8260",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "65b59f44-1150-4689-87ef-d1747e0eaa26",
+      "nom": "SVT",
+      "coefficient": 2,
+      "niveauClasseId": "f1ec7ebd-b1cc-48ab-9dfa-a404e1cb8260",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "b21f5b7f-0724-4ab9-90a6-dc4654134b57",
+      "nom": "LV2",
+      "coefficient": 2,
+      "niveauClasseId": "f1ec7ebd-b1cc-48ab-9dfa-a404e1cb8260",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "be976f1b-a85e-4f7e-9dde-3564bb4dedde",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "f1ec7ebd-b1cc-48ab-9dfa-a404e1cb8260",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "bb2b1b6c-f83c-429e-bdd6-50fc5a50d880",
+      "nom": "Français",
+      "coefficient": 5,
+      "niveauClasseId": "f366037a-c131-4143-8acc-24e59b5c4664",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "36655bc1-aa7c-4e03-adf5-ef87a59dfc5f",
+      "nom": "Mathématiques",
+      "coefficient": 4,
+      "niveauClasseId": "f366037a-c131-4143-8acc-24e59b5c4664",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "cfd062d4-6c21-4b9b-b9b0-e6611843ac74",
+      "nom": "Anglais",
+      "coefficient": 3,
+      "niveauClasseId": "f366037a-c131-4143-8acc-24e59b5c4664",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "4aac7578-9d3c-41ec-897a-9fafef2dba30",
+      "nom": "Sciences Physiques",
+      "coefficient": 2,
+      "niveauClasseId": "f366037a-c131-4143-8acc-24e59b5c4664",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "3c28d553-845f-4210-8fc9-3573e7142394",
+      "nom": "SVT",
+      "coefficient": 2,
+      "niveauClasseId": "f366037a-c131-4143-8acc-24e59b5c4664",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "716e481a-e1ff-48e1-b250-a52198aef4aa",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "f366037a-c131-4143-8acc-24e59b5c4664",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "9cf4f373-9d16-4a1e-8814-0687d82e8eee",
+      "nom": "LV2",
+      "coefficient": 2,
+      "niveauClasseId": "f366037a-c131-4143-8acc-24e59b5c4664",
+      "createdAt": "2026-04-03T18:38:08.588Z",
+      "updatedAt": "2026-04-03T18:38:08.588Z"
+    },
+    {
+      "id": "7379a227-f43a-438f-b146-dce1e1969583",
+      "nom": "Français",
+      "coefficient": 5,
+      "niveauClasseId": "2697a8ef-0b62-4129-a068-4db773343aa2",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "8fd7e8ec-f01b-403a-a67d-cf7bc8bd3534",
+      "nom": "Mathématiques",
+      "coefficient": 4,
+      "niveauClasseId": "2697a8ef-0b62-4129-a068-4db773343aa2",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "f84c604f-b837-4e8c-a622-73dd0902c298",
+      "nom": "Anglais (LV1)",
+      "coefficient": 3,
+      "niveauClasseId": "2697a8ef-0b62-4129-a068-4db773343aa2",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "d083f6cb-f33d-45c4-bf51-53fc00f884c2",
+      "nom": "Histoire-Géographie",
+      "coefficient": 3,
+      "niveauClasseId": "2697a8ef-0b62-4129-a068-4db773343aa2",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "6de84890-b268-4590-8965-e2983b1e1fbb",
+      "nom": "SVT",
+      "coefficient": 2,
+      "niveauClasseId": "2697a8ef-0b62-4129-a068-4db773343aa2",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "4891723c-f051-4bb0-af3c-2119bdbab1d3",
+      "nom": "Langue Ancienne (Grec/Latin/Arabe)",
+      "coefficient": 2,
+      "niveauClasseId": "2697a8ef-0b62-4129-a068-4db773343aa2",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "95c76d58-3222-48c5-aa7f-0da0bdf1ee72",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "2697a8ef-0b62-4129-a068-4db773343aa2",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "daa6395b-d71b-4603-a13f-a9cabc9cdf97",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "d00f7c99-95bf-46fa-b6eb-79cb05959558",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "96b3f3e8-9296-4361-8ac6-b9e7f1b646c8",
+      "nom": "Sciences Physiques",
+      "coefficient": 5,
+      "niveauClasseId": "d00f7c99-95bf-46fa-b6eb-79cb05959558",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a24d45b6-6213-4818-939f-6d3e08fb476b",
+      "nom": "SVT",
+      "coefficient": 4,
+      "niveauClasseId": "d00f7c99-95bf-46fa-b6eb-79cb05959558",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "dda91915-8b97-4b8b-a550-ff274c866470",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "d00f7c99-95bf-46fa-b6eb-79cb05959558",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "1c12c3ee-c7ce-4097-9c27-900b1ad93f8d",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "d00f7c99-95bf-46fa-b6eb-79cb05959558",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a05d5bdd-18cc-473a-a0d8-360ca9a19a58",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "d00f7c99-95bf-46fa-b6eb-79cb05959558",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "0b3473d9-6f61-4205-97da-1f0e954113db",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "d00f7c99-95bf-46fa-b6eb-79cb05959558",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "7940f8cc-a0f1-4256-a59d-94877cb36ea4",
+      "nom": "Mathématiques",
+      "coefficient": 8,
+      "niveauClasseId": "5606a458-bcb1-43a0-8d9a-a12a10fec9ae",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "50809b90-c753-4026-ba66-c5b98054f529",
+      "nom": "Sciences Physiques",
+      "coefficient": 8,
+      "niveauClasseId": "5606a458-bcb1-43a0-8d9a-a12a10fec9ae",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "668c3b40-cad0-49b6-bf49-18dbe3398482",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "5606a458-bcb1-43a0-8d9a-a12a10fec9ae",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "fe079961-9a93-443a-94b3-77d112ec346a",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "5606a458-bcb1-43a0-8d9a-a12a10fec9ae",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "2b417580-fd1b-4133-9d39-74b071458e1b",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "5606a458-bcb1-43a0-8d9a-a12a10fec9ae",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "bbcb1893-410e-424a-beb2-623ff79fcbbf",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "5606a458-bcb1-43a0-8d9a-a12a10fec9ae",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "9cd8ff13-913b-47ec-845a-9cbb6936b130",
+      "nom": "SVT",
+      "coefficient": 2,
+      "niveauClasseId": "5606a458-bcb1-43a0-8d9a-a12a10fec9ae",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "76c1524a-cefd-4555-95b5-f35be9fffa5c",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "5606a458-bcb1-43a0-8d9a-a12a10fec9ae",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "88db0e20-7f88-42c9-91d7-87b8570fdcd8",
+      "nom": "Mathématiques",
+      "coefficient": 6,
+      "niveauClasseId": "c092aefd-5393-4cb5-8fc7-1ffed19990cb",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "28928598-7e3b-452f-9a36-b51de57e44cb",
+      "nom": "Sciences Physiques",
+      "coefficient": 6,
+      "niveauClasseId": "c092aefd-5393-4cb5-8fc7-1ffed19990cb",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "0301ad1b-601b-47e7-a6f0-a7416d7b8a14",
+      "nom": "SVT",
+      "coefficient": 6,
+      "niveauClasseId": "c092aefd-5393-4cb5-8fc7-1ffed19990cb",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "495012a1-5406-474e-ab55-43a89a610cd4",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "c092aefd-5393-4cb5-8fc7-1ffed19990cb",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "2d6abd26-973f-4931-a669-3d832413cb9d",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "c092aefd-5393-4cb5-8fc7-1ffed19990cb",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ea2b9c6c-755a-4112-8254-52443a1e344d",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "c092aefd-5393-4cb5-8fc7-1ffed19990cb",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e2c9289c-2658-4ab2-957b-cf18060206b4",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "c092aefd-5393-4cb5-8fc7-1ffed19990cb",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b715353c-ebfe-48fd-94f7-5d93b7d5360b",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "c092aefd-5393-4cb5-8fc7-1ffed19990cb",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "c605984e-b59b-41d7-839e-ecbe5b625328",
+      "nom": "Mathématiques",
+      "coefficient": 6,
+      "niveauClasseId": "5eb683c1-60c0-4326-8929-d136ec1e9f66",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "67df7d8a-9bc7-4d42-b464-58f3e8d0bf01",
+      "nom": "Sciences Physiques",
+      "coefficient": 5,
+      "niveauClasseId": "5eb683c1-60c0-4326-8929-d136ec1e9f66",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "de113ef3-59dd-4f85-9d26-27eea551a81f",
+      "nom": "Construction Mécanique",
+      "coefficient": 5,
+      "niveauClasseId": "5eb683c1-60c0-4326-8929-d136ec1e9f66",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "2b6868c0-cc3b-465e-9a4b-1db44d8115b4",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "5eb683c1-60c0-4326-8929-d136ec1e9f66",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "de9a0f1a-2fdc-4c8f-84ec-18279b11c4b4",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "5eb683c1-60c0-4326-8929-d136ec1e9f66",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "d27ae05e-8b46-44fc-bae2-24af15366d5c",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "5eb683c1-60c0-4326-8929-d136ec1e9f66",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "04417c0c-27ab-4529-9ac9-9edc8b5ef3b9",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "5eb683c1-60c0-4326-8929-d136ec1e9f66",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "4c8a10c7-cf88-4520-a703-8ab1627e1616",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "5eb683c1-60c0-4326-8929-d136ec1e9f66",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "959e6639-f8ea-41be-922d-3ddd742e7db4",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "102240b6-2340-4aa4-b2c6-27831e6aaf67",
+      "nom": "Sciences Physiques",
+      "coefficient": 5,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "da627142-47b5-4034-918f-e07a825bf975",
+      "nom": "SVT",
+      "coefficient": 5,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "4de7e263-9bde-44e6-b1c9-6fc5395e2553",
+      "nom": "Phytotechnique",
+      "coefficient": 4,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e1efb1ad-be86-4ad5-aa18-a797b0dd8677",
+      "nom": "Zootechnique",
+      "coefficient": 3,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "9585d919-425f-4548-a9c4-1446f47a0b65",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "87694628-b120-44ae-acfd-22c0bed03c53",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "606c74fb-b86e-4a6b-adb4-ab4aeb9318ff",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "caaddca0-0bca-482d-89db-75c083ff3791",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e608bc95-c057-46e2-a49a-da797db5d5c2",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "550f62e5-46ec-402b-b987-df1537aac0a4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "3721df96-9346-4d6c-b25a-eb808969966e",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "22059393-8ff8-4d72-bf9a-ffe273190c95",
+      "nom": "Sciences Physiques",
+      "coefficient": 5,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "5789671b-69fc-455d-ba1e-c360a0d7c8e3",
+      "nom": "SVT",
+      "coefficient": 4,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "8d9bcd7c-7414-4960-9226-69ed2f01547d",
+      "nom": "Technologies Agro-Alimentaires",
+      "coefficient": 5,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "1e38b2b5-6c4d-4d61-ad4c-1ce8f4fbc11a",
+      "nom": "Microbiologie",
+      "coefficient": 3,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "15a2a525-42a2-4a61-a954-0662bd6b9708",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "c3afd4aa-9b62-4e18-8b11-d08bec3d6eef",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e84d0898-a03b-46be-a3c9-28635d906981",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "78dda539-9bfc-4a81-a871-9fb89f703b3d",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "09991f0d-ff6e-4782-b505-ead62c5b0b29",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "a0960614-1466-427d-a90d-b3c4ef1b864d",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "0108cab7-59f9-444b-b57c-f42ac3530423",
+      "nom": "Français",
+      "coefficient": 6,
+      "niveauClasseId": "a7f937da-66de-41f9-b526-e3e4d274b548",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "2c64eb8b-d112-4eb4-b71b-54e1b21090e1",
+      "nom": "Philosophie",
+      "coefficient": 6,
+      "niveauClasseId": "a7f937da-66de-41f9-b526-e3e4d274b548",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "53198fd3-728c-45cb-a716-63c6e5b1a846",
+      "nom": "Grec",
+      "coefficient": 5,
+      "niveauClasseId": "a7f937da-66de-41f9-b526-e3e4d274b548",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ed7ae525-c1e1-4a10-a786-67a1d78cbdbd",
+      "nom": "Latin ou Arabe Classique",
+      "coefficient": 5,
+      "niveauClasseId": "a7f937da-66de-41f9-b526-e3e4d274b548",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "adc325e2-c094-4c18-93eb-dcc356ee31ab",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "a7f937da-66de-41f9-b526-e3e4d274b548",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "6e6fe623-b9de-4913-af47-8404cbc80402",
+      "nom": "LV1",
+      "coefficient": 2,
+      "niveauClasseId": "a7f937da-66de-41f9-b526-e3e4d274b548",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "efde665f-b457-4c1d-abc5-8143b7636f99",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "a7f937da-66de-41f9-b526-e3e4d274b548",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "4bde1012-864a-40fe-be58-8422f2b272e3",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "a7f937da-66de-41f9-b526-e3e4d274b548",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "6249a15a-f9f8-4da2-ab15-0489610d02c6",
+      "nom": "Français",
+      "coefficient": 6,
+      "niveauClasseId": "df94feff-d4f3-4756-a4dc-57a12eec92e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "0fb6a0e4-6668-49db-a091-a4fc294adb5d",
+      "nom": "Philosophie",
+      "coefficient": 6,
+      "niveauClasseId": "df94feff-d4f3-4756-a4dc-57a12eec92e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "1270bc66-d1d2-44f2-bac2-a36a9c7252fb",
+      "nom": "Latin ou Arabe Classique",
+      "coefficient": 5,
+      "niveauClasseId": "df94feff-d4f3-4756-a4dc-57a12eec92e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ce25dc20-889b-4bcc-a30a-e0df40df3c95",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "df94feff-d4f3-4756-a4dc-57a12eec92e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e7520135-dcd9-447e-8a47-2db4a582d2bf",
+      "nom": "LV1",
+      "coefficient": 3,
+      "niveauClasseId": "df94feff-d4f3-4756-a4dc-57a12eec92e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "3fece188-3df3-4e05-9ad6-141de81c925e",
+      "nom": "LV2",
+      "coefficient": 2,
+      "niveauClasseId": "df94feff-d4f3-4756-a4dc-57a12eec92e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "1ea292cc-958a-4135-9dbf-a7963feee34a",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "df94feff-d4f3-4756-a4dc-57a12eec92e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "2a9ee229-9b38-4fc4-83d7-0d5aa85ac342",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "df94feff-d4f3-4756-a4dc-57a12eec92e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ddefc31c-9bd4-4bb7-b6b9-00494c7c97f7",
+      "nom": "Français",
+      "coefficient": 5,
+      "niveauClasseId": "c1d8a7a6-f9e9-457e-8920-708c9d2259d4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "979bdb91-e62b-431b-a48b-88c3f7dd208f",
+      "nom": "Philosophie",
+      "coefficient": 6,
+      "niveauClasseId": "c1d8a7a6-f9e9-457e-8920-708c9d2259d4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b74d59d7-dcdd-471c-aa51-e73534c17acd",
+      "nom": "Histoire-Géographie",
+      "coefficient": 6,
+      "niveauClasseId": "c1d8a7a6-f9e9-457e-8920-708c9d2259d4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "22d04ac2-44bc-4a6a-ba78-fd3b1d213de6",
+      "nom": "LV1",
+      "coefficient": 4,
+      "niveauClasseId": "c1d8a7a6-f9e9-457e-8920-708c9d2259d4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "336c7916-a65d-49e8-9dba-19d2ace4f4fc",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "c1d8a7a6-f9e9-457e-8920-708c9d2259d4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "daa9de29-b849-4182-8836-7a9307b7bcbf",
+      "nom": "LV2 ou Économie",
+      "coefficient": 2,
+      "niveauClasseId": "c1d8a7a6-f9e9-457e-8920-708c9d2259d4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "969631b4-aa82-4d8c-afb6-2a1e8b4de5f9",
+      "nom": "Sciences de la Nature (Sciences Physiques ou SVT)",
+      "coefficient": 2,
+      "niveauClasseId": "c1d8a7a6-f9e9-457e-8920-708c9d2259d4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "8be52737-45c0-4753-9999-b2f8573c2ca4",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "c1d8a7a6-f9e9-457e-8920-708c9d2259d4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "c5b1bfdf-7773-42e3-b024-a69be28e62a3",
+      "nom": "Français",
+      "coefficient": 6,
+      "niveauClasseId": "8a0eb789-cb50-4cc2-9d1b-1641893f993f",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "daf799d7-d698-40cf-b464-16aecf6e3b7b",
+      "nom": "Philosophie",
+      "coefficient": 4,
+      "niveauClasseId": "8a0eb789-cb50-4cc2-9d1b-1641893f993f",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "273e4db0-93d7-4532-9ae0-6c78f220451f",
+      "nom": "LV1",
+      "coefficient": 4,
+      "niveauClasseId": "8a0eb789-cb50-4cc2-9d1b-1641893f993f",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ccb1b44f-68e5-4644-bae9-2cf8e7a8af74",
+      "nom": "LV2",
+      "coefficient": 4,
+      "niveauClasseId": "8a0eb789-cb50-4cc2-9d1b-1641893f993f",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e1cfc132-adfa-4197-86b5-9c882e5daf9c",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "8a0eb789-cb50-4cc2-9d1b-1641893f993f",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e1a61ffa-30e1-45a8-86a2-9872f9a1854f",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "8a0eb789-cb50-4cc2-9d1b-1641893f993f",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e1a92b4b-1597-4dab-88ea-eb1cab7e688a",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "8a0eb789-cb50-4cc2-9d1b-1641893f993f",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "44340032-82d1-4fc0-bbf2-7df266fc7cfc",
+      "nom": "Philosophie",
+      "coefficient": 6,
+      "niveauClasseId": "94328e95-c8ae-4a01-bd6e-9397609758bc",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "48518f54-da94-41bf-86c9-53f08d08b706",
+      "nom": "Langue et Littérature Arabes",
+      "coefficient": 6,
+      "niveauClasseId": "94328e95-c8ae-4a01-bd6e-9397609758bc",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "6b34b1d0-400f-4713-accd-a62996f8085f",
+      "nom": "Histoire-Géographie",
+      "coefficient": 4,
+      "niveauClasseId": "94328e95-c8ae-4a01-bd6e-9397609758bc",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "4beebd5d-19c9-40cb-80c5-efa9d2af38cc",
+      "nom": "Français (LV1)",
+      "coefficient": 3,
+      "niveauClasseId": "94328e95-c8ae-4a01-bd6e-9397609758bc",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "86c10e31-aaf9-47bb-8c31-68d44c079fd4",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "94328e95-c8ae-4a01-bd6e-9397609758bc",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ad670647-9ba9-4d81-a095-d7df88be5dcf",
+      "nom": "Anglais (LV2)",
+      "coefficient": 2,
+      "niveauClasseId": "94328e95-c8ae-4a01-bd6e-9397609758bc",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "90e0b783-c5b5-47eb-a51a-7e332b0a0658",
+      "nom": "Civilisation Arabo-Islamique",
+      "coefficient": 2,
+      "niveauClasseId": "94328e95-c8ae-4a01-bd6e-9397609758bc",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "6ae32cbb-aa85-4b51-85c8-ad434a36fa83",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "94328e95-c8ae-4a01-bd6e-9397609758bc",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "74bf7f1e-0636-4f2e-b52b-4b23766c073e",
+      "nom": "Sciences Sanitaires et Sociales",
+      "coefficient": 6,
+      "niveauClasseId": "2280ca37-b298-4144-a958-2171388dc9dd",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "5aafea6d-c41a-44da-b04c-9c7a2789a77a",
+      "nom": "Biologie et Physiopathologie Humaines",
+      "coefficient": 5,
+      "niveauClasseId": "2280ca37-b298-4144-a958-2171388dc9dd",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "5aefde9c-244f-4126-8b30-c44e55d39fa0",
+      "nom": "Mathématiques",
+      "coefficient": 3,
+      "niveauClasseId": "2280ca37-b298-4144-a958-2171388dc9dd",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "0e39d36f-74d0-4997-9c4e-6976305cab97",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "2280ca37-b298-4144-a958-2171388dc9dd",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "701907a3-59a3-4d40-9923-e6537b4de72e",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "2280ca37-b298-4144-a958-2171388dc9dd",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "58697523-ea3e-4c61-bd9e-ec10ec16e96a",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "2280ca37-b298-4144-a958-2171388dc9dd",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "1fd9ebbe-465b-4445-a6eb-25af18189ac9",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "2280ca37-b298-4144-a958-2171388dc9dd",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "320bc965-7f8d-4f8d-b93c-a3c4f8cdd75d",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "2280ca37-b298-4144-a958-2171388dc9dd",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "d96ab02d-f246-44a9-a4ce-8e5a73706d93",
+      "nom": "Mathématiques",
+      "coefficient": 8,
+      "niveauClasseId": "381e6754-88fb-410f-9dd0-6ab591fb166b",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "c7bbd81e-2042-4bc8-b428-f44db049cc3a",
+      "nom": "Sciences Physiques",
+      "coefficient": 8,
+      "niveauClasseId": "381e6754-88fb-410f-9dd0-6ab591fb166b",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "f098e935-506b-45af-844d-c8b3f0548e68",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "381e6754-88fb-410f-9dd0-6ab591fb166b",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "0e549bc5-59e0-4a65-a7a7-98827e6f9a2e",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "381e6754-88fb-410f-9dd0-6ab591fb166b",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "cd982326-a2b7-46f0-9138-7bc57cedf923",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "381e6754-88fb-410f-9dd0-6ab591fb166b",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "2faccc45-8d06-417c-949c-55ac05035792",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "381e6754-88fb-410f-9dd0-6ab591fb166b",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "4fc70e68-df1f-4638-8027-d4cfa793df11",
+      "nom": "SVT",
+      "coefficient": 2,
+      "niveauClasseId": "381e6754-88fb-410f-9dd0-6ab591fb166b",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "2796155f-272a-4e6d-9f39-1735d9d6a650",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "381e6754-88fb-410f-9dd0-6ab591fb166b",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "5010de07-56cc-409c-8696-3e72ca91a840",
+      "nom": "Mathématiques",
+      "coefficient": 6,
+      "niveauClasseId": "a15adc6f-7abd-42f9-a1ad-b3636a243ed3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "f81cd6f4-8063-4796-ae8d-540d44b63bbb",
+      "nom": "Sciences Physiques",
+      "coefficient": 6,
+      "niveauClasseId": "a15adc6f-7abd-42f9-a1ad-b3636a243ed3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a2580ba6-ba25-4eb3-be6a-1068468ae725",
+      "nom": "SVT",
+      "coefficient": 6,
+      "niveauClasseId": "a15adc6f-7abd-42f9-a1ad-b3636a243ed3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e0777240-ad12-486b-a893-50e0127a05a0",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "a15adc6f-7abd-42f9-a1ad-b3636a243ed3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "14d79b17-0b77-4255-9c8d-d23a25c8f418",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "a15adc6f-7abd-42f9-a1ad-b3636a243ed3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "85e6207c-c945-4946-b081-e46af29402b4",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "a15adc6f-7abd-42f9-a1ad-b3636a243ed3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "99949673-1bf2-4c8d-a2b8-e9f19a21a805",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "a15adc6f-7abd-42f9-a1ad-b3636a243ed3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "76c925ba-12df-4040-9bef-e3fd8e12491c",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "a15adc6f-7abd-42f9-a1ad-b3636a243ed3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "1f86caf8-86fc-4347-897d-13e8606c94fc",
+      "nom": "Mathématiques",
+      "coefficient": 8,
+      "niveauClasseId": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b13d9713-af78-471b-bc7f-86b5fde90291",
+      "nom": "Sciences Physiques",
+      "coefficient": 8,
+      "niveauClasseId": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b4ba93a4-0a82-4134-b765-f71b5fba6eec",
+      "nom": "Construction Mécanique",
+      "coefficient": 8,
+      "niveauClasseId": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "8298ca2b-ddfe-4574-8c26-c4baee144f00",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "1f7a81a4-42de-439f-8fe4-14df1406078a",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ee489fda-bf35-4d42-9dcc-0d38131eb182",
+      "nom": "Analyse de Fabrication et Technologies Automatisées",
+      "coefficient": 2,
+      "niveauClasseId": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "58476cdf-5af4-446e-9b15-ed5614578958",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a473c4ae-5cff-4965-972d-1297f6e22028",
+      "nom": "Epreuve Pratique Atelier",
+      "coefficient": 3,
+      "niveauClasseId": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "96d63e68-963b-457e-b241-75518b07aaa5",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "5379b205-9e4b-4845-bb33-f347b007e0c3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "279388dc-1bbe-4dc4-af67-786291cb717e",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "d0388da4-11e2-4dea-86c6-2c5078410a76",
+      "nom": "Sciences Physiques",
+      "coefficient": 5,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "9913f52d-fbfb-447c-a1fb-bfa3f60e84f7",
+      "nom": "SVT",
+      "coefficient": 5,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "cb434198-55a7-4ed8-b935-4db8ce41d8bc",
+      "nom": "Phytotechnique",
+      "coefficient": 6,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a692448f-a50e-4f1f-997f-1670291f47e0",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "587c10ba-25f5-4615-9b92-770a5db52df5",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "02aac704-d4f6-46d0-922c-8b8fa984479b",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "0bff41f5-a00e-4329-96e1-24d71078e750",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "65bf2836-036f-48ae-96b8-8b98a18edb27",
+      "nom": "Ecologie-Environnement",
+      "coefficient": 2,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "3df852f2-5759-47fa-936f-8e88ba12ca10",
+      "nom": "Zootechnique",
+      "coefficient": 2,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a49b636f-0671-4140-95eb-5443aa6e9406",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "10534ab6-f522-4d87-8b98-5bef5af495e4",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "f1ed0795-ea89-418b-9094-38aa7e0ba350",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "441999e1-ef8e-461d-a4e5-69080090e16c",
+      "nom": "Sciences Physiques",
+      "coefficient": 5,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "7d3e2b50-e152-4093-9bcb-d5484325d443",
+      "nom": "SVT",
+      "coefficient": 4,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "140cdf0f-2cd0-44a9-a409-dc5340c24f53",
+      "nom": "Technologies Agro-Alimentaires",
+      "coefficient": 5,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "6f6fc4a8-20d6-4c89-8a5f-b1e5c6db7a52",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "63520bcd-d76c-4c88-8b00-193ebf766dfd",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b84da819-02b4-4e36-ae80-c82296fb82ba",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "d9dc1845-ca58-43cf-b278-8872055be025",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e6265639-bcb9-4cae-b11e-c3f7bd741632",
+      "nom": "Microbiologie",
+      "coefficient": 2,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "237f4851-307e-4ae4-9814-7c8663988795",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "c9d5065d-7caf-48c7-b7ff-06b930ad5b8c",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "bf55d3c8-2d85-47cc-92f7-e9bb03f6d78f",
+      "nom": "Français",
+      "coefficient": 6,
+      "niveauClasseId": "b23b072e-12ed-4296-a24e-1e4f1925b208",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "f4129c98-a143-4805-937b-44725cc9b32a",
+      "nom": "Philosophie",
+      "coefficient": 6,
+      "niveauClasseId": "b23b072e-12ed-4296-a24e-1e4f1925b208",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e8eb9663-1e24-4e3a-8584-5e5bdad02d6f",
+      "nom": "Grec",
+      "coefficient": 5,
+      "niveauClasseId": "b23b072e-12ed-4296-a24e-1e4f1925b208",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "cd66cd1b-e5b7-4f8a-9975-ba27089f12fc",
+      "nom": "Latin ou Arabe Classique",
+      "coefficient": 5,
+      "niveauClasseId": "b23b072e-12ed-4296-a24e-1e4f1925b208",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b6610016-fe39-4352-8dc5-baa45573ce0b",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "b23b072e-12ed-4296-a24e-1e4f1925b208",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "c6bfbe62-184e-4c39-bf89-e45ee9403e25",
+      "nom": "LV1",
+      "coefficient": 2,
+      "niveauClasseId": "b23b072e-12ed-4296-a24e-1e4f1925b208",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "87f137dc-9eec-4bce-8b73-ed1bd56f157e",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "b23b072e-12ed-4296-a24e-1e4f1925b208",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "998c2ee9-a8b1-43be-8ca7-e066547f0b1d",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "b23b072e-12ed-4296-a24e-1e4f1925b208",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "336471d0-e542-4edf-b43a-dc0c1b919518",
+      "nom": "Français",
+      "coefficient": 6,
+      "niveauClasseId": "4744947f-ed33-4d40-adee-2b8c33354954",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "7d43b9d4-62ad-4a85-9131-19675730c7a2",
+      "nom": "Philosophie",
+      "coefficient": 6,
+      "niveauClasseId": "4744947f-ed33-4d40-adee-2b8c33354954",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "91009732-0994-4a70-b78d-5e283ac4c574",
+      "nom": "Latin ou Arabe Classique",
+      "coefficient": 5,
+      "niveauClasseId": "4744947f-ed33-4d40-adee-2b8c33354954",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "7e3288e9-088e-4266-9364-49d4fa620802",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "4744947f-ed33-4d40-adee-2b8c33354954",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "84280bcc-b5a7-4344-965e-45dfa26882f4",
+      "nom": "LV1",
+      "coefficient": 3,
+      "niveauClasseId": "4744947f-ed33-4d40-adee-2b8c33354954",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "d15be5ad-21a8-4931-b1cf-e8c3d9d5716e",
+      "nom": "LV2",
+      "coefficient": 2,
+      "niveauClasseId": "4744947f-ed33-4d40-adee-2b8c33354954",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ecb4240d-12ff-48c2-b0f5-3b6bb30c51b2",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "4744947f-ed33-4d40-adee-2b8c33354954",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "99034d42-d825-4832-b4ec-1e58accd2f87",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "4744947f-ed33-4d40-adee-2b8c33354954",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "d08fabda-7e8a-4b46-a389-857ae2e29030",
+      "nom": "Français",
+      "coefficient": 5,
+      "niveauClasseId": "f68bedff-e127-411f-a6f3-47ccc79f5d53",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "be662a79-5eda-433e-8b76-0bcc0d7b8408",
+      "nom": "Philosophie",
+      "coefficient": 6,
+      "niveauClasseId": "f68bedff-e127-411f-a6f3-47ccc79f5d53",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "36668669-b8c4-4a59-b4ef-465d10fff7e5",
+      "nom": "Histoire-Géographie",
+      "coefficient": 6,
+      "niveauClasseId": "f68bedff-e127-411f-a6f3-47ccc79f5d53",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "1e60ce83-bdb9-4667-bee0-205d1b80e50d",
+      "nom": "LV1",
+      "coefficient": 4,
+      "niveauClasseId": "f68bedff-e127-411f-a6f3-47ccc79f5d53",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "365b2fab-b134-4e80-bda7-c962f5f35d9f",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "f68bedff-e127-411f-a6f3-47ccc79f5d53",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "c536cef2-2731-4fcd-a885-d8ac6bbe50e6",
+      "nom": "LV2 ou Économie",
+      "coefficient": 2,
+      "niveauClasseId": "f68bedff-e127-411f-a6f3-47ccc79f5d53",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "49760732-6f24-4b42-9c4a-9d102ddb217e",
+      "nom": "Sciences de la Nature (Sciences Physiques ou SVT)",
+      "coefficient": 2,
+      "niveauClasseId": "f68bedff-e127-411f-a6f3-47ccc79f5d53",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "65dd3d28-7f50-474d-b4e1-25b22ee704cc",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "f68bedff-e127-411f-a6f3-47ccc79f5d53",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "97e456a6-a57b-4e3c-a543-3a40c66194ee",
+      "nom": "Français",
+      "coefficient": 6,
+      "niveauClasseId": "9e06dbec-5baa-4995-aaef-3fd6843747b3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "a37dd002-6c12-4071-963a-ed446680d61c",
+      "nom": "Philosophie",
+      "coefficient": 4,
+      "niveauClasseId": "9e06dbec-5baa-4995-aaef-3fd6843747b3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b7ec33ea-33f8-4cd8-8776-45755af9e081",
+      "nom": "LV1",
+      "coefficient": 4,
+      "niveauClasseId": "9e06dbec-5baa-4995-aaef-3fd6843747b3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ae8639c6-e86e-4333-9d03-20b598fcffc5",
+      "nom": "LV2",
+      "coefficient": 4,
+      "niveauClasseId": "9e06dbec-5baa-4995-aaef-3fd6843747b3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "7b7e9964-6e20-4e02-a138-dee154db8d46",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "9e06dbec-5baa-4995-aaef-3fd6843747b3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e0cebd77-db71-43fe-bce9-d9a7f9d972ba",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "9e06dbec-5baa-4995-aaef-3fd6843747b3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "dc2e22c4-32a5-4e4a-be44-f0700fc69791",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "9e06dbec-5baa-4995-aaef-3fd6843747b3",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "ec3ad010-3b43-49bc-83cf-0b503257cf7d",
+      "nom": "Philosophie",
+      "coefficient": 6,
+      "niveauClasseId": "e3aa0c3c-6aaf-4efa-8ff2-3b8f1cb54e34",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "67932b36-566b-4837-b765-469733bdb790",
+      "nom": "Langue et Littérature Arabes",
+      "coefficient": 6,
+      "niveauClasseId": "e3aa0c3c-6aaf-4efa-8ff2-3b8f1cb54e34",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "64503891-aa82-4b55-9ea1-f1cd58e65841",
+      "nom": "Histoire-Géographie",
+      "coefficient": 4,
+      "niveauClasseId": "e3aa0c3c-6aaf-4efa-8ff2-3b8f1cb54e34",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "87d499b8-80d0-4c67-a3d2-9aad4380f875",
+      "nom": "Français (LV1)",
+      "coefficient": 3,
+      "niveauClasseId": "e3aa0c3c-6aaf-4efa-8ff2-3b8f1cb54e34",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "24fc324b-59fb-4a28-b3d4-5e63c7d96fa9",
+      "nom": "Mathématiques",
+      "coefficient": 2,
+      "niveauClasseId": "e3aa0c3c-6aaf-4efa-8ff2-3b8f1cb54e34",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "47906ee9-74b0-4553-a7ba-62f386f90710",
+      "nom": "Anglais (LV2)",
+      "coefficient": 2,
+      "niveauClasseId": "e3aa0c3c-6aaf-4efa-8ff2-3b8f1cb54e34",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "79facb5a-89f9-4a08-8236-753458443d7f",
+      "nom": "Civilisation Arabo-Islamique",
+      "coefficient": 2,
+      "niveauClasseId": "e3aa0c3c-6aaf-4efa-8ff2-3b8f1cb54e34",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b34a3fc7-a0cd-497d-8598-3dbba2079b7e",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "e3aa0c3c-6aaf-4efa-8ff2-3b8f1cb54e34",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b1c30750-1fb7-47b0-9f4d-0ce339b413fb",
+      "nom": "Sciences Sanitaires et Sociales",
+      "coefficient": 6,
+      "niveauClasseId": "f49a718d-281a-4dfa-8298-5f52ce40cdba",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "76166931-e624-4d23-89ab-efd1d9c2ee07",
+      "nom": "Biologie et Physiopathologie Humaines",
+      "coefficient": 5,
+      "niveauClasseId": "f49a718d-281a-4dfa-8298-5f52ce40cdba",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b30374e1-26f3-4ea3-ae8c-2d04f2a6b6b1",
+      "nom": "Mathématiques",
+      "coefficient": 3,
+      "niveauClasseId": "f49a718d-281a-4dfa-8298-5f52ce40cdba",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "63d2e0f8-1de4-41a9-a287-c547d998800d",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "f49a718d-281a-4dfa-8298-5f52ce40cdba",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "e37e0617-e51b-4042-8157-b62d9ebc697c",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "f49a718d-281a-4dfa-8298-5f52ce40cdba",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "5d377f6d-2f37-4ac5-975b-79815a27dadb",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "f49a718d-281a-4dfa-8298-5f52ce40cdba",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "49bf9a44-0f55-48b6-a601-3c56d3999959",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "f49a718d-281a-4dfa-8298-5f52ce40cdba",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "6a1bca36-ad05-4d4c-af99-befc64a4cc1c",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "f49a718d-281a-4dfa-8298-5f52ce40cdba",
+      "createdAt": "2026-04-03T19:19:20.017Z",
+      "updatedAt": "2026-04-03T19:19:20.017Z"
+    },
+    {
+      "id": "b792e37e-7fd0-4d77-a250-88fee9deb9f3",
+      "nom": "Langage et Communication",
+      "coefficient": 1,
+      "niveauClasseId": "97e452b4-b398-4ef8-9807-7565de3069b1",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "1b5565d5-1ab3-4f40-bca6-5092671493a4",
+      "nom": "Activités Psychomotrices",
+      "coefficient": 1,
+      "niveauClasseId": "97e452b4-b398-4ef8-9807-7565de3069b1",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "9c5cf4e2-0789-44d9-b7b6-37fdf87f61ac",
+      "nom": "Activités de Découverte",
+      "coefficient": 1,
+      "niveauClasseId": "97e452b4-b398-4ef8-9807-7565de3069b1",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "87c72a03-c27c-4a6e-8649-5ab643feddae",
+      "nom": "Vivre Ensemble",
+      "coefficient": 1,
+      "niveauClasseId": "97e452b4-b398-4ef8-9807-7565de3069b1",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ef2cb38f-3f9f-4d58-b30a-2507e4c6526d",
+      "nom": "Activités Physiques",
+      "coefficient": 1,
+      "niveauClasseId": "97e452b4-b398-4ef8-9807-7565de3069b1",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "020539fe-3344-4fc0-8229-90d03d2d316d",
+      "nom": "Langage et Communication",
+      "coefficient": 1,
+      "niveauClasseId": "45ba485c-5742-4127-b2a4-6809e819f0f2",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "0d0d097f-c0f5-4997-a8a9-25eae7d4de50",
+      "nom": "Activités Psychomotrices",
+      "coefficient": 1,
+      "niveauClasseId": "45ba485c-5742-4127-b2a4-6809e819f0f2",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "20703ae5-c286-4539-bef6-04c8007bee8c",
+      "nom": "Activités de Découverte",
+      "coefficient": 1,
+      "niveauClasseId": "45ba485c-5742-4127-b2a4-6809e819f0f2",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "696c5596-2741-4564-b80a-93740057c4ab",
+      "nom": "Vivre Ensemble",
+      "coefficient": 1,
+      "niveauClasseId": "45ba485c-5742-4127-b2a4-6809e819f0f2",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "1d19ff5a-c4bd-45db-9209-b526bd03454b",
+      "nom": "Activités Physiques",
+      "coefficient": 1,
+      "niveauClasseId": "45ba485c-5742-4127-b2a4-6809e819f0f2",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ab959a65-463d-418d-a443-7579c2495fd3",
+      "nom": "Langage et Communication",
+      "coefficient": 1,
+      "niveauClasseId": "12d9c5cc-c13e-44a7-96b7-20e1b178745d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "f572c515-21f2-411f-9c91-74a0e6564cca",
+      "nom": "Activités Psychomotrices",
+      "coefficient": 1,
+      "niveauClasseId": "12d9c5cc-c13e-44a7-96b7-20e1b178745d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "913c9afb-3f7e-48e6-bee9-0136331794a8",
+      "nom": "Activités de Découverte",
+      "coefficient": 1,
+      "niveauClasseId": "12d9c5cc-c13e-44a7-96b7-20e1b178745d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ad7479c3-7e4b-468e-9f8e-aac9d8e1c986",
+      "nom": "Vivre Ensemble",
+      "coefficient": 1,
+      "niveauClasseId": "12d9c5cc-c13e-44a7-96b7-20e1b178745d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "d8943758-2e58-4ce9-a303-37d36cb949dc",
+      "nom": "Activités Physiques",
+      "coefficient": 1,
+      "niveauClasseId": "12d9c5cc-c13e-44a7-96b7-20e1b178745d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "c6295872-370a-44e4-b4e8-3951051c7894",
+      "nom": "Langue et Communication",
+      "coefficient": 3,
+      "niveauClasseId": "ff575b60-a13a-457e-97d2-df7e36bb32e6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "2d457884-9b93-4ee1-8ca5-862f93fcbd11",
+      "nom": "Mathématiques",
+      "coefficient": 3,
+      "niveauClasseId": "ff575b60-a13a-457e-97d2-df7e36bb32e6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "b4103504-e49d-4eac-bb4d-a892879dc23a",
+      "nom": "ESVS",
+      "coefficient": 2,
+      "niveauClasseId": "ff575b60-a13a-457e-97d2-df7e36bb32e6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ea119b6f-dcd9-404d-8856-02cf4c67b685",
+      "nom": "Éducation Artistique",
+      "coefficient": 1,
+      "niveauClasseId": "ff575b60-a13a-457e-97d2-df7e36bb32e6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "a88b7dcd-d85e-49eb-9235-11d824af545e",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "ff575b60-a13a-457e-97d2-df7e36bb32e6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "60012037-a367-4417-b7ba-e9f615686337",
+      "nom": "Langue et Communication",
+      "coefficient": 3,
+      "niveauClasseId": "34e2e006-8610-4e1d-9893-e56217d85c28",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "84a9a7b3-2f29-4c4f-9668-ad947af95c38",
+      "nom": "Mathématiques",
+      "coefficient": 3,
+      "niveauClasseId": "34e2e006-8610-4e1d-9893-e56217d85c28",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "71d6371c-6ec8-4906-aa9f-5b46abde2dca",
+      "nom": "ESVS",
+      "coefficient": 2,
+      "niveauClasseId": "34e2e006-8610-4e1d-9893-e56217d85c28",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "1d7f22b0-2104-4587-81f2-de9a96f21f21",
+      "nom": "Éducation Artistique",
+      "coefficient": 1,
+      "niveauClasseId": "34e2e006-8610-4e1d-9893-e56217d85c28",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "97e8d55a-5c14-45d9-898e-ee0375ceaeb3",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "34e2e006-8610-4e1d-9893-e56217d85c28",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "9ca5143d-2459-4556-842b-1e5ae6c2badd",
+      "nom": "Langue et Communication",
+      "coefficient": 3,
+      "niveauClasseId": "0a6de7f7-7848-4196-8498-f78d3624a8c9",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "071afc79-cfd3-43df-a739-0c8e667c55ed",
+      "nom": "Mathématiques",
+      "coefficient": 3,
+      "niveauClasseId": "0a6de7f7-7848-4196-8498-f78d3624a8c9",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "5e5e9ebc-ac92-474b-a886-4407e96205ea",
+      "nom": "ESVS",
+      "coefficient": 2,
+      "niveauClasseId": "0a6de7f7-7848-4196-8498-f78d3624a8c9",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "fa7431dd-bc00-4770-b5cd-1d5debc6b58e",
+      "nom": "Éducation Artistique",
+      "coefficient": 1,
+      "niveauClasseId": "0a6de7f7-7848-4196-8498-f78d3624a8c9",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "86d32928-2cd2-452d-8014-109008a7301f",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "0a6de7f7-7848-4196-8498-f78d3624a8c9",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "d921df2b-06d8-49eb-824e-2e33320e4c72",
+      "nom": "Langue et Communication",
+      "coefficient": 3,
+      "niveauClasseId": "84e91628-65f9-43fc-a26d-3a0cd9990c6a",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "8417017b-694a-4213-a604-81b04b704477",
+      "nom": "Mathématiques",
+      "coefficient": 3,
+      "niveauClasseId": "84e91628-65f9-43fc-a26d-3a0cd9990c6a",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "22c61a15-f115-4884-b818-e98d06305b0c",
+      "nom": "ESVS",
+      "coefficient": 2,
+      "niveauClasseId": "84e91628-65f9-43fc-a26d-3a0cd9990c6a",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "e7db2593-76cb-4f48-9ad1-822669e89974",
+      "nom": "Éducation Artistique",
+      "coefficient": 1,
+      "niveauClasseId": "84e91628-65f9-43fc-a26d-3a0cd9990c6a",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ba87e50b-ed0d-4fbd-b456-a5ef53a4a743",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "84e91628-65f9-43fc-a26d-3a0cd9990c6a",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "fc58dc05-8bfc-4018-89d9-f44884b01f7f",
+      "nom": "Langue et Communication",
+      "coefficient": 3,
+      "niveauClasseId": "457bb266-0a26-43c9-8afc-5f0d3a5deb11",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "5341b7bd-3130-4b59-89c1-fadc5f31c4a0",
+      "nom": "Mathématiques",
+      "coefficient": 3,
+      "niveauClasseId": "457bb266-0a26-43c9-8afc-5f0d3a5deb11",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "3e664888-fc2c-45ac-9a5e-463ccd36e9d4",
+      "nom": "ESVS",
+      "coefficient": 2,
+      "niveauClasseId": "457bb266-0a26-43c9-8afc-5f0d3a5deb11",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "732cd052-d5cf-4df5-a2fc-c35906b1f74d",
+      "nom": "Éducation Artistique",
+      "coefficient": 1,
+      "niveauClasseId": "457bb266-0a26-43c9-8afc-5f0d3a5deb11",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "50c2060c-5c92-4d5f-9186-cf18f2643b2a",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "457bb266-0a26-43c9-8afc-5f0d3a5deb11",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ce780a5d-61df-4112-a915-9c1f8cddd81f",
+      "nom": "Langue et Communication",
+      "coefficient": 3,
+      "niveauClasseId": "4d30c64d-a512-4279-a275-163c7b63f32b",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "a0f13106-f1fa-4c6a-bdac-cdd13a499322",
+      "nom": "Mathématiques",
+      "coefficient": 3,
+      "niveauClasseId": "4d30c64d-a512-4279-a275-163c7b63f32b",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "59e1a663-70ff-4b42-b17c-1c2260a8aeb6",
+      "nom": "ESVS",
+      "coefficient": 2,
+      "niveauClasseId": "4d30c64d-a512-4279-a275-163c7b63f32b",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "e563d722-c50c-4b31-810a-704dff35ef8b",
+      "nom": "Éducation Artistique",
+      "coefficient": 1,
+      "niveauClasseId": "4d30c64d-a512-4279-a275-163c7b63f32b",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "87e6acb1-98a9-4c45-91d8-eb2a4cbb9e02",
+      "nom": "EPS",
+      "coefficient": 1,
+      "niveauClasseId": "4d30c64d-a512-4279-a275-163c7b63f32b",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "318932de-8452-4739-b651-49f770714078",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "6deb9f10-1c33-43d6-a077-53946761321d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "3e4d350d-b8d3-4f6f-b95c-ee5b5b6d13a7",
+      "nom": "Sciences Physiques",
+      "coefficient": 5,
+      "niveauClasseId": "6deb9f10-1c33-43d6-a077-53946761321d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "41839c90-1c26-4a87-8664-1312c7182fe0",
+      "nom": "Construction",
+      "coefficient": 4,
+      "niveauClasseId": "6deb9f10-1c33-43d6-a077-53946761321d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "c305f0d3-efca-42ff-a6a0-f766c33b7cfe",
+      "nom": "Atelier",
+      "coefficient": 4,
+      "niveauClasseId": "6deb9f10-1c33-43d6-a077-53946761321d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "0149fc16-ec3a-4a62-aa65-27ab902a4a52",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "6deb9f10-1c33-43d6-a077-53946761321d",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "9cb35ade-8ce1-45c6-8d33-07ec1a93bbfe",
+      "nom": "Comptabilité",
+      "coefficient": 4,
+      "niveauClasseId": "08db8a82-d052-491f-b330-a4f8ab9243db",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "592b773f-e881-476c-bce4-5542dc0035f4",
+      "nom": "Économie",
+      "coefficient": 3,
+      "niveauClasseId": "08db8a82-d052-491f-b330-a4f8ab9243db",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "e05af0cd-e4b2-4af4-8160-a3210a5f1125",
+      "nom": "Français",
+      "coefficient": 5,
+      "niveauClasseId": "08db8a82-d052-491f-b330-a4f8ab9243db",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "6f064f63-001c-43fd-af1e-c88f018f58e5",
+      "nom": "Mathématiques",
+      "coefficient": 4,
+      "niveauClasseId": "08db8a82-d052-491f-b330-a4f8ab9243db",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "65ebd39e-76db-4dce-b5be-0252a92bfcdf",
+      "nom": "Anglais",
+      "coefficient": 3,
+      "niveauClasseId": "08db8a82-d052-491f-b330-a4f8ab9243db",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "67631c94-79cf-45a0-bb3f-dccecad1ceaf",
+      "nom": "Français",
+      "coefficient": 4,
+      "niveauClasseId": "71e023ce-ddb9-4f5c-afea-71b4163406c0",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "b5bd5b5c-a20a-4056-b0f8-0cf48016cabc",
+      "nom": "Mathématiques",
+      "coefficient": 3,
+      "niveauClasseId": "71e023ce-ddb9-4f5c-afea-71b4163406c0",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "c9ddbbf4-261a-4655-953d-e74c1ab1da8c",
+      "nom": "Anglais",
+      "coefficient": 3,
+      "niveauClasseId": "71e023ce-ddb9-4f5c-afea-71b4163406c0",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "7b0ca095-7b46-483d-bc45-3fb08b442fa1",
+      "nom": "Économie et Gestion Hôtelière",
+      "coefficient": 4,
+      "niveauClasseId": "71e023ce-ddb9-4f5c-afea-71b4163406c0",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "5c312aed-b644-4d4e-8b8c-11e6c5130a18",
+      "nom": "Techniques de Restauration",
+      "coefficient": 4,
+      "niveauClasseId": "71e023ce-ddb9-4f5c-afea-71b4163406c0",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "c5b3df61-c839-4c3b-b6de-425d7ff0c01c",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "71e023ce-ddb9-4f5c-afea-71b4163406c0",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "9c89a4dd-4ee5-4454-995c-4951e95b5ec5",
+      "nom": "Français",
+      "coefficient": 5,
+      "niveauClasseId": "1ddbf0bd-0db2-4e73-820c-0371401d0cfa",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "07b2bb1a-d385-4ceb-b04a-6885ae449c15",
+      "nom": "Mathématiques",
+      "coefficient": 4,
+      "niveauClasseId": "1ddbf0bd-0db2-4e73-820c-0371401d0cfa",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "c58651cd-f0fe-40c0-803a-9582a130be0d",
+      "nom": "Anglais",
+      "coefficient": 3,
+      "niveauClasseId": "1ddbf0bd-0db2-4e73-820c-0371401d0cfa",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "6f61dcd3-9b18-4a2b-a514-95c1135c7e44",
+      "nom": "Droit",
+      "coefficient": 3,
+      "niveauClasseId": "1ddbf0bd-0db2-4e73-820c-0371401d0cfa",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "f9f2f242-878d-4027-be3c-1d4995d9d7ff",
+      "nom": "Comptabilité",
+      "coefficient": 3,
+      "niveauClasseId": "1ddbf0bd-0db2-4e73-820c-0371401d0cfa",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "dd364659-22a5-4e00-8be2-7a7b8ef20300",
+      "nom": "Histoire-Géographie",
+      "coefficient": 2,
+      "niveauClasseId": "1ddbf0bd-0db2-4e73-820c-0371401d0cfa",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "198a5ef8-626d-44e6-adda-8b2677283ddb",
+      "nom": "Étude Construction",
+      "coefficient": 8,
+      "niveauClasseId": "05326332-4ade-4794-989a-a3616ded1d71",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "2f654424-550b-44e9-9f9c-27bb9652d445",
+      "nom": "Atelier",
+      "coefficient": 8,
+      "niveauClasseId": "05326332-4ade-4794-989a-a3616ded1d71",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "3db00ebf-ec4d-41bc-bf07-c876cdd0feb9",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "05326332-4ade-4794-989a-a3616ded1d71",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "efa8b903-168a-4126-8871-cdcca108cdd4",
+      "nom": "Sciences Physiques",
+      "coefficient": 3,
+      "niveauClasseId": "05326332-4ade-4794-989a-a3616ded1d71",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "90406995-af1f-4dbd-810d-521452b31813",
+      "nom": "Français",
+      "coefficient": 2,
+      "niveauClasseId": "05326332-4ade-4794-989a-a3616ded1d71",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "374aae4e-45d8-4a9a-9fc9-6754adf99bf6",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "05326332-4ade-4794-989a-a3616ded1d71",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "1a96fe96-ed41-44b6-91b0-cdbae2df233a",
+      "nom": "Électronique",
+      "coefficient": 8,
+      "niveauClasseId": "5e4d2349-a37e-4bb7-9004-9de76e5d2511",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "b24b6c3a-0d67-4e2a-af32-90bf7570b497",
+      "nom": "Schéma et TP",
+      "coefficient": 6,
+      "niveauClasseId": "5e4d2349-a37e-4bb7-9004-9de76e5d2511",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "eced62a0-765e-40f9-86e5-e63db1707421",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "5e4d2349-a37e-4bb7-9004-9de76e5d2511",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "5dc01b8e-dad3-4719-93e7-deb130184a68",
+      "nom": "Sciences Physiques",
+      "coefficient": 3,
+      "niveauClasseId": "5e4d2349-a37e-4bb7-9004-9de76e5d2511",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ea85dc06-0c20-4684-859c-0a3d0ef82935",
+      "nom": "Français",
+      "coefficient": 2,
+      "niveauClasseId": "5e4d2349-a37e-4bb7-9004-9de76e5d2511",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "f4580987-48d9-49a7-9bc2-0cff247de763",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "5e4d2349-a37e-4bb7-9004-9de76e5d2511",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "64edfaab-9214-499f-ba0a-fdf03a2f20ad",
+      "nom": "Électrotechnique",
+      "coefficient": 8,
+      "niveauClasseId": "24cf3e57-e886-46ce-b2bc-aa139b62ef34",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "4911079f-f374-4c9d-9756-8d0c10a81fee",
+      "nom": "Essais Machines",
+      "coefficient": 6,
+      "niveauClasseId": "24cf3e57-e886-46ce-b2bc-aa139b62ef34",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "0716f127-0cdb-4013-a7df-ab31b2f0f99d",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "24cf3e57-e886-46ce-b2bc-aa139b62ef34",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "6b4cdd82-8ea5-483c-8902-fb7ec116019c",
+      "nom": "Sciences Physiques",
+      "coefficient": 3,
+      "niveauClasseId": "24cf3e57-e886-46ce-b2bc-aa139b62ef34",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "e13851e8-c1b7-4641-b018-e5c4c6c3fadd",
+      "nom": "Français",
+      "coefficient": 2,
+      "niveauClasseId": "24cf3e57-e886-46ce-b2bc-aa139b62ef34",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "ce5edc20-5e74-44bb-be91-8715a1a07198",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "24cf3e57-e886-46ce-b2bc-aa139b62ef34",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "12e54152-e510-41a4-aeda-663c0bc5d68d",
+      "nom": "Étude Construction",
+      "coefficient": 8,
+      "niveauClasseId": "d78a2920-9777-472f-aa97-96d0ec8e7cb4",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "776c1059-376c-4747-9930-a63c622620d4",
+      "nom": "Topographie",
+      "coefficient": 6,
+      "niveauClasseId": "d78a2920-9777-472f-aa97-96d0ec8e7cb4",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "00e53af1-b4ec-4dd0-b5a2-05376afd14be",
+      "nom": "Mathématiques",
+      "coefficient": 5,
+      "niveauClasseId": "d78a2920-9777-472f-aa97-96d0ec8e7cb4",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "69f5e309-0932-4029-be8b-26cfb1e89554",
+      "nom": "Sciences Physiques",
+      "coefficient": 3,
+      "niveauClasseId": "d78a2920-9777-472f-aa97-96d0ec8e7cb4",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "bde9a581-3ab0-4ca3-898c-2a62c8b043d1",
+      "nom": "Français",
+      "coefficient": 2,
+      "niveauClasseId": "d78a2920-9777-472f-aa97-96d0ec8e7cb4",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "fd22d3e0-c1ad-4cdb-8eeb-fdc856f535d9",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "d78a2920-9777-472f-aa97-96d0ec8e7cb4",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "78b7689a-c780-4bc6-a239-afebad43e41a",
+      "nom": "Chimie Organique et Minérale",
+      "coefficient": 8,
+      "niveauClasseId": "ae6035ae-8c93-41ca-bf0e-c11c5f49fec6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "16223042-7607-47e2-81e5-12c4b0501dec",
+      "nom": "Analyses Chimiques",
+      "coefficient": 8,
+      "niveauClasseId": "ae6035ae-8c93-41ca-bf0e-c11c5f49fec6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "5d580fc8-f2eb-4f10-80f4-c40321f4553c",
+      "nom": "Mathématiques",
+      "coefficient": 4,
+      "niveauClasseId": "ae6035ae-8c93-41ca-bf0e-c11c5f49fec6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "716babbb-6cc4-4a0d-83b7-12d04f87236a",
+      "nom": "Français",
+      "coefficient": 2,
+      "niveauClasseId": "ae6035ae-8c93-41ca-bf0e-c11c5f49fec6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "04daa69c-778e-444b-bbfc-4aa1ac5be908",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "ae6035ae-8c93-41ca-bf0e-c11c5f49fec6",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "76f8e8cb-6141-4715-803a-c4b40235d9e9",
+      "nom": "Comptabilité et Finance",
+      "coefficient": 6,
+      "niveauClasseId": "2ff45fe7-8d6c-4671-bdc2-eee8ed732602",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "18fd3e6e-0bb2-4b7a-9062-128bdef0d4f5",
+      "nom": "Économie Générale",
+      "coefficient": 4,
+      "niveauClasseId": "2ff45fe7-8d6c-4671-bdc2-eee8ed732602",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "7bb35940-6ec5-44cf-ae39-d040baff3d05",
+      "nom": "Droit",
+      "coefficient": 3,
+      "niveauClasseId": "2ff45fe7-8d6c-4671-bdc2-eee8ed732602",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "9daf9f44-0473-42d4-b393-2ec02f5c598f",
+      "nom": "Mathématiques Appliquées",
+      "coefficient": 4,
+      "niveauClasseId": "2ff45fe7-8d6c-4671-bdc2-eee8ed732602",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "7347a079-8b9e-417f-87b1-80386e47a73d",
+      "nom": "Français",
+      "coefficient": 2,
+      "niveauClasseId": "2ff45fe7-8d6c-4671-bdc2-eee8ed732602",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "64d80b26-90ac-417f-b761-002c3d5bb018",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "2ff45fe7-8d6c-4671-bdc2-eee8ed732602",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "44ad5b42-d482-4259-af60-4438fd5edb85",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "2ff45fe7-8d6c-4671-bdc2-eee8ed732602",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "01d3a9a6-663e-4ed6-837e-4c0e482d291a",
+      "nom": "Gestion Hôtelière",
+      "coefficient": 6,
+      "niveauClasseId": "2bd8681c-07e6-4405-9c5a-6bdd92d81bec",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "59d4d3fe-d183-43f2-b84a-c8edb321bb63",
+      "nom": "Techniques de Restauration",
+      "coefficient": 5,
+      "niveauClasseId": "2bd8681c-07e6-4405-9c5a-6bdd92d81bec",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "cbb7f834-5b4b-46e6-9926-9b97d1fdbcf2",
+      "nom": "Accueil et Tourisme",
+      "coefficient": 4,
+      "niveauClasseId": "2bd8681c-07e6-4405-9c5a-6bdd92d81bec",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "9941a838-66e5-4d64-9654-249933788d0a",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "2bd8681c-07e6-4405-9c5a-6bdd92d81bec",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "0b2e9efb-3a34-4e22-8a35-427200e94c4c",
+      "nom": "Anglais",
+      "coefficient": 3,
+      "niveauClasseId": "2bd8681c-07e6-4405-9c5a-6bdd92d81bec",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "0961080c-245f-4a6e-be99-4cec7452820d",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "2bd8681c-07e6-4405-9c5a-6bdd92d81bec",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "3a55f21c-bfea-429f-aa56-5edc2bb9fb64",
+      "nom": "Droit Administratif",
+      "coefficient": 5,
+      "niveauClasseId": "9d9be28c-f947-45d9-86b8-d022c55aff72",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "1680b0bd-ded7-47ee-aba9-e8430c7013f0",
+      "nom": "Comptabilité Publique",
+      "coefficient": 5,
+      "niveauClasseId": "9d9be28c-f947-45d9-86b8-d022c55aff72",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "8b305553-461a-43be-b5ce-f1559dae1d77",
+      "nom": "Gestion",
+      "coefficient": 4,
+      "niveauClasseId": "9d9be28c-f947-45d9-86b8-d022c55aff72",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "8cee46f1-5c5c-4ea6-bd7c-86daf0f82454",
+      "nom": "Français",
+      "coefficient": 3,
+      "niveauClasseId": "9d9be28c-f947-45d9-86b8-d022c55aff72",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "646a01f7-1ea0-44b5-8065-8daa8c3eb063",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "9d9be28c-f947-45d9-86b8-d022c55aff72",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "6d0d7619-0ee7-44fc-9f62-0f8a55727132",
+      "nom": "Anglais",
+      "coefficient": 2,
+      "niveauClasseId": "9d9be28c-f947-45d9-86b8-d022c55aff72",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "6cc00a4c-ceec-4387-9d5c-2d120b6a5950",
+      "nom": "Mathématiques",
+      "coefficient": 6,
+      "niveauClasseId": "1da9206e-fc77-4b6a-ae92-59a1007f6078",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "865f7d71-da7e-4ea9-812d-c8f53f25eb17",
+      "nom": "Sciences Physiques",
+      "coefficient": 5,
+      "niveauClasseId": "1da9206e-fc77-4b6a-ae92-59a1007f6078",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "7233f00a-3e1c-4853-bb4a-107703da953f",
+      "nom": "Techniques Industrielles",
+      "coefficient": 5,
+      "niveauClasseId": "1da9206e-fc77-4b6a-ae92-59a1007f6078",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "0aa6a68b-a7c8-451b-abcb-8c8df290d81b",
+      "nom": "Français",
+      "coefficient": 2,
+      "niveauClasseId": "1da9206e-fc77-4b6a-ae92-59a1007f6078",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    },
+    {
+      "id": "13f77414-3424-466c-9d6c-befbaf58b5f2",
+      "nom": "Philosophie",
+      "coefficient": 2,
+      "niveauClasseId": "1da9206e-fc77-4b6a-ae92-59a1007f6078",
+      "createdAt": "2026-04-08T20:29:21.849Z",
+      "updatedAt": "2026-04-08T20:29:21.849Z"
+    }
+  ],
+  "classes": [
+    {
+      "id": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "nom": "6e A",
+      "niveauClasseId": "21e08b45-c977-4ffb-a574-97d1e21189e1",
+      "effectifF": 0,
+      "effectifM": 0,
+      "createdAt": "2026-04-03T20:08:26.188Z",
+      "updatedAt": "2026-04-03T20:08:26.188Z"
+    },
+    {
+      "id": "ff79fb65-075d-4bdf-bd9b-eb8ccbe388ba",
+      "nom": "6e B",
+      "niveauClasseId": "21e08b45-c977-4ffb-a574-97d1e21189e1",
+      "effectifF": 0,
+      "effectifM": 0,
+      "createdAt": "2026-04-03T20:08:26.188Z",
+      "updatedAt": "2026-04-03T20:08:26.188Z"
+    },
+    {
+      "id": "e2fffe6b-fb15-4588-82e1-0742b8b30f5b",
+      "nom": "5e A",
+      "niveauClasseId": "28210e05-0387-4ae2-a2b6-9087ee97a82a",
+      "effectifF": 0,
+      "effectifM": 0,
+      "createdAt": "2026-04-06T18:07:13.372Z",
+      "updatedAt": "2026-04-06T18:07:13.372Z"
+    },
+    {
+      "id": "92f56a62-cad7-4a18-b78d-f37d2f2d9b6a",
+      "nom": "5e B",
+      "niveauClasseId": "28210e05-0387-4ae2-a2b6-9087ee97a82a",
+      "effectifF": 0,
+      "effectifM": 0,
+      "createdAt": "2026-04-06T18:07:13.372Z",
+      "updatedAt": "2026-04-06T18:07:13.372Z"
+    }
+  ],
+  "elevesData": [
+    {
+      "id": "865ba8cb-76ab-4161-a6db-7882f0f38080",
+      "nom": "Leroy",
+      "prenom": "Anaïs",
+      "dateNaissance": "2013-08-01",
+      "sexe": "M",
+      "lieuDeNaissance": "Bazin",
+      "contact": "+221 5721060405",
+      "photo": "photo1.jpg",
+      "matricule": "MAT001",
+      "statut": "actif",
+      "createdAt": "2026-04-03T20:09:36.950Z",
+      "updatedAt": "2026-04-03T20:09:36.950Z"
+    },
+    {
+      "id": "85d0dd1a-e575-497b-9a68-586f76fba194",
+      "nom": "Richard",
+      "prenom": "Sébastien",
+      "dateNaissance": "2019-11-28",
+      "sexe": "M",
+      "lieuDeNaissance": "Duval",
+      "contact": "+221 9085975653",
+      "photo": "photo2.jpg",
+      "matricule": "MAT002",
+      "statut": "actif",
+      "createdAt": "2026-04-03T20:09:37.023Z",
+      "updatedAt": "2026-04-03T20:09:37.023Z"
+    },
+    {
+      "id": "d9fa1bf3-cc5b-4fb2-86d3-b534544a2744",
+      "nom": "Leduc",
+      "prenom": "Gilbert",
+      "dateNaissance": "2007-12-13",
+      "sexe": "F",
+      "lieuDeNaissance": "Regnier",
+      "contact": "+221 0136675228",
+      "photo": "photo3.jpg",
+      "matricule": "MAT003",
+      "statut": "actif",
+      "createdAt": "2026-04-03T20:09:37.036Z",
+      "updatedAt": "2026-04-03T20:09:37.036Z"
+    },
+    {
+      "id": "39001022-da55-49a0-a821-015382f95ee3",
+      "nom": "Carlier",
+      "prenom": "Adélaïde",
+      "dateNaissance": "2012-04-22",
+      "sexe": "F",
+      "lieuDeNaissance": "Marty",
+      "contact": "+221 0055011882",
+      "photo": "photo4.jpg",
+      "matricule": "MAT004",
+      "statut": "actif",
+      "createdAt": "2026-04-03T20:09:37.158Z",
+      "updatedAt": "2026-04-03T20:09:37.158Z"
+    },
+    {
+      "id": "be818248-fb61-4448-a160-01bc8a9f6e7f",
+      "nom": "Lemaire",
+      "prenom": "Julie",
+      "dateNaissance": "2013-06-15",
+      "sexe": "F",
+      "lieuDeNaissance": "VidalBourg",
+      "contact": "+221 4074544735",
+      "photo": "photo5.jpg",
+      "matricule": "MAT005",
+      "statut": "actif",
+      "createdAt": "2026-04-03T20:09:37.175Z",
+      "updatedAt": "2026-04-03T20:09:37.175Z"
+    },
+    {
+      "id": "cff64b3d-19ef-47cc-bf6f-6be9b0257c9c",
+      "nom": "Pelletier",
+      "prenom": "Georges",
+      "dateNaissance": "2012-03-06",
+      "sexe": "F",
+      "lieuDeNaissance": "Saint Anastasie-la-Forêt",
+      "contact": "+221 5632555576",
+      "photo": "photo6.jpg",
+      "matricule": "MAT006",
+      "statut": "actif",
+      "createdAt": "2026-04-03T20:09:37.191Z",
+      "updatedAt": "2026-04-03T20:09:37.191Z"
+    },
+    {
+      "id": "eb8b2157-8886-4b93-a673-9f8f220dfbf1",
+      "nom": "Carpentier",
+      "prenom": "Caroline",
+      "dateNaissance": "2012-03-17",
+      "sexe": "M",
+      "lieuDeNaissance": "Hernandez",
+      "contact": "+221 7977690073",
+      "photo": "photo7.jpg",
+      "matricule": "MAT007",
+      "statut": "actif",
+      "createdAt": "2026-04-06T18:08:23.821Z",
+      "updatedAt": "2026-04-06T18:08:23.821Z"
+    },
+    {
+      "id": "3cad6d94-8f62-492b-8c73-f889c08c30aa",
+      "nom": "Allain",
+      "prenom": "Éric",
+      "dateNaissance": "2014-11-05",
+      "sexe": "M",
+      "lieuDeNaissance": "Saint Henriettenec",
+      "contact": "+221 7372565566",
+      "photo": "photo8.jpg",
+      "matricule": "MAT008",
+      "statut": "actif",
+      "createdAt": "2026-04-06T18:08:23.887Z",
+      "updatedAt": "2026-04-06T18:08:23.887Z"
+    },
+    {
+      "id": "ac51edbf-703b-46b3-80c6-d4fe0346b101",
+      "nom": "Valentin",
+      "prenom": "Caroline",
+      "dateNaissance": "2008-08-24",
+      "sexe": "M",
+      "lieuDeNaissance": "Saint Simone",
+      "contact": "+221 7784338518",
+      "photo": "photo9.jpg",
+      "matricule": "MAT009",
+      "statut": "actif",
+      "createdAt": "2026-04-06T18:08:24.010Z",
+      "updatedAt": "2026-04-06T18:08:24.010Z"
+    }
+  ],
+  "inscriptions": [
+    {
+      "id": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "eleveDataId": "865ba8cb-76ab-4161-a6db-7882f0f38080",
+      "anneeScolaire": "2026-2027",
+      "dateInscription": "2026-04-03",
+      "statutScolaire": "nouveau",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "isActive": true,
+      "createdAt": "2026-04-03T20:09:36.950Z",
+      "updatedAt": "2026-04-08T10:32:02.949Z",
+      "vieScolaire": [
+        {
+          "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+          "score": {
+            "absences": 0,
+            "retards": 0,
+            "conduite": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "eleveDataId": "85d0dd1a-e575-497b-9a68-586f76fba194",
+      "anneeScolaire": "2026-2027",
+      "dateInscription": "2026-04-03",
+      "statutScolaire": "nouveau",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "isActive": true,
+      "createdAt": "2026-04-03T20:09:37.023Z",
+      "updatedAt": "2026-04-08T09:53:11.978Z",
+      "vieScolaire": [
+        {
+          "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+          "score": {
+            "absences": 0,
+            "retards": 0,
+            "conduite": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "eleveDataId": "d9fa1bf3-cc5b-4fb2-86d3-b534544a2744",
+      "anneeScolaire": "2026-2027",
+      "dateInscription": "2026-04-03",
+      "statutScolaire": "nouveau",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "isActive": true,
+      "createdAt": "2026-04-03T20:09:37.036Z",
+      "updatedAt": "2026-04-08T09:53:11.991Z",
+      "vieScolaire": [
+        {
+          "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+          "score": {
+            "absences": 0,
+            "retards": 0,
+            "conduite": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "eleveDataId": "39001022-da55-49a0-a821-015382f95ee3",
+      "anneeScolaire": "2026-2027",
+      "dateInscription": "2026-04-03",
+      "statutScolaire": "nouveau",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "isActive": true,
+      "createdAt": "2026-04-03T20:09:37.158Z",
+      "updatedAt": "2026-04-09T10:10:53.659Z",
+      "vieScolaire": [
+        {
+          "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+          "score": {
+            "absences": 0,
+            "retards": 0,
+            "conduite": 18
+          }
+        }
+      ]
+    },
+    {
+      "id": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "eleveDataId": "be818248-fb61-4448-a160-01bc8a9f6e7f",
+      "anneeScolaire": "2026-2027",
+      "dateInscription": "2026-04-03",
+      "statutScolaire": "nouveau",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "isActive": true,
+      "createdAt": "2026-04-03T20:09:37.175Z",
+      "updatedAt": "2026-04-08T09:53:12.145Z",
+      "vieScolaire": [
+        {
+          "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+          "score": {
+            "absences": 0,
+            "retards": 0,
+            "conduite": 16.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "eleveDataId": "cff64b3d-19ef-47cc-bf6f-6be9b0257c9c",
+      "anneeScolaire": "2026-2027",
+      "dateInscription": "2026-04-03",
+      "statutScolaire": "nouveau",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "isActive": true,
+      "createdAt": "2026-04-03T20:09:37.191Z",
+      "updatedAt": "2026-04-08T09:53:12.163Z",
+      "vieScolaire": [
+        {
+          "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+          "score": {
+            "absences": 0,
+            "retards": 0,
+            "conduite": 9
+          }
+        }
+      ]
+    },
+    {
+      "id": "7086bb00-663a-41cf-a118-690df0631c6a",
+      "eleveDataId": "eb8b2157-8886-4b93-a673-9f8f220dfbf1",
+      "anneeScolaire": "2026-2027",
+      "dateInscription": "2026-04-06",
+      "statutScolaire": "nouveau",
+      "classeId": "e2fffe6b-fb15-4588-82e1-0742b8b30f5b",
+      "isActive": true,
+      "createdAt": "2026-04-06T18:08:23.821Z",
+      "updatedAt": "2026-04-08T09:53:12.284Z",
+      "vieScolaire": [
+        {
+          "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+          "score": {
+            "absences": 0,
+            "retards": 0,
+            "conduite": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "d4ca2ada-486b-47c9-8245-cc960a3b747b",
+      "eleveDataId": "3cad6d94-8f62-492b-8c73-f889c08c30aa",
+      "anneeScolaire": "2026-2027",
+      "dateInscription": "2026-04-06",
+      "statutScolaire": "nouveau",
+      "classeId": "e2fffe6b-fb15-4588-82e1-0742b8b30f5b",
+      "isActive": true,
+      "createdAt": "2026-04-06T18:08:23.887Z",
+      "updatedAt": "2026-04-08T10:30:59.708Z",
+      "vieScolaire": [
+        {
+          "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+          "score": {
+            "absences": 0,
+            "retards": 0,
+            "conduite": 18
+          }
+        }
+      ]
+    },
+    {
+      "id": "974659f1-77f9-4450-bbb3-be08257ba5c8",
+      "eleveDataId": "ac51edbf-703b-46b3-80c6-d4fe0346b101",
+      "anneeScolaire": "2026-2027",
+      "dateInscription": "2026-04-06",
+      "statutScolaire": "nouveau",
+      "classeId": "e2fffe6b-fb15-4588-82e1-0742b8b30f5b",
+      "isActive": true,
+      "createdAt": "2026-04-06T18:08:24.010Z",
+      "updatedAt": "2026-04-08T10:35:48.010Z",
+      "vieScolaire": [
+        {
+          "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+          "score": {
+            "absences": 0,
+            "retards": 0,
+            "conduite": 19
+          }
+        }
+      ]
+    }
+  ],
+  "configBulletin": {
+    "id": "dd45b67e-1584-446b-b551-07cd156455e7",
+    "interrogation": {
+      "actif": false,
+      "mode": "moyenne"
+    },
+    "devoir": {
+      "actif": true,
+      "mode": "conserver"
+    },
+    "composition": {
+      "actif": true,
+      "mode": "conserver"
+    },
+    "createdAt": "2026-04-05T12:15:17.040Z",
+    "updatedAt": "2026-04-05T12:15:17.040Z"
+  },
+  "notes": [
+    {
+      "id": "69c53cea-2d6b-413f-b800-eecb8815eb19",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:44:22.898Z",
+      "updatedAt": "2026-04-05T15:44:22.898Z"
+    },
+    {
+      "id": "4da964c8-01e0-4a64-ab81-4d2646a2de7b",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 14,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:44:22.898Z",
+      "updatedAt": "2026-04-05T15:44:22.898Z"
+    },
+    {
+      "id": "809ef789-eb55-44b9-91b1-0379ee4f82ec",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 15,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:44:22.898Z",
+      "updatedAt": "2026-04-05T15:44:22.898Z"
+    },
+    {
+      "id": "218839fc-d85a-4c51-8247-c6f7b4572275",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 10,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:44:22.898Z",
+      "updatedAt": "2026-04-05T15:44:22.898Z"
+    },
+    {
+      "id": "c08b6726-34f9-4da4-a4e1-9dd297fe1bfe",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16.5,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:44:22.898Z",
+      "updatedAt": "2026-04-05T15:44:22.898Z"
+    },
+    {
+      "id": "84d6b24d-f6f6-489b-9917-85052d79ffe0",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 9,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:44:22.898Z",
+      "updatedAt": "2026-04-05T15:44:22.898Z"
+    },
+    {
+      "id": "bdc662f8-900d-4763-b27d-76ad801be4e3",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:13.414Z",
+      "updatedAt": "2026-04-05T15:45:13.414Z"
+    },
+    {
+      "id": "6e9362df-b738-4ca0-8e0e-cf34daf37e59",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 14,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:13.414Z",
+      "updatedAt": "2026-04-05T15:45:13.414Z"
+    },
+    {
+      "id": "ebf59a37-c734-4ecb-ba53-9512777d60f7",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 15,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:13.414Z",
+      "updatedAt": "2026-04-05T15:45:13.414Z"
+    },
+    {
+      "id": "bb822630-2b96-4285-a6e0-cf381275caba",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 10,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:13.414Z",
+      "updatedAt": "2026-04-05T15:45:13.414Z"
+    },
+    {
+      "id": "78dbd1ff-a1fc-4218-b314-eeffc07d79b1",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16.5,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:13.414Z",
+      "updatedAt": "2026-04-05T15:45:13.414Z"
+    },
+    {
+      "id": "427be968-1c3c-4d6f-aa8b-48fb7be928a2",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 9,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:13.414Z",
+      "updatedAt": "2026-04-05T15:45:13.414Z"
+    },
+    {
+      "id": "3f631c8c-997c-426a-baff-6ea6e31b444e",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:26.174Z",
+      "updatedAt": "2026-04-05T15:45:26.174Z"
+    },
+    {
+      "id": "7f5e3c37-e513-4058-8aff-781428619f03",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 14,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:26.174Z",
+      "updatedAt": "2026-04-05T15:45:26.174Z"
+    },
+    {
+      "id": "bdb18e7b-1d4a-47cd-b826-a45fceb3106a",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 15,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:26.174Z",
+      "updatedAt": "2026-04-05T15:45:26.174Z"
+    },
+    {
+      "id": "0b809769-fbe6-495a-800a-1d1aa62b9be0",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 10,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:26.174Z",
+      "updatedAt": "2026-04-05T15:45:26.174Z"
+    },
+    {
+      "id": "e31b8a94-1b6a-4d5d-ae0a-901b952602b5",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16.5,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:26.174Z",
+      "updatedAt": "2026-04-05T15:45:26.174Z"
+    },
+    {
+      "id": "bac045e3-450c-401b-9ed0-97ef26060b53",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 9,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:26.174Z",
+      "updatedAt": "2026-04-05T15:45:26.174Z"
+    },
+    {
+      "id": "f4b64685-ac1b-4ac5-adfc-96eec1a74d36",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:36.018Z",
+      "updatedAt": "2026-04-05T15:45:36.018Z"
+    },
+    {
+      "id": "dd0f8b22-3c9e-4245-852b-6d0b553f2f17",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 14,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:36.018Z",
+      "updatedAt": "2026-04-05T15:45:36.018Z"
+    },
+    {
+      "id": "6925a36b-92a2-4918-ae23-f8fcf41f0469",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 15,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:36.018Z",
+      "updatedAt": "2026-04-05T15:45:36.018Z"
+    },
+    {
+      "id": "d4facf55-1e55-4210-bbb5-849e767bc9a9",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 10,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:36.018Z",
+      "updatedAt": "2026-04-05T15:45:36.018Z"
+    },
+    {
+      "id": "dc2e8a39-59a1-42c0-afec-0f20a260aaa4",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16.5,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:36.018Z",
+      "updatedAt": "2026-04-05T15:45:36.018Z"
+    },
+    {
+      "id": "2e00b911-8c92-41a4-821b-8e6eb1b701ef",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 9,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:36.018Z",
+      "updatedAt": "2026-04-05T15:45:36.018Z"
+    },
+    {
+      "id": "69e6819c-4740-4ad1-9084-d4ed62f69ae7",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:46.351Z",
+      "updatedAt": "2026-04-05T15:45:46.351Z"
+    },
+    {
+      "id": "8b36a5d9-644e-4890-b05e-09e96e700aae",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 14,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:46.351Z",
+      "updatedAt": "2026-04-05T15:45:46.351Z"
+    },
+    {
+      "id": "d17a3697-b285-4a44-ada9-1bca8a987f7b",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 15,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:46.351Z",
+      "updatedAt": "2026-04-05T15:45:46.351Z"
+    },
+    {
+      "id": "2f691292-abef-4212-8a48-0af5e48163ec",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 10,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:46.351Z",
+      "updatedAt": "2026-04-05T15:45:46.351Z"
+    },
+    {
+      "id": "7ffcb96d-8c75-465b-b128-a8e84b7891ad",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16.5,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:46.351Z",
+      "updatedAt": "2026-04-05T15:45:46.351Z"
+    },
+    {
+      "id": "110b0e4d-4a6a-40bc-992f-501840f20d80",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 9,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:46.351Z",
+      "updatedAt": "2026-04-05T15:45:46.351Z"
+    },
+    {
+      "id": "468fa320-3c29-4a87-b611-bf99ba15e895",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:56.567Z",
+      "updatedAt": "2026-04-05T15:45:56.567Z"
+    },
+    {
+      "id": "a6ebdabf-e7c0-44d9-844b-b58fc32e8e2f",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 14,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:56.567Z",
+      "updatedAt": "2026-04-05T15:45:56.567Z"
+    },
+    {
+      "id": "4cf7d3e6-f495-4f2d-a71e-fa4dd3c20b81",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 15,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:56.567Z",
+      "updatedAt": "2026-04-05T15:45:56.567Z"
+    },
+    {
+      "id": "dc462833-c826-4656-b487-daedc18b0d83",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 10,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:56.567Z",
+      "updatedAt": "2026-04-05T15:45:56.567Z"
+    },
+    {
+      "id": "e83a3ac8-74cf-41db-8da0-34bbc1f8d0ff",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16.5,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:56.567Z",
+      "updatedAt": "2026-04-05T15:45:56.567Z"
+    },
+    {
+      "id": "cf18e623-c4f0-4038-bc69-839e9fd9e9a2",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 9,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:45:56.567Z",
+      "updatedAt": "2026-04-05T15:45:56.567Z"
+    },
+    {
+      "id": "e32c3a62-5c34-48fe-a343-76faeaf49d31",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:02.500Z",
+      "updatedAt": "2026-04-05T15:47:02.500Z"
+    },
+    {
+      "id": "19396b7e-c892-463c-ad8c-470dd57cdcd1",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 14,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:02.500Z",
+      "updatedAt": "2026-04-05T15:47:02.500Z"
+    },
+    {
+      "id": "97872192-8918-4709-981b-0e57e237c6b5",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 15,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:02.500Z",
+      "updatedAt": "2026-04-05T15:47:02.500Z"
+    },
+    {
+      "id": "c5fdaf32-afeb-46bf-84e5-a821eccf2226",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 10,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:02.500Z",
+      "updatedAt": "2026-04-05T15:47:02.500Z"
+    },
+    {
+      "id": "9ef4148d-82cb-4295-8f27-23b8844cd283",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16.5,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:02.500Z",
+      "updatedAt": "2026-04-05T15:47:02.500Z"
+    },
+    {
+      "id": "3a23b5d6-db12-40f5-a15c-be384d1962dc",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "f92dfe88-2271-4d2f-9e6c-fc17495f0883",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 9,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:02.500Z",
+      "updatedAt": "2026-04-05T15:47:02.500Z"
+    },
+    {
+      "id": "2223eb09-2671-4fe3-920f-874b2e02ecc7",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:16.479Z",
+      "updatedAt": "2026-04-05T15:47:16.479Z"
+    },
+    {
+      "id": "4571e7b1-14cf-4a25-8534-c19506476ada",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 14,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:16.479Z",
+      "updatedAt": "2026-04-05T15:47:16.479Z"
+    },
+    {
+      "id": "561e53e6-93ad-4ef8-8f55-33aa5d2bea87",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 15,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:16.479Z",
+      "updatedAt": "2026-04-05T15:47:16.479Z"
+    },
+    {
+      "id": "5940eb55-d84d-42de-b92d-667e14a051b6",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 10,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:16.479Z",
+      "updatedAt": "2026-04-05T15:47:16.479Z"
+    },
+    {
+      "id": "8f488f82-1285-4eb9-b770-7bf695ad15de",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16.5,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:16.479Z",
+      "updatedAt": "2026-04-05T15:47:16.479Z"
+    },
+    {
+      "id": "975a6f09-6fe6-40d3-addc-dee828179362",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "b12dcec8-ed3f-4143-9bc0-058dcbc3ec49",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 9,
+      "coefficient": 4,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:16.479Z",
+      "updatedAt": "2026-04-05T15:47:16.479Z"
+    },
+    {
+      "id": "2a3143ac-8b0f-4c42-b403-49b4762bc486",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:25.114Z",
+      "updatedAt": "2026-04-05T15:47:25.114Z"
+    },
+    {
+      "id": "9745e098-971f-4326-8a24-8de837514b3e",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 14,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:25.114Z",
+      "updatedAt": "2026-04-05T15:47:25.114Z"
+    },
+    {
+      "id": "3b6d5577-c4d6-427b-9954-c41a28ee1d31",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 15,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:25.114Z",
+      "updatedAt": "2026-04-05T15:47:25.114Z"
+    },
+    {
+      "id": "b14cb70c-6581-4e19-a7fd-8e394a800002",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 10,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:25.114Z",
+      "updatedAt": "2026-04-05T15:47:25.114Z"
+    },
+    {
+      "id": "aa7af248-00f8-430c-a49f-a3da4db7f5f1",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16.5,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:25.114Z",
+      "updatedAt": "2026-04-05T15:47:25.114Z"
+    },
+    {
+      "id": "fd1cae34-e4b1-4715-ba10-6c5a057223a2",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "923807b6-47c5-4da4-85b7-75d3ba49e5a4",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 9,
+      "coefficient": 3,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:25.114Z",
+      "updatedAt": "2026-04-05T15:47:25.114Z"
+    },
+    {
+      "id": "fa84d760-e030-4785-9142-746491a60453",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:34.295Z",
+      "updatedAt": "2026-04-05T15:47:34.295Z"
+    },
+    {
+      "id": "53518b3c-bcff-475b-ba91-d8cadd042772",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 14,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:34.295Z",
+      "updatedAt": "2026-04-05T15:47:34.295Z"
+    },
+    {
+      "id": "13964be5-3b70-44d1-9dae-79a4e75c43b3",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 15,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:34.295Z",
+      "updatedAt": "2026-04-05T15:47:34.295Z"
+    },
+    {
+      "id": "dbd41eac-c1e6-47d2-9c51-922fd720c97b",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 10,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:34.295Z",
+      "updatedAt": "2026-04-05T15:47:34.295Z"
+    },
+    {
+      "id": "c59619fe-96e2-493a-b33b-1b255b787058",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16.5,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:34.295Z",
+      "updatedAt": "2026-04-05T15:47:34.295Z"
+    },
+    {
+      "id": "3ed63c63-f3ff-4b71-aea0-e95deaf972a2",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "8e648d80-be15-4f13-a3eb-667888c9888f",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 9,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:34.295Z",
+      "updatedAt": "2026-04-05T15:47:34.295Z"
+    },
+    {
+      "id": "25b72923-0031-4413-9597-3686cc89fca8",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:43.903Z",
+      "updatedAt": "2026-04-05T15:47:43.903Z"
+    },
+    {
+      "id": "3443bf38-0497-4914-bc4c-a0e8aa56379b",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 14,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:43.903Z",
+      "updatedAt": "2026-04-05T15:47:43.903Z"
+    },
+    {
+      "id": "e9627906-f5f1-4741-8d03-993f64802ebd",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 15,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:43.903Z",
+      "updatedAt": "2026-04-05T15:47:43.903Z"
+    },
+    {
+      "id": "1f649b4c-bdb1-44ce-a4b1-4d4272a9351f",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 10,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:43.903Z",
+      "updatedAt": "2026-04-05T15:47:43.903Z"
+    },
+    {
+      "id": "fa92fd42-92c2-4ce0-a69e-d1637aaff83c",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16.5,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:43.903Z",
+      "updatedAt": "2026-04-05T15:47:43.903Z"
+    },
+    {
+      "id": "038c6065-16eb-456a-9aed-c11d3905cea4",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "d500dcf1-9c61-4f61-88e0-1f4e8899881e",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 9,
+      "coefficient": 2,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:43.903Z",
+      "updatedAt": "2026-04-05T15:47:43.903Z"
+    },
+    {
+      "id": "42629b09-29cd-4a68-bfcb-5a58b3e73802",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:53.948Z",
+      "updatedAt": "2026-04-05T15:47:53.948Z"
+    },
+    {
+      "id": "806ecb7a-2007-4ba2-83d9-a6537301774a",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 14,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:53.948Z",
+      "updatedAt": "2026-04-05T15:47:53.948Z"
+    },
+    {
+      "id": "3c70557c-23d8-4ad8-8d57-d0faf7c90362",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 15,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:53.948Z",
+      "updatedAt": "2026-04-05T15:47:53.948Z"
+    },
+    {
+      "id": "f74b74db-e3c4-4a06-9359-4c43dd20c8e5",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 10,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:53.948Z",
+      "updatedAt": "2026-04-05T15:47:53.948Z"
+    },
+    {
+      "id": "b774d194-9416-48b2-9bd9-0bdeb660be8d",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 16.5,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:53.948Z",
+      "updatedAt": "2026-04-05T15:47:53.948Z"
+    },
+    {
+      "id": "96c65ae7-9c40-4619-8820-e6a245add0f0",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "00f25dbf-1335-48be-8c63-a41a48db2e0a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "be63d9a6-3823-4111-9255-96a999d53790",
+      "note": 9,
+      "coefficient": 1,
+      "enseignantId": "",
+      "createdAt": "2026-04-05T15:47:53.948Z",
+      "updatedAt": "2026-04-05T15:47:53.948Z"
+    },
+    {
+      "id": "1a454fab-7722-45d7-a9c9-eb7cb498f443",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "matiereId": "9591334f-3b2f-4d23-b887-298194cd3c3b",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-06T18:09:09.096Z",
+      "updatedAt": "2026-04-06T18:09:09.096Z"
+    },
+    {
+      "id": "8e7662d2-bd4b-4e24-be1f-5f70a7c44d64",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "matiereId": "9591334f-3b2f-4d23-b887-298194cd3c3b",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 14,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-06T18:09:09.096Z",
+      "updatedAt": "2026-04-06T18:09:09.096Z"
+    },
+    {
+      "id": "a55a7eae-125d-406d-8f5f-14ac52154994",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "matiereId": "9591334f-3b2f-4d23-b887-298194cd3c3b",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 15,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-06T18:09:09.096Z",
+      "updatedAt": "2026-04-06T18:09:09.096Z"
+    },
+    {
+      "id": "e98dd8d0-5f33-454e-8577-ed438e93b2b9",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "matiereId": "9591334f-3b2f-4d23-b887-298194cd3c3b",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 10,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-06T18:09:09.096Z",
+      "updatedAt": "2026-04-06T18:09:09.096Z"
+    },
+    {
+      "id": "20eacfe7-f002-4853-9923-35b2302acda8",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "matiereId": "9591334f-3b2f-4d23-b887-298194cd3c3b",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 16.5,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-06T18:09:09.096Z",
+      "updatedAt": "2026-04-06T18:09:09.096Z"
+    },
+    {
+      "id": "d12d8314-7ff7-4629-83e1-9c9ce97037b0",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "matiereId": "9591334f-3b2f-4d23-b887-298194cd3c3b",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 9,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-06T18:09:09.096Z",
+      "updatedAt": "2026-04-06T18:09:09.096Z"
+    },
+    {
+      "id": "cc82cc6b-a6be-4b1c-b4f5-2865f98e9bca",
+      "inscriptionId": "7086bb00-663a-41cf-a118-690df0631c6a",
+      "matiereId": "9591334f-3b2f-4d23-b887-298194cd3c3b",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "note": 8,
+      "coefficient": 5,
+      "enseignantId": "",
+      "createdAt": "2026-04-06T18:09:09.096Z",
+      "updatedAt": "2026-04-06T18:09:09.096Z"
+    },
+    {
+      "id": "fa31d747-9962-4f70-91a7-4aaf44b5e670",
+      "inscriptionId": "d4ca2ada-486b-47c9-8245-cc960a3b747b",
+      "matiereId": "9591334f-3b2f-4d23-b887-298194cd3c3b",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "note": 16,
+      "coefficient": 1,
+      "enseignantId": "",
+      "evaluationId": "b48b66d8-c322-4c99-bd13-d139e644ca22",
+      "createdAt": "2026-04-06T20:15:16.094Z",
+      "updatedAt": "2026-04-06T20:15:16.094Z"
+    }
+  ],
+  "bulletins": [
+    {
+      "id": "73c96d91-0b0d-4637-9668-70d1794c35ce",
+      "inscriptionId": "d4ca2ada-486b-47c9-8245-cc960a3b747b",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "classeId": "e2fffe6b-fb15-4588-82e1-0742b8b30f5b",
+      "classe": "5e A",
+      "status": "brouillon",
+      "moyennesParMatiere": [],
+      "resultatFinal": null,
+      "infosDeClasse": {
+        "effectif": 0
+      },
+      "vieScolaire": {
+        "absences": 0,
+        "retards": 0,
+        "conduite": 18
+      },
+      "commentaires": {
+        "decisionConseil": "",
+        "observations": ""
+      },
+      "notesManquantes": [],
+      "createdAt": "2026-04-06T20:15:16.111Z",
+      "updatedAt": "2026-04-08T10:30:59.708Z"
+    },
+    {
+      "id": "1a5f9b8e-f9b9-42ac-ae43-38da007ee296",
+      "inscriptionId": "3b231f6e-0ff4-45b1-a913-2efae8765282",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "classe": "6e A",
+      "status": "brouillon",
+      "moyennesParMatiere": [],
+      "resultatFinal": null,
+      "infosDeClasse": {
+        "effectif": 0
+      },
+      "vieScolaire": {
+        "absences": 0,
+        "retards": 0,
+        "conduite": 14
+      },
+      "commentaires": {
+        "decisionConseil": "",
+        "observations": ""
+      },
+      "notesManquantes": [],
+      "createdAt": "2026-04-08T09:40:35.764Z",
+      "updatedAt": "2026-04-08T09:53:11.983Z"
+    },
+    {
+      "id": "0f4ce5b2-ab63-4924-8949-4093f4c007c7",
+      "inscriptionId": "1aa960a0-e661-470a-98ef-d17e7ade471a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "classe": "6e A",
+      "status": "brouillon",
+      "moyennesParMatiere": [],
+      "resultatFinal": null,
+      "infosDeClasse": {
+        "effectif": 0
+      },
+      "vieScolaire": {
+        "absences": 0,
+        "retards": 0,
+        "conduite": 20
+      },
+      "commentaires": {
+        "decisionConseil": "",
+        "observations": ""
+      },
+      "notesManquantes": [],
+      "createdAt": "2026-04-08T09:40:54.825Z",
+      "updatedAt": "2026-04-08T10:32:02.949Z"
+    },
+    {
+      "id": "f86f1a43-ebb1-4ba9-8b65-1a5b69b99871",
+      "inscriptionId": "f5f7d792-7533-4379-86a6-7c0513c39888",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "classe": "6e A",
+      "status": "brouillon",
+      "moyennesParMatiere": [],
+      "resultatFinal": null,
+      "infosDeClasse": {
+        "effectif": 0
+      },
+      "vieScolaire": {
+        "absences": 0,
+        "retards": 0,
+        "conduite": 15
+      },
+      "commentaires": {
+        "decisionConseil": "",
+        "observations": ""
+      },
+      "notesManquantes": [],
+      "createdAt": "2026-04-08T09:53:11.996Z",
+      "updatedAt": "2026-04-08T09:53:11.996Z"
+    },
+    {
+      "id": "9dd49cbe-e695-4892-8991-60f9942a7406",
+      "inscriptionId": "171b7d71-aad3-41e8-85e8-8b0780f42c47",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "classe": "6e A",
+      "status": "brouillon",
+      "moyennesParMatiere": [],
+      "resultatFinal": null,
+      "infosDeClasse": {
+        "effectif": 0
+      },
+      "vieScolaire": {
+        "absences": 0,
+        "retards": 0,
+        "conduite": 18
+      },
+      "commentaires": {
+        "decisionConseil": "",
+        "observations": ""
+      },
+      "notesManquantes": [],
+      "createdAt": "2026-04-08T09:53:12.129Z",
+      "updatedAt": "2026-04-09T10:10:53.659Z"
+    },
+    {
+      "id": "f25ba135-ab9f-4854-a803-e2c05103c795",
+      "inscriptionId": "b557dc16-b16c-4ce3-8a4a-4583a18d2da0",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "classe": "6e A",
+      "status": "brouillon",
+      "moyennesParMatiere": [],
+      "resultatFinal": null,
+      "infosDeClasse": {
+        "effectif": 0
+      },
+      "vieScolaire": {
+        "absences": 0,
+        "retards": 0,
+        "conduite": 16.5
+      },
+      "commentaires": {
+        "decisionConseil": "",
+        "observations": ""
+      },
+      "notesManquantes": [],
+      "createdAt": "2026-04-08T09:53:12.152Z",
+      "updatedAt": "2026-04-08T09:53:12.152Z"
+    },
+    {
+      "id": "780ed466-f36c-4f26-ae0c-6cce233696c1",
+      "inscriptionId": "b982b77f-258d-480c-b2a6-c6fad5fcffbc",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "classeId": "d9636a32-8578-4a20-8a6e-716eebe4425d",
+      "classe": "6e A",
+      "status": "brouillon",
+      "moyennesParMatiere": [],
+      "resultatFinal": null,
+      "infosDeClasse": {
+        "effectif": 0
+      },
+      "vieScolaire": {
+        "absences": 0,
+        "retards": 0,
+        "conduite": 9
+      },
+      "commentaires": {
+        "decisionConseil": "",
+        "observations": ""
+      },
+      "notesManquantes": [],
+      "createdAt": "2026-04-08T09:53:12.168Z",
+      "updatedAt": "2026-04-08T09:53:12.168Z"
+    },
+    {
+      "id": "69310017-ea16-4647-8229-fb2c07d10fd5",
+      "inscriptionId": "7086bb00-663a-41cf-a118-690df0631c6a",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "classeId": "e2fffe6b-fb15-4588-82e1-0742b8b30f5b",
+      "classe": "5e A",
+      "status": "brouillon",
+      "moyennesParMatiere": [],
+      "resultatFinal": null,
+      "infosDeClasse": {
+        "effectif": 0
+      },
+      "vieScolaire": {
+        "absences": 0,
+        "retards": 0,
+        "conduite": 8
+      },
+      "commentaires": {
+        "decisionConseil": "",
+        "observations": ""
+      },
+      "notesManquantes": [],
+      "createdAt": "2026-04-08T09:53:12.290Z",
+      "updatedAt": "2026-04-08T09:53:12.290Z"
+    },
+    {
+      "id": "69487651-a911-40db-b543-352831d00e0a",
+      "inscriptionId": "974659f1-77f9-4450-bbb3-be08257ba5c8",
+      "periodeId": "bf4eda3f-f897-4ec7-88ee-9b68cb9868c6",
+      "classeId": "e2fffe6b-fb15-4588-82e1-0742b8b30f5b",
+      "classe": "5e A",
+      "status": "brouillon",
+      "moyennesParMatiere": [],
+      "resultatFinal": null,
+      "infosDeClasse": {
+        "effectif": 0
+      },
+      "vieScolaire": {
+        "absences": 0,
+        "retards": 0,
+        "conduite": 19
+      },
+      "commentaires": {
+        "decisionConseil": "",
+        "observations": ""
+      },
+      "notesManquantes": [],
+      "createdAt": "2026-04-08T10:35:33.920Z",
+      "updatedAt": "2026-04-08T10:35:48.010Z"
+    }
+  ]
+}

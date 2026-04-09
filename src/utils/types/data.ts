@@ -1,13 +1,32 @@
-import { BaseClasse, BaseCycle, BaseEleveData, BaseEnseignant, BaseEvaluation, BaseInscription, BaseMatiere, BaseNiveauClasse, BaseNiveauScolaire, BaseNote, BasePayement, BasePeriode, BaseSeance } from "./base";
+// Ici ce sont des types ( modeles) de données sortantes de la base de données
 
 
+import {
+  BaseAchat,
+  BaseBulletin,
+  BaseCharge,
+  BaseClasse, BaseConfigBulletin, BaseCycle, BaseEleveData, BaseEnseignant, BaseEvaluation, BaseInscription,
+  BaseInventaire,
+  BaseMateriel,
+  BaseMatiere, BaseMouvementStock, BaseNiveauClasse, BaseNiveauScolaire, BaseNote, BasePaiement, BasePeriode, BaseSeance, BaseTransaction, StatutPayement
+} from "./base";
+
+
+
+export interface User {
+  id: string
+}
 export interface EcoleInfo {
   id: string;
   nom: string;
+  ia?: string;
+  ief?: string;
   logo?: string;
   adresse: string;
   telephone: string;
   email: string;
+  enTeteCarte?: string
+  pays?: string
   siteWeb?: string;
   anneeScolaire: string;
   devise?: string;
@@ -23,12 +42,9 @@ export interface EleveData extends BaseEleveData {
 
 export interface Eleve extends Inscription {
   id: string;
-  eleveDataId: string;
-
-
 }
 
-export interface Payement extends BasePayement {
+export interface Paiement extends BasePaiement {
   id: string;
   inscription: Inscription;
   createdAt?: string;
@@ -41,15 +57,21 @@ export interface Inscription extends BaseInscription, EleveData {
   classe: string;
   cycle: string;
   niveauScolaire: string;
-  payements?: Payement[]
+  statutPayement: StatutPayement
+  paiements?: Paiement[]
   createdAt?: string;
   updatedAt?: string;
 }
 
 export interface Enseignant extends BaseEnseignant {
   id: string;
-  classes: string[];
-  matieres: string[];
+  enseignementsData: {
+    classe: string,
+    niveauClasse: string,
+    cycle: string,
+    niveauScolaire: string
+    matiere: string
+  }[],
   emploiDuTemps?: Record<string, unknown>;
   createdAt?: string;
   updatedAt?: string;
@@ -64,6 +86,11 @@ export interface Note extends BaseNote {
   coefficient: number;
   enseignantId: string;
   evaluation: string;
+  niveauScolaire: string;
+  classe: string,
+  eleve: string;
+  niveauClasse: string;
+  anneeScolaire: string
   createdAt?: string;
   updatedAt?: string;
 }
@@ -84,6 +111,10 @@ export interface Classe extends BaseClasse {
   cycle: string;
   niveauClasse: string;
   niveauScolaire: string
+  effectifTotal: number,
+  effectifFInscrits: number
+  effectifGInscrits: number;
+  effectifTotalInscrits: number
   createdAt?: string;
   updatedAt?: string;
 }
@@ -148,41 +179,181 @@ export interface DossierEleve {
 
 export interface Recu {
   id: string;
-  eleveId: string;
-  montant: number;
-  datePaiement: string;
-  description: string;
+  numeroRecu: string;           // ex: "REC-2025-0001"
+  paiementId: string;            // Référence au paiement original
+  inscription: Inscription;      // Infos élève
+  montantPaye: number;
+  montantRestant: number
+  motif: string;                 // "Scolarité 1er trimestre", etc.
+  modePaiement: string;
+  datePayement: string;
+  dateEmission: string;          // Date d'édition du reçu
+  statutPayement: string
+  ecoleInfos: {
+    nom: string;
+    adresse: string;
+    telephone: string;
+    email: string;
+    logo?: string;
+    devise?: string;
+  };
   createdAt?: string;
   updatedAt?: string;
 }
 
 
-export interface JournalCaisse {
-  id: string;
-  date: string;
-  totalEntrees: number;
-  totalSorties: number;
-  recuIds: string[];
-  createdAt?: string;
-  updatedAt?: string;
-}
 
 export interface CarteIdentite {
-  id: string;
-  eleveId: string;
-  numeroCarte: string;
-  dateCreation: string;
-  photo?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  enTeteCarte?: string;
+  nomEcole: string;
+  devise?: string;
+  anneeScolaire: string;
+  eleve: {
+    nom: string;
+    prenom: string;
+    dateNaissance: string;
+    matricule: string;
+    sexe: 'M' | 'F';
+    classe: string;
+    lieuNaissance?: string;
+    photoBase64?: string | null;
+  };
 }
 
-export interface Bulletin {
+
+
+
+
+export interface Materiel extends BaseMateriel {
+  id: string
+  nom: string
+  quantite: number,
+  createdAt: string
+  updatedAt: string
+}
+
+
+
+export interface Achat extends BaseAchat {
+  id: string
+  materielId: string        // Quel matériel est acheté
+  quantite: number
+  prixUnitaire: number
+  date: string
+  createdBy: string
+  total?: number
+  transactionId?: string;
+  reference: string
+  materiel?: Materiel,
+  transaction?: Transaction
+  createdAt: string
+  updatedAt: string
+
+}
+
+
+export interface Transaction extends BaseTransaction {
+  id: string
+  createdAt: string
+  updatedAt: string
+}
+
+
+export interface Inventaire extends BaseInventaire {
+  id: string
+
+  createdAt: string
+  updatedAt: string
+}
+
+
+
+
+export interface Charge extends BaseCharge {
   id: string;
-  inscriptionId: string;
+  createdAt: string;
+  updatedAt: string;
+  transaction?: Transaction;
+}
+
+
+// src/utils/types/data.ts
+export interface MouvementStock extends BaseMouvementStock {
+  id: string;
+  date: string;        // Date du mouvement
+  createdAt: string;
+  updatedAt: string;
+
+  // Champs enrichis
+  materiel?: Materiel;
+  utilisateur?: string;
+}
+
+
+
+interface NoteItem {
+  nom: string;
+  note: string;
+  coefficient?: string;
+}
+
+
+
+
+export interface NoteDetail {
+  items: NoteItem[];
+}
+
+export interface MoyenneParMatiere {
+  matiereId: string;
+  matiere: string;
+  notes: NoteDetail;
+  moyenneVingtieme: string;
+  coefficient: string;
+  pointsPonderes: string;
+  appreciation: string;
+}
+
+export interface Bulletin extends BaseBulletin {
+  id: string;
+  eleve: {
+    nom: string;
+    prenom: string;
+    matricule: string;
+    classe: string;
+    niveauClasse: string; // ex: "6ème"
+    cycle: string;        // ex: "COLLÈGE"
+    niveauScolaire: string; // ex: "SECONDAIRE"
+  };
+  infosDeClasse: {
+    effectif: number
+
+  }
   periode: string;
-  notes: Note[];
-  moyenne: number;
-  appreciation?: string;
-  dateGeneration: string;
+  classeId: string,
+
+
+
+  moyennesParMatiere: MoyenneParMatiere[];
+
+  resultatFinal: {
+    totalPoints: string;     // Le 249,49
+    totalCoefficients: string; // Le 22
+    moyenneGenerale: string;
+    moyennesPeriodesAnterieures?: {
+      periodeId: string,
+      nom: string,
+      moyenne: string
+    }[]
+    moyenneAnnuelle: string;
+    rang: string;
+  }
+
+}
+
+// Model de données sortante 
+export interface ConfigBulletin extends BaseConfigBulletin {
+  id: string
+  createdAt: string;
+  updatedAt: string;
 }

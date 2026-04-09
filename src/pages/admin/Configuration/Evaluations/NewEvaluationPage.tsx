@@ -1,95 +1,70 @@
-// src/pages/admin/configuration/evaluations/NewEvaluationPage.tsx
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { v4 as uuidv4 } from 'uuid';
-import EvaluationForm, { EvaluationFormData } from "../../../../components/admin/forms/EvaluationFom";
+import EvaluationForm, { EvaluationFormData } from "../../../../components/admin/forms/EvaluationForm";
+import { evaluationService } from "../../../../services/evaluationService";
+import { alertError } from "../../../../helpers/alertError";
 
 export default function NewEvaluationPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const periodePreselectionnee = location.state?.periodeId;
-  const periodeNom = location.state?.periodeNom;
-  const niveauScolaireId = location.state?.niveauScolaireId;
-  const niveauScolaire = location.state?.niveauScolaire;
-  
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Pré-remplir si une période est passée en paramètre
-  const initialData = periodePreselectionnee ? {
-    periodeId: periodePreselectionnee,
-    periode: periodeNom || "",
-    niveauScolaireId: niveauScolaireId || "",
-    niveauScolaire: niveauScolaire || "",
-    nom: ""
+  const initialData = location.state?.periodeId ? {
+    periodeId: location.state.periodeId,
+    periode: location.state.periodeNom || "",
+    niveauScolaireId: location.state.niveauScolaireId || "",
+    niveauScolaire: location.state.niveauScolaire || "",
+    nom: "",
+    abreviation: "",
+    type: "devoir" as const,
+    coefficient: 0.5,
   } : undefined;
 
-  const handleSubmit = async (data: EvaluationFormData) => {
+  const handleSubmit = async (dataArray: EvaluationFormData[]) => {
     setIsSubmitting(true);
     try {
-      // Simulation d'appel API
-      const newEvaluation = {
-        id: uuidv4(),
-        nom: data.nom,
-        periodeId: data.periodeId,
-        periode: data.periode,
-        niveauScolaireId: data.niveauScolaireId,
-        niveauScolaire: data.niveauScolaire,
-        createdAt: new Date().toISOString()
-      };
+      const promises = dataArray.map(item => evaluationService.create({
+        nom: item.nom,
+        periodeId: item.periodeId,
+        niveauScolaireId: item.niveauScolaireId,
+        coefficient: item.coefficient,
+        abreviation: item.abreviation || item.nom.substring(0, 3).toUpperCase(),
+        type: item.type
+      }));
       
-      console.log("Création d'une évaluation:", newEvaluation);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await Promise.all(promises);
       
-      // Rediriger vers la liste
-      navigate("/admin/configuration/evaluations");
+      // ✅ Pas besoin d'alertSuccess, on navigue simplement
+      navigate(-1);
+      
     } catch (error) {
-      console.error("Erreur lors de la création:", error);
+      alertError("Erreur lors de la création des évaluations");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleCancel = () => {
-    navigate("/admin/configuration/evaluations");
-  };
-
   return (
     <div className="space-y-6">
-      {/* En-tête */}
       <div className="flex items-center gap-4">
-        <button
-          onClick={() => navigate("/admin/configuration/evaluations")}
+        <button 
+          onClick={() => navigate(-1)} 
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          title="Retour à la liste"
+          disabled={isSubmitting}
         >
           <ArrowLeft size={20} className="text-gray-600" />
         </button>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Nouvelle évaluation</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {periodeNom ? `Ajouter une évaluation à la période ${periodeNom}` : "Créez une nouvelle évaluation"}
-          </p>
-        </div>
+        <h1 className="text-2xl font-bold text-gray-800">Nouvelle évaluation</h1>
       </div>
-
-      {/* Formulaire */}
-      <div className="bg-white rounded-lg shadow-sm">
-        <EvaluationForm
-          initialData={initialData}
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-          isSubmitting={isSubmitting}
+      
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+        <EvaluationForm 
+          initialData={initialData} 
+          onSubmit={handleSubmit} 
+          onCancel={() => navigate(-1)} 
+          isSubmitting={isSubmitting} 
         />
-      </div>
-
-      {/* Aide */}
-      <div className="text-sm text-gray-500 bg-gray-50 rounded-lg p-4">
-        <p className="font-medium mb-1">📝 Information :</p>
-        <p>
-          Les évaluations sont liées à une période spécifique (Trimestre, Semestre).
-          Chaque évaluation appartient automatiquement au niveau scolaire de sa période.
-        </p>
       </div>
     </div>
   );

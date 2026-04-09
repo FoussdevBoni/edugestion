@@ -1,11 +1,12 @@
 // src/pages/admin/configuration/evaluations/EvaluationDetailsPage.tsx
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { 
-  ArrowLeft, Edit, Trash2, Calendar, BookOpen, 
-  ChevronRight, Layers, FileText
+import {
+  ArrowLeft, Edit, Trash2, Calendar, BookOpen, Layers, FileText
 } from "lucide-react";
 import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
+import { alertError } from "../../../../helpers/alertError";
+import { evaluationService } from "../../../../services/evaluationService";
 
 export default function EvaluationDetailsPage() {
   const location = useLocation();
@@ -20,10 +21,10 @@ export default function EvaluationDetailsPage() {
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Évaluation non trouvée</h2>
           <p className="text-gray-500 mb-4">Les informations de l'évaluation sont introuvables.</p>
           <button
-            onClick={() => navigate("/admin/configuration/evaluations")}
+            onClick={() => navigate(-1)}
             className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
-            Retour à la liste
+            Retour
           </button>
         </div>
       </div>
@@ -43,10 +44,20 @@ export default function EvaluationDetailsPage() {
     navigate("/admin/configuration/evaluations/update", { state: evaluation });
   };
 
-  const handleDelete = () => {
-    console.log("Suppression de l'évaluation:", evaluation);
-    setOpenDeleteModal(false);
-    navigate("/admin/configuration/evaluations");
+  const handleDelete = async () => {
+    if (!evaluation.id) {
+      alertError()
+      return
+    }
+    try {
+
+      await evaluationService.delete(evaluation.id)
+
+      setOpenDeleteModal(false);
+      navigate("/admin/configuration/evaluations")
+    } catch (error) {
+      alertError()
+    };
   };
 
   return (
@@ -57,7 +68,7 @@ export default function EvaluationDetailsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => navigate("/admin/configuration/evaluations")}
+                onClick={() => navigate(-1)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <ArrowLeft size={20} className="text-gray-600" />
@@ -88,22 +99,6 @@ export default function EvaluationDetailsPage() {
             </div>
           </div>
 
-          {/* Fil d'Ariane */}
-          <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
-            <span onClick={() => navigate("/admin")} className="hover:text-primary cursor-pointer">
-              Dashboard
-            </span>
-            <ChevronRight size={14} />
-            <span onClick={() => navigate("/admin/parametres")} className="hover:text-primary cursor-pointer">
-              Paramètres
-            </span>
-            <ChevronRight size={14} />
-            <span onClick={() => navigate("/admin/configuration/evaluations")} className="hover:text-primary cursor-pointer">
-              Évaluations
-            </span>
-            <ChevronRight size={14} />
-            <span className="text-gray-700">{evaluation.nom}</span>
-          </div>
         </div>
       </div>
 

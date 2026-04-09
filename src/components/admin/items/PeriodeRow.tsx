@@ -30,7 +30,7 @@ export default function PeriodeRow({ periode, onAction, evaluationsCount = 0 }: 
       </td>
       <td className="py-3 px-4 text-gray-600">
         <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-          {periode.niveauScolaire}
+          {periode.coefficient}
         </span>
       </td>
       <td className="py-3 px-4 text-gray-600">
@@ -40,8 +40,7 @@ export default function PeriodeRow({ periode, onAction, evaluationsCount = 0 }: 
       </td>
       <td className="py-3 px-4 text-gray-600">
         <div className="flex items-center gap-2">
-          <Calendar size={14} className="text-gray-400" />
-          <span>{formatDate(periode.createdAt!)}</span>
+          <span>{periode.ordre}</span>
         </div>
       </td>
       <td className="py-3 px-4 text-right">

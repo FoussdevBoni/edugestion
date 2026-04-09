@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import LicenseScreen from "../../pages/auth/LicenceScreen";
+import LicenseScreen from "../../pages/auth/AuthPage";
 
 export default function AdminNav() {
   return (

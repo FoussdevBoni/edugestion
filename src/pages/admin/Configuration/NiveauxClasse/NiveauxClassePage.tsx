@@ -1,13 +1,15 @@
 // src/pages/admin/configuration/niveaux-classe/NiveauxClassePage.tsx
-import { useState } from "react";
-import { Plus, Download, MoreVertical, FileText, Printer, Search } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Plus, Download, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NiveauxClasseList from "../../../../components/admin/lists/NiveauxClasseList";
 import MenuModal, { Menu } from "../../../../components/ui/MenuModal";
 
-import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
 import { NiveauClasse } from "../../../../utils/types/data";
-import { niveauxClasse } from "../../../../data/baseData";
+import useNiveauxClasses from "../../../../hooks/niveauxClasses/useNiveauxClasses";
+import NiveauClasseModals from "../../../../components/admin/modals/NiveauClasseModals";
+import { useEcoleNiveau } from "../../../../hooks/filters/useEcoleNiveau";
+import { alertError } from "../../../../helpers/alertError";
 
 export default function NiveauxClassePage() {
   const navigate = useNavigate();
@@ -15,38 +17,53 @@ export default function NiveauxClassePage() {
   const [selectedNiveauClasse, setSelectedNiveauClasse] = useState<NiveauClasse | null>(null);
   const [niveauClasseToDelete, setNiveauClasseToDelete] = useState<NiveauClasse | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const { niveauxClasse, deleteNiveauClasse } = useNiveauxClasses()
+
+  const { cycleSelectionne, niveauSelectionne } = useEcoleNiveau()
 
   // Filtrer les niveaux de classe
-  const filteredNiveauxClasse = niveauxClasse.filter(nc =>
-    nc.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    nc.cycle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    nc.niveauScolaire.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredNiveauxClasse = useMemo(() => {
+    return niveauxClasse.filter(nc => {
+      // Filtres globaux (du header)
+      const matchesNiveauGlobal = niveauSelectionne ? nc.niveauScolaire === niveauSelectionne : true;
+      const matchesCycleGlobal = cycleSelectionne ? nc.cycle === cycleSelectionne : true;
+
+      // Si les filtres globaux ne matchent pas, on exclut directement
+      if (!matchesNiveauGlobal || !matchesCycleGlobal) {
+        return false;
+      }
+
+      // Si searchTerm est vide, on garde tous ceux qui ont passé les filtres globaux
+      if (!searchTerm) {
+        return true;
+      }
+
+      // Sinon, on filtre par searchTerm
+      const term = searchTerm.toLowerCase();
+      return (
+        nc.nom.toLowerCase().includes(term) ||
+        nc.cycle.toLowerCase().includes(term) ||
+        nc.niveauScolaire.toLowerCase().includes(term)
+      );
+    });
+  }, [niveauxClasse, niveauSelectionne, cycleSelectionne, searchTerm]);
 
   const handleDelete = () => {
-    console.log("Suppression du niveau de classe:", niveauClasseToDelete);
-    setNiveauClasseToDelete(null);
-    setSelectedNiveauClasse(null);
+    if (!niveauClasseToDelete?.id) {
+      alertError()
+      return
+    }
+    try {
+      deleteNiveauClasse(niveauClasseToDelete.id)
+      setNiveauClasseToDelete(null);
+      setSelectedNiveauClasse(null);
+    } catch (error) {
+      alertError()
+
+    }
   };
 
-  const menuItems: Menu[] = [
-    {
-      label: "Ajouter un niveau",
-      icon: Plus,
-      onClick: () => {
-        navigate("/admin/configuration/niveaux-classe/new");
-        setIsModalOpen(false);
-      }
-    },
-    {
-      label: "Importer",
-      icon: Download,
-      onClick: () => {
-        console.log("Importer des niveaux de classe");
-        setIsModalOpen(false);
-      }
-    }
-  ];
+
 
   const handleAction = (niveauClasse: NiveauClasse) => {
     setSelectedNiveauClasse(niveauClasse);
@@ -77,7 +94,9 @@ export default function NiveauxClassePage() {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              navigate("/admin/configuration/niveaux-classe/new")
+            }}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
           >
             <Plus size={18} />
@@ -108,6 +127,28 @@ export default function NiveauxClassePage() {
         </div>
       </div>
 
+      {/* Indicateur des filtres actifs */}
+      {(niveauSelectionne || cycleSelectionne || searchTerm) && (
+        <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap">
+          <span>Filtres actifs:</span>
+          {niveauSelectionne && (
+            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
+              {niveauSelectionne}
+            </span>
+          )}
+          {cycleSelectionne && (
+            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
+              {cycleSelectionne}
+            </span>
+          )}
+          {searchTerm && (
+            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
+              "{searchTerm}"
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Liste */}
       <NiveauxClasseList niveauxClasse={filteredNiveauxClasse} onAction={handleAction} />
 
@@ -115,9 +156,13 @@ export default function NiveauxClassePage() {
       {filteredNiveauxClasse.length === 0 && (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
           <p className="text-gray-500">Aucun niveau de classe trouvé</p>
-          {searchTerm && (
+          {(searchTerm || niveauSelectionne || cycleSelectionne) && (
             <button
-              onClick={clearSearch}
+              onClick={() => {
+                setSearchTerm("");
+                // Note: on ne réinitialise pas les filtres globaux ici
+                // car ils sont gérés ailleurs
+              }}
               className="mt-4 text-primary hover:text-primary/80 text-sm"
             >
               Effacer la recherche
@@ -126,68 +171,16 @@ export default function NiveauxClassePage() {
         </div>
       )}
 
-      {/* Modal actions globales */}
-      <MenuModal
-        menu={menuItems}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Gestion des niveaux de classe"
-        icon={<Plus className="text-primary" size={20} />}
-      />
 
       {/* Modal actions sur un niveau de classe */}
-      {selectedNiveauClasse && (
-        <MenuModal
-          menu={[
-            {
-              label: "Voir détails",
-              icon: FileText,
-              onClick: () => {
-                navigate("/admin/configuration/niveaux-classe/details", { state: selectedNiveauClasse });
-                setSelectedNiveauClasse(null);
-              }
-            },
-            {
-              label: "Modifier",
-              icon: Plus,
-              onClick: () => {
-                navigate("/admin/configuration/niveaux-classe/update", { state: selectedNiveauClasse });
-                setSelectedNiveauClasse(null);
-              }
-            },
-            {
-              label: "Gérer les classes",
-              icon: Printer,
-              onClick: () => {
-                navigate("/admin/configuration/classes", { state: { niveauClasseId: selectedNiveauClasse.id } });
-                setSelectedNiveauClasse(null);
-              }
-            },
-            {
-              label: "Supprimer",
-              icon: MoreVertical,
-              onClick: () => {
-                setNiveauClasseToDelete(selectedNiveauClasse);
-                setSelectedNiveauClasse(null);
-              }
-            }
-          ]}
-          isOpen={!!selectedNiveauClasse}
-          onClose={handleCloseMenuModal}
-          title={selectedNiveauClasse.nom}
-          icon={<Plus className="text-primary" size={20} />}
-        />
-      )}
-
-      {/* Modal confirmation suppression */}
-      <DeleteConfirmationModal
-        isOpen={!!niveauClasseToDelete}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleDelete}
-        title="Supprimer le niveau de classe"
-        message={`Êtes-vous sûr de vouloir supprimer le niveau "${niveauClasseToDelete?.nom}" ? Cette action est irréversible.`}
-        confirmText="Supprimer"
-        cancelText="Annuler"
+      <NiveauClasseModals
+        handleDelete={handleDelete}
+        niveauClasseToDelete={niveauClasseToDelete}
+        selectedNiveauClasse={selectedNiveauClasse}
+        setNiveauClasseToDelete={setNiveauClasseToDelete}
+        setSelectedNiveauClasse={setSelectedNiveauClasse}
+        handleCloseDeleteModal={handleCloseDeleteModal}
+        handleCloseMenuModal={handleCloseMenuModal}
       />
     </div>
   );

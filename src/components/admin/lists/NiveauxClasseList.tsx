@@ -1,6 +1,6 @@
 // src/components/admin/lists/NiveauxClasseList.tsx
 
-import { classes } from "../../../data/baseData";
+import useClasses from "../../../hooks/classes/useClasses";
 import { NiveauClasse } from "../../../utils/types/data";
 import NiveauClasseRow from "../items/NiveauClasseRow";
 
@@ -11,6 +11,7 @@ interface NiveauxClasseListProps {
 }
 
 export default function NiveauxClasseList({ niveauxClasse, onAction }: NiveauxClasseListProps) {
+  const {classes} = useClasses()
   // Compter les classes pour chaque niveau de classe
   const getClassesCount = (niveauClasseId: string) => {
     return classes.filter(c => c.niveauClasseId === niveauClasseId).length;
@@ -24,12 +25,6 @@ export default function NiveauxClasseList({ niveauxClasse, onAction }: NiveauxCl
             <tr>
               <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Niveau de classe
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Cycle
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Niveau scolaire
               </th>
               <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Classes

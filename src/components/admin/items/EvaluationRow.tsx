@@ -1,5 +1,5 @@
 // src/components/admin/rows/EvaluationRow.tsx
-import { MoreVertical, Calendar, FileText } from "lucide-react";
+import { MoreVertical, FileText } from "lucide-react";
 import { Evaluation } from "../../../utils/types/data";
 
 interface EvaluationRowProps {
@@ -8,14 +8,7 @@ interface EvaluationRowProps {
 }
 
 export default function EvaluationRow({ evaluation, onAction }: EvaluationRowProps) {
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  };
+ 
 
   return (
     <tr className="hover:bg-gray-50 border-b border-gray-200">
@@ -34,13 +27,12 @@ export default function EvaluationRow({ evaluation, onAction }: EvaluationRowPro
       </td>
       <td className="py-3 px-4 text-gray-600">
         <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-          {evaluation.niveauScolaire}
+          {evaluation.abreviation}
         </span>
       </td>
       <td className="py-3 px-4 text-gray-600">
         <div className="flex items-center gap-2">
-          <Calendar size={14} className="text-gray-400" />
-          <span>{formatDate(evaluation.createdAt!)}</span>
+          <span>{evaluation.type}</span>
         </div>
       </td>
       <td className="py-3 px-4 text-right">

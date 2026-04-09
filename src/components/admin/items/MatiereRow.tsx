@@ -1,13 +1,23 @@
 // src/components/admin/rows/MatiereRow.tsx
-import { MoreVertical, Calendar, BookOpen, Hash } from "lucide-react";
+import { Calendar, BookOpen, Hash } from "lucide-react";
 import { Matiere } from "../../../utils/types/data";
+import TableRow from "../../ui/tables/TableRow";
 
 interface MatiereRowProps {
   matiere: Matiere;
   onAction: (matiere: Matiere) => void;
+  onSelect?: (matiere: Matiere, isSelected: boolean) => void;
+  isSelected?: boolean;
+  selectable?: boolean;
 }
 
-export default function MatiereRow({ matiere, onAction }: MatiereRowProps) {
+export default function MatiereRow({ 
+  matiere, 
+  onAction, 
+  onSelect,
+  isSelected = false,
+  selectable = false
+}: MatiereRowProps) {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('fr-FR', {
@@ -18,7 +28,14 @@ export default function MatiereRow({ matiere, onAction }: MatiereRowProps) {
   };
 
   return (
-    <tr className="hover:bg-gray-50 border-b border-gray-200">
+    <TableRow
+      item={matiere}
+      onAction={onAction}
+      onSelect={onSelect}
+      isSelected={isSelected}
+      selectable={selectable}
+      actionable={true}
+    >
       <td className="py-3 px-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -44,14 +61,6 @@ export default function MatiereRow({ matiere, onAction }: MatiereRowProps) {
           <span>{formatDate(matiere.createdAt!)}</span>
         </div>
       </td>
-      <td className="py-3 px-4 text-right">
-        <button
-          onClick={() => onAction(matiere)}
-          className="p-1.5 rounded hover:bg-gray-200 transition-colors"
-        >
-          <MoreVertical size={18} className="text-gray-500" />
-        </button>
-      </td>
-    </tr>
+    </TableRow>
   );
 }

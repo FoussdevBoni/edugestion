@@ -1,56 +1,77 @@
+// src/pages/admin/eleves/ImportElevesPage.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  ArrowLeft, Upload, Download, AlertCircle, 
+import {
+  ArrowLeft, Upload, Download, AlertCircle,
   CheckCircle, XCircle, FileSpreadsheet, HelpCircle,
-  ChevronRight
+  ChevronRight, School, Trash2, Search, AlertTriangle
 } from "lucide-react";
-import { Eleve } from "../../../utils/types/data";
+import * as XLSX from 'xlsx';
+import { BaseEleveData, Sexe, StatutEleve } from "../../../utils/types/base";
+import { inscriptionService } from "../../../services/inscriptionService";
+import { alertServerError } from "../../../helpers/alertError";
+import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
+import useClasses from "../../../hooks/classes/useClasses";
+import useEleves from "../../../hooks/eleves/useEleves";
+import { differenceBy } from "../../../helpers/differenceBy";
+import { excludeBy } from "../../../helpers/exludeBy";
 
 export default function ImportElevesPage() {
   const navigate = useNavigate();
-  const [eleves, setEleves] = useState<Eleve[]>([]);
+  const { niveauSelectionne, cycleSelectionne } = useEcoleNiveau();
+  const { classes } = useClasses();
+  const { eleves: elevesExistants } = useEleves();
+
+  const [eleves, setEleves] = useState<BaseEleveData[]>([]);
+  const [elevesNonInscrits, setElevesNonInscrits] = useState<BaseEleveData[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [importStatus, setImportStatus] = useState<"idle" | "preview" | "success" | "error">("idle");
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [selectedClasseId, setSelectedClasseId] = useState("");
+  const [statutScolaire, setStatutScolaire] = useState<"nouveau" | "redoublant">("nouveau");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+  const [showOnlyNew, setShowOnlyNew] = useState(true);
 
-  // Champs obligatoires
+  // Filtrer les classes selon les filtres globaux
+  const classesFiltrees = classes.filter(c => {
+    if (cycleSelectionne && c.cycle !== cycleSelectionne) return false;
+    if (niveauSelectionne && c.niveauScolaire !== niveauSelectionne) return false;
+    return true;
+  });
+
+
+
+  // Champs selon ton fichier
   const requiredFields = [
     { field: "nom", label: "Nom" },
     { field: "prenom", label: "Prénom" },
     { field: "dateNaissance", label: "Date de naissance" },
-    { field: "sexe", label: "Sexe (M/F)" },
-    { field: "niveauScolaire", label: "Niveau scolaire" },
-    { field: "cycle", label: "Cycle" },
-    { field: "classe", label: "Classe" },
-    { field: "anneeScolaire", label: "Année scolaire" }
+    { field: "sexe", label: "Sexe" }
   ];
 
-  // Champs optionnels
   const optionalFields = [
-    { field: "section", label: "Section" },
-    { field: "photo", label: "Photo (URL)" }
+    { field: "photo", label: "Photo" },
+    { field: "matricule", label: "Matricule" },
+    { field: "statut", label: "Statut" },
+    { field: "lieuDeNaissance", label: "Lieu de naissance" },
+    { field: "contact", label: "Contact" }
   ];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     setError(null);
-    
+    setValidationErrors([]);
+
     if (!selectedFile) {
       setFile(null);
       return;
     }
 
-    // Vérifier le type de fichier
-    const validTypes = [
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'text/csv'
-    ];
-    
-    if (!validTypes.includes(selectedFile.type)) {
+    const fileExtension = selectedFile.name.split('.').pop()?.toLowerCase();
+    if (fileExtension !== 'xlsx' && fileExtension !== 'xls' && fileExtension !== 'csv') {
       setError("Format de fichier non supporté. Veuillez uploader un fichier Excel (.xlsx, .xls) ou CSV.");
       setFile(null);
       return;
@@ -59,123 +80,240 @@ export default function ImportElevesPage() {
     setFile(selectedFile);
   };
 
-  const importList = () => {
+  const readExcelFile = (file: File): Promise<any[]> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          resolve(jsonData);
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      reader.onerror = (error) => reject(error);
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  const importList = async () => {
     if (!file) {
       setError("Veuillez sélectionner un fichier");
       return;
     }
 
+    if (!selectedClasseId) {
+      setError("Veuillez sélectionner une classe pour l'inscription");
+      return;
+    }
+
     setIsUploading(true);
     setError(null);
+    setValidationErrors([]);
 
-    // Simulation de lecture du fichier Excel
-    setTimeout(() => {
-      try {
-        // Ici, tu utiliseras une bibliothèque comme xlsx ou papaparse
-        // pour parser le fichier Excel/CSV
-        
-        // Simulation de données importées
-        const importedData: Partial<Eleve>[] = [
-          {
-            nom: "Koffi",
-            prenom: "Abla",
-            dateNaissance: "2010-05-12",
-            sexe: "F",
-            niveauScolaire: "Secondaire",
-            cycle: "1er cycle (Collège)",
-            classe: "6ème",
-            section: "A",
-            anneeScolaire: "2024-2025"
-          },
-          {
-            nom: "Mensah",
-            prenom: "Kofi",
-            dateNaissance: "2009-11-23",
-            sexe: "M",
-            niveauScolaire: "Secondaire",
-            cycle: "1er cycle (Collège)",
-            classe: "5ème",
-            section: "B",
-            anneeScolaire: "2024-2025"
+    try {
+      const rawData = await readExcelFile(file);
+
+      const errors: string[] = [];
+
+      rawData.forEach((row: any, index) => {
+        requiredFields.forEach(field => {
+          if (!row[field.field]) {
+            errors.push(`Ligne ${index + 2}: Le champ "${field.label}" est obligatoire`);
           }
-        ];
-
-        // Valider les données importées
-        const errors: string[] = [];
-        importedData.forEach((eleve, index) => {
-          requiredFields.forEach(field => {
-            if (!eleve[field.field as keyof Eleve]) {
-              errors.push(`Ligne ${index + 2}: Le champ "${field.label}" est obligatoire`);
-            }
-          });
         });
+      });
 
-        if (errors.length > 0) {
-          setValidationErrors(errors);
-          setImportStatus("error");
-        } else {
-          setEleves(importedData as Eleve[]);
-          setImportStatus("preview");
-        }
-      } catch (err) {
-        setError("Erreur lors de la lecture du fichier");
-      } finally {
-        setIsUploading(false);
+      if (errors.length > 0) {
+        setValidationErrors(errors);
+        setImportStatus("error");
+      } else {
+        const mappedEleves: BaseEleveData[] = rawData.map((row: any) => ({
+          nom: row.nom || '',
+          prenom: row.prenom || '',
+          dateNaissance: row.dateNaissance || '',
+          sexe: (row.sexe === 'M' || row.sexe === 'F' ? row.sexe : 'M') as Sexe,
+          photo: row.photo || undefined,
+          matricule: row.matricule || undefined,
+          statut: (row.statut === 'actif' || row.statut === 'inactif' || row.statut === 'exclu'
+            ? row.statut
+            : undefined) as StatutEleve,
+          lieuDeNaissance: row.lieuDeNaissance || undefined,
+          contact: row.contact || undefined
+        }));
+
+        setEleves(mappedEleves);
+
+        // Filtrer les élèves non inscrits avec la fonction differenceBy
+
+        const nonInscrits = excludeBy(
+          mappedEleves,
+          elevesExistants,
+          e => e.matricule,
+          e => e.matricule
+        );
+        setElevesNonInscrits(nonInscrits);
+
+        // Sélectionner tous les nouveaux élèves par défaut
+        const indices = nonInscrits.map((_, index) => index);
+        setSelectedRows(new Set(indices));
+
+        setImportStatus("preview");
       }
-    }, 2000);
+    } catch (err) {
+      setError("Erreur lors de la lecture du fichier. Vérifiez que le format est correct.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  const confirmAndSaveList = () => {
+  // Supprimer une ligne de la liste
+  const handleDeleteRow = (index: number) => {
+    setElevesNonInscrits(prev => prev.filter((_, i) => i !== index));
+    setSelectedRows(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(index);
+      const adjusted = new Set<number>();
+      prev.forEach(i => {
+        if (i < index) adjusted.add(i);
+        else if (i > index) adjusted.add(i - 1);
+      });
+      return adjusted;
+    });
+  };
+
+  // Supprimer plusieurs lignes
+  const handleDeleteSelected = () => {
+    const indicesToDelete = Array.from(selectedRows).sort((a, b) => b - a);
+    let newEleves = [...elevesNonInscrits];
+
+    indicesToDelete.forEach(index => {
+      newEleves = newEleves.filter((_, i) => i !== index);
+    });
+
+    setElevesNonInscrits(newEleves);
+    setSelectedRows(new Set());
+  };
+
+  // Supprimer toutes les lignes
+  const handleDeleteAll = () => {
+    if (window.confirm("Voulez-vous vraiment supprimer toutes les lignes ?")) {
+      setElevesNonInscrits([]);
+      setSelectedRows(new Set());
+      setImportStatus("idle");
+      setFile(null);
+    }
+  };
+
+  // Sélectionner/désélectionner une ligne
+  const toggleRow = (index: number) => {
+    setSelectedRows(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
+  // Sélectionner toutes les lignes
+  const toggleSelectAll = () => {
+    if (selectedRows.size === filteredEleves.length) {
+      setSelectedRows(new Set());
+    } else {
+      setSelectedRows(new Set(filteredEleves.map((_, i) => i)));
+    }
+  };
+
+  const confirmAndSaveList = async () => {
     setIsUploading(true);
-    
-    // Simulation de sauvegarde en base de données
-    setTimeout(() => {
-      console.log("Élèves importés:", eleves);
-      setImportStatus("success");
+
+    try {
+      const elevesASauvegarder = Array.from(selectedRows).map(index => elevesNonInscrits[index]);
+
+      const anneeCourante = new Date().getFullYear() + '-' + (new Date().getFullYear() + 1);
+      let successCount = 0;
+      const errors: string[] = [];
+
+      for (const eleve of elevesASauvegarder) {
+        try {
+          await inscriptionService.inscrireNouvelEleve({
+            nom: eleve.nom,
+            prenom: eleve.prenom,
+            dateNaissance: eleve.dateNaissance,
+            sexe: eleve.sexe,
+            lieuDeNaissance: eleve.lieuDeNaissance || "",
+            contact: eleve.contact || "",
+            photo: eleve.photo || "",
+            anneeScolaire: anneeCourante,
+            statutScolaire: statutScolaire,
+            classeId: selectedClasseId,
+            matricule: eleve.matricule
+          });
+          successCount++;
+        } catch (err: any) {
+          errors.push(`${eleve.prenom} ${eleve.nom}: ${err.message || "Erreur inconnue"}`);
+        }
+      }
+
+      if (errors.length > 0) {
+        setValidationErrors(errors);
+        setImportStatus("error");
+      } else {
+        setImportStatus("success");
+        setTimeout(() => {
+          navigate("/admin/eleves");
+        }, 2000);
+      }
+    } catch (err) {
+      alertServerError(err, "Erreur lors de l'importation");
+    } finally {
       setIsUploading(false);
-      
-      // Redirection après 2 secondes
-      setTimeout(() => {
-        navigate("/admin/eleves");
-      }, 2000);
-    }, 1500);
+    }
   };
 
   const downloadTemplate = () => {
-    // Générer un fichier Excel template
-    const headers = [
-      "nom",
-      "prenom",
-      "dateNaissance",
-      "sexe",
-      "niveauScolaire",
-      "cycle",
-      "classe",
-      "section",
-      "anneeScolaire"
-    ].join(",");
-    
-    const sampleRow = [
-      "Koffi",
-      "Abla",
-      "2010-05-12",
-      "F",
-      "Secondaire",
-      "1er cycle (Collège)",
-      "6ème",
-      "A",
-      "2024-2025"
-    ].join(",");
+    const wb = XLSX.utils.book_new();
 
-    const csvContent = `${headers}\n${sampleRow}`;
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "template_import_eleves.csv";
-    a.click();
-    window.URL.revokeObjectURL(url);
+    const headers = [
+      ["nom", "prenom", "dateNaissance", "sexe", "photo", "matricule", "statut", "lieuDeNaissance", "contact"]
+    ];
+
+    const sampleData = [
+      ["Leroy", "Anaïs", "2013-08-01", "F", "photo1.jpg", "MAT001", "inactif", "Paris", "+221 77 123 45 67"]
+    ];
+
+    const wsData = [...headers, ...sampleData];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    XLSX.utils.book_append_sheet(wb, ws, "Template");
+    XLSX.writeFile(wb, "template_import_eleves.xlsx");
   };
+
+  // Filtrer les élèves pour la recherche
+  const filteredEleves = elevesNonInscrits
+    .filter(eleve =>
+      eleve.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      eleve.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      eleve.matricule?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+  // Afficher loading si pas encore de données
+  if (!elevesExistants && importStatus === "idle") {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -193,6 +331,57 @@ export default function ImportElevesPage() {
             Importez une liste d'élèves depuis un fichier Excel ou CSV
           </p>
         </div>
+      </div>
+
+      {/* Sélection de la classe */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+          <School size={16} className="text-primary" />
+          Classe d'affectation
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Classe <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={selectedClasseId}
+              onChange={(e) => setSelectedClasseId(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+            >
+              <option value="">Sélectionner une classe</option>
+              {classesFiltrees.map(classe => (
+                <option key={classe.id} value={classe.id}>
+                  {classe.nom} - {classe.niveauClasse} ({classe.cycle})
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">
+              Tous les élèves importés seront inscrits dans cette classe
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Statut scolaire
+            </label>
+            <select
+              value={statutScolaire}
+              onChange={(e) => setStatutScolaire(e.target.value as "nouveau" | "redoublant")}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+            >
+              <option value="nouveau">Nouveau</option>
+              <option value="redoublant">Redoublant</option>
+            </select>
+          </div>
+        </div>
+
+        {(niveauSelectionne || cycleSelectionne) && (
+          <p className="mt-3 text-sm text-gray-500">
+            Filtres actifs: {niveauSelectionne} {cycleSelectionne && `- ${cycleSelectionne}`}
+          </p>
+        )}
       </div>
 
       {/* Instructions */}
@@ -218,7 +407,7 @@ export default function ImportElevesPage() {
                 className="mt-2 flex items-center gap-2 text-primary hover:text-primary/80 text-sm"
               >
                 <Download size={16} />
-                Télécharger le modèle Excel/CSV
+                Télécharger le modèle Excel
               </button>
             </div>
           </div>
@@ -232,14 +421,13 @@ export default function ImportElevesPage() {
               <p className="text-sm text-gray-500 mt-1">
                 Remplissez le fichier avec les informations des élèves
               </p>
-              
-              {/* Champs obligatoires */}
+
               <div className="mt-3 bg-red-50 border border-red-200 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-red-800 flex items-center gap-2 mb-2">
                   <AlertCircle size={16} />
                   Champs obligatoires
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {requiredFields.map(field => (
                     <div key={field.field} className="text-xs text-red-700">
                       • {field.label}
@@ -248,7 +436,6 @@ export default function ImportElevesPage() {
                 </div>
               </div>
 
-              {/* Champs optionnels */}
               <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2 mb-2">
                   <CheckCircle size={16} className="text-gray-500" />
@@ -283,7 +470,7 @@ export default function ImportElevesPage() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
           <FileSpreadsheet size={48} className="mx-auto text-gray-400 mb-4" />
-          
+
           <div className="mb-4">
             <p className="text-gray-700 mb-2">
               {file ? file.name : "Glissez-déposez votre fichier ici"}
@@ -306,7 +493,7 @@ export default function ImportElevesPage() {
                 Choisir un fichier
               </span>
             </label>
-            
+
             {file && (
               <button
                 onClick={importList}
@@ -335,68 +522,159 @@ export default function ImportElevesPage() {
             <XCircle size={16} />
             Erreurs de validation ({validationErrors.length})
           </h3>
-          <ul className="space-y-1">
-            {validationErrors.map((error, index) => (
-              <li key={index} className="text-xs text-red-600">
-                • {error}
-              </li>
-            ))}
-          </ul>
+          <div className="max-h-60 overflow-y-auto">
+            <ul className="space-y-1">
+              {validationErrors.map((error, index) => (
+                <li key={index} className="text-xs text-red-600">
+                  • {error}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
 
       {/* Prévisualisation des données */}
-      {importStatus === "preview" && eleves.length > 0 && (
+      {importStatus === "preview" && elevesNonInscrits.length > 0 && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           <div className="bg-primary/5 px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800">
-              Prévisualisation ({eleves.length} élèves)
-            </h2>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Prévisualisation ({elevesNonInscrits.length} nouveaux élèves à importer)
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Classe: {classes.find(c => c.id === selectedClasseId)?.nom}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {selectedRows.size > 0 && (
+                  <button
+                    onClick={handleDeleteSelected}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 text-sm"
+                  >
+                    <Trash2 size={16} />
+                    Supprimer la sélection
+                  </button>
+                )}
+                <button
+                  onClick={handleDeleteAll}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 text-sm"
+                >
+                  <Trash2 size={16} />
+                  Tout supprimer
+                </button>
+              </div>
+            </div>
+
+            {/* Barre de recherche */}
+            <div className="mt-4 relative">
+              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Rechercher dans la liste..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
           </div>
-          <div className="overflow-x-auto">
+
+          <div className="overflow-x-auto max-h-96 overflow-y-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
                 <tr>
+                  <th className="px-6 py-3 text-left">
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.size === filteredEleves.length && filteredEleves.length > 0}
+                      onChange={toggleSelectAll}
+                      className="rounded text-primary focus:ring-primary"
+                    />
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Matricule</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nom</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prénom</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Niveau</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cycle</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Classe</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Section</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sexe</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date naiss.</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Lieu naiss.</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {eleves.map((eleve, index) => (
+                {filteredEleves.map((eleve, index) => (
                   <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.has(index)}
+                        onChange={() => toggleRow(index)}
+                        className="rounded text-primary focus:ring-primary"
+                      />
+                    </td>
+                    <td className="px-6 py-3 font-mono text-xs">{eleve.matricule || '-'}</td>
                     <td className="px-6 py-3">{eleve.nom}</td>
                     <td className="px-6 py-3">{eleve.prenom}</td>
-                    <td className="px-6 py-3">{eleve.niveauScolaire}</td>
-                    <td className="px-6 py-3">{eleve.cycle}</td>
-                    <td className="px-6 py-3">{eleve.classe}</td>
-                    <td className="px-6 py-3">{eleve.section || "-"}</td>
+                    <td className="px-6 py-3">
+                      <span className={`px-2 py-1 rounded-full text-xs ${eleve.sexe === 'M' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'
+                        }`}>
+                        {eleve.sexe}
+                      </span>
+                    </td>
+                    <td className="px-6 py-3">{eleve.dateNaissance}</td>
+                    <td className="px-6 py-3">
+                      {eleve.statut && (
+                        <span className={`px-2 py-1 rounded-full text-xs ${eleve.statut === 'actif' ? 'bg-green-100 text-green-700' :
+                            eleve.statut === 'inactif' ? 'bg-gray-100 text-gray-700' :
+                              'bg-red-100 text-red-700'
+                          }`}>
+                          {eleve.statut}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-3 font-mono text-xs">{eleve.contact || '-'}</td>
+                    <td className="px-6 py-3">{eleve.lieuDeNaissance || '-'}</td>
+                    <td className="px-6 py-3">
+                      <button
+                        onClick={() => handleDeleteRow(index)}
+                        className="p-1 hover:bg-red-100 rounded-lg text-red-600"
+                        title="Supprimer"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
-            <button
-              onClick={() => {
-                setFile(null);
-                setEleves([]);
-                setImportStatus("idle");
-              }}
-              className="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              Annuler
-            </button>
-            <button
-              onClick={confirmAndSaveList}
-              disabled={isUploading}
-              className="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50"
-            >
-              {isUploading ? "Enregistrement..." : "Confirmer l'importation"}
-            </button>
+
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+            <div className="text-sm text-gray-600">
+              <span className="font-medium">{selectedRows.size}</span> élève(s) sélectionné(s) pour importation
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setFile(null);
+                  setElevesNonInscrits([]);
+                  setImportStatus("idle");
+                }}
+                className="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={confirmAndSaveList}
+                disabled={isUploading || selectedRows.size === 0}
+                className="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50"
+              >
+                {isUploading ? "Enregistrement..." : `Importer ${selectedRows.size} élève(s)`}
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -409,7 +687,7 @@ export default function ImportElevesPage() {
             Importation réussie !
           </h3>
           <p className="text-sm text-green-600">
-            {eleves.length} élèves ont été importés avec succès.
+            {selectedRows.size} élèves ont été importés avec succès.
           </p>
           <p className="text-xs text-green-500 mt-2">
             Redirection vers la liste des élèves...

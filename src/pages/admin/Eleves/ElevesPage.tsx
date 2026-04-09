@@ -1,309 +1,241 @@
-import { useState, useEffect } from "react";
-import { Plus, Download, MoreVertical, UserPlus, FileText, Printer } from "lucide-react";
+// src/pages/admin/eleves/ElevesPage.tsx
+import { useState } from "react";
+import {
+  Plus, Download, MoreVertical, UserPlus, FileText, Search,
+  Users, School, Camera
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+// Components
 import ElevesList from "../../../components/admin/lists/ElevesList";
 import MenuModal, { Menu } from "../../../components/ui/MenuModal";
-import { Eleve } from "../../../utils/types/data";
-import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
-import { useNavigate } from "react-router-dom";
-import { eleves } from "../../../data/eleves";
 import DeleteConfirmationModal from "../../../components/ui/DeleteConfirmationModal";
+import ClasseFilter from "../../../components/wrappers/ClassesFilter";
+
+// Hooks & Helpers
+import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
+import useEleves from "../../../hooks/eleves/useEleves";
+import { alertServerError } from "../../../helpers/alertError";
+import { Inscription } from "../../../utils/types/data";
+import useCarte from "../../../hooks/eleves/useCarte";
+import useClasses from "../../../hooks/classes/useClasses";
+import { compterParClasse } from "../../../utils/helpers/compterParClasse";
+import PageLayout from "../../../layouts/PageLayout";
 
 export default function ElevesPage() {
-  const { niveauSelectionne, cycleSelectionne } = useEcoleNiveau();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEleve, setSelectedEleve] = useState<Eleve | null>(null);
-  const [eleveToDelete, setEleveToDelete] = useState<Eleve | null>(null); // 👈 Nouvel état pour la suppression
-
   const navigate = useNavigate();
 
-  const handleDelete = () => {
-    console.log("Suppression de l'élève:", eleveToDelete);
-    // Ici tu feras l'appel API pour supprimer
-    setEleveToDelete(null);
-    setSelectedEleve(null);
-    // Optionnel: recharger la liste ou mettre à jour l'UI
-  };
+  // 1. Context & Data Hooks
+  const {
+    niveauSelectionne, cycleSelectionne, niveauClasseSelectionne, classeSelectionne
+  } = useEcoleNiveau();
 
-  // États pour les filtres locaux
+  const { eleves, loading, deleteInscription, deleteManyInscriptions } = useEleves();
+  const { classes } = useClasses();
+  
+  // 2. Local UI State
+  const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
+  const [selectedEleve, setSelectedEleve] = useState<Inscription | null>(null);
+  const [eleveToDelete, setEleveToDelete] = useState<Inscription | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedClasse, setSelectedClasse] = useState("");
-  const [selectedSection, setSelectedSection] = useState("");
+  const [itemsToDelete, setItemsToDelete] = useState<string[] | null>(null);
 
-  // Obtenir les classes disponibles pour le cycle sélectionné
-  const classesDisponibles = [...new Set(
-    eleves
-      .filter(eleve => {
-        const matchesNiveau = niveauSelectionne ? eleve.niveauScolaire === niveauSelectionne : true;
-        const matchesCycle = cycleSelectionne ? eleve.cycle === cycleSelectionne : true;
-        return matchesNiveau && matchesCycle;
-      })
-      .map(e => e.classe)
-  )].filter(Boolean).sort();
-
-  // Obtenir les sections disponibles pour la classe sélectionnée
-  const sectionsDisponibles = [...new Set(
-    eleves
-      .filter(eleve => {
-        const matchesNiveau = niveauSelectionne ? eleve.niveauScolaire === niveauSelectionne : true;
-        const matchesCycle = cycleSelectionne ? eleve.cycle === cycleSelectionne : true;
-        const matchesClasse = selectedClasse ? eleve.classe === selectedClasse : true;
-        return matchesNiveau && matchesCycle && matchesClasse;
-      })
-      .map(e => e.section)
-  )].filter(Boolean).sort();
-
-  // Filtrer les élèves selon tous les critères
+  // 3. Filtrage dynamique
   const filteredEleves = eleves.filter(eleve => {
-    // Filtres globaux (du header)
-    const matchesNiveauGlobal = niveauSelectionne ? eleve.niveauScolaire === niveauSelectionne : true;
-    const matchesCycleGlobal = cycleSelectionne ? eleve.cycle === cycleSelectionne : true;
-
-    // Filtres locaux
+    const matchesGlobal = (!niveauSelectionne || eleve.niveauScolaire === niveauSelectionne) &&
+      (!cycleSelectionne || eleve.cycle === cycleSelectionne);
+    const matchesLocal = (!niveauClasseSelectionne || eleve.niveauClasse === niveauClasseSelectionne) &&
+      (!classeSelectionne || eleve.classe === classeSelectionne);
     const matchesSearch =
       eleve.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      eleve.prenom.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesClasse = selectedClasse ? eleve.classe === selectedClasse : true;
-    const matchesSection = selectedSection ? eleve.section === selectedSection : true;
+      eleve.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (eleve.matricule || "").toLowerCase().includes(searchTerm.toLowerCase());
 
-    return matchesNiveauGlobal && matchesCycleGlobal && matchesSearch && matchesClasse && matchesSection;
+    return matchesGlobal && matchesLocal && matchesSearch;
   });
 
-  // Réinitialiser les filtres locaux quand les filtres globaux changent
-  useEffect(() => {
-    setSelectedClasse("");
-    setSelectedSection("");
-  }, [niveauSelectionne, cycleSelectionne]);
+  const effectifsParClasse = compterParClasse(eleves, classes);
 
-  // Réinitialiser la section quand la classe change
-  useEffect(() => {
-    setSelectedSection("");
-  }, [selectedClasse]);
+  // 4. Handlers
+  const handleDelete = async () => {
+    if (!eleveToDelete?.id) return;
+    try {
+      await deleteInscription(eleveToDelete.id);
+      setEleveToDelete(null);
+    } catch (err) {
+      alertServerError(err, "Erreur suppression");
+    }
+  };
+
+  const handleDeleteMany = async () => {
+    if (!itemsToDelete || itemsToDelete.length === 0) return;
+    try {
+      await deleteManyInscriptions(itemsToDelete);
+      setItemsToDelete(null);
+    } catch (err) {
+      alertServerError(err, "Erreur suppression multiple");
+    }
+  };
+
+  const { handleDownload } = useCarte({ eleve: selectedEleve });
 
   const menuItems: Menu[] = [
     {
       label: "Ajouter un élève",
       icon: UserPlus,
-      onClick: () => {
-        navigate("/admin/eleves/new");
-        setIsModalOpen(false);
-      }
+      onClick: () => { navigate("/admin/eleves/new"); setIsAddMenuOpen(false); }
     },
     {
       label: "Importer liste",
       icon: Download,
-      onClick: () => {
-        navigate("/admin/eleves/import")
-        setIsModalOpen(false);
-      }
+      onClick: () => { navigate("/admin/eleves/import"); setIsAddMenuOpen(false); }
+    },
+    {
+      label: "Transférer les élèves",
+      icon: Users,
+      onClick: () => { navigate("/admin/eleves/transfert"); setIsAddMenuOpen(false); }
     }
   ];
 
-  const handleAction = (eleve: Eleve) => {
-    setSelectedEleve(eleve);
-  };
-
-  const handleCloseMenuModal = () => {
-    setSelectedEleve(null);
-  };
-
-  const handleCloseDeleteModal = () => {
-    setEleveToDelete(null);
-    // Ne pas remettre selectedEleve à null ici, car il est déjà null
-  };
+  if (loading) {
+    return (
+      <div className="flex justify-center p-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {/* En-tête de la page */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Gestion des élèves</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {filteredEleves.length} élèves sur {eleves.length} inscrits pour l'année 2024-2025
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
+    <PageLayout
+      title="Gestion des élèves"
+      description={`${filteredEleves.length} élèves affichés`}
+      actions={
+        <>
           <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+            onClick={() => navigate("/admin/eleves/upload-photos")}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
-            <Plus size={18} />
-            Nouvel élève
+            <Camera size={18} /> Ajouter les photos
           </button>
-        </div>
-      </div>
-
-      {/* Barre de recherche */}
-      <div className="flex items-center gap-4">
-        <div className="flex-1">
-          <input
-            type="text"
-            placeholder="Rechercher un élève par nom ou prénom..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-          />
-        </div>
-      </div>
-
-      {/* Filtres locaux (classe et section) avec hiérarchie */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Filtre Classe - désactivé si aucun cycle sélectionné */}
-        <select
-          value={selectedClasse}
-          onChange={(e) => setSelectedClasse(e.target.value)}
-          disabled={!cycleSelectionne}
-          className={`px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-            !cycleSelectionne ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : ''
-          }`}
-        >
-          <option value="">Toutes les classes</option>
-          {classesDisponibles.map(classe => (
-            <option key={classe} value={classe}>{classe}</option>
+          <button
+            onClick={() => setIsAddMenuOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
+          >
+            <Plus size={18} /> Nouvel élève
+          </button>
+        </>
+      }
+      menu={{
+        isOpen: isAddMenuOpen,
+        onClose: () => setIsAddMenuOpen(false),
+        title: "Gestion des élèves",
+        icon: <Plus className="text-primary" size={20} />,
+        items: menuItems
+      }}
+    >
+      {/* Stats rapides */}
+      <div className="bg-white rounded-lg shadow-sm border p-4">
+        <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+          <School size={16} className="text-primary" /> Effectifs par classe
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {Object.entries(effectifsParClasse).sort().map(([classe, count]) => (
+            <div key={classe} className="bg-gray-50 p-2 rounded flex justify-between items-center text-sm">
+              <span className="font-medium">{classe}</span>
+              <span className="bg-primary/10 text-primary px-2 rounded-full font-bold">{count}</span>
+            </div>
           ))}
-        </select>
-
-        {/* Filtre Section - désactivé si aucune classe sélectionnée */}
-        <select
-          value={selectedSection}
-          onChange={(e) => setSelectedSection(e.target.value)}
-          disabled={!selectedClasse}
-          className={`px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-            !selectedClasse ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : ''
-          }`}
-        >
-          <option value="">Toutes les sections</option>
-          {sectionsDisponibles.map(section => section && (
-            <option key={section} value={section}>Section {section}</option>
-          ))}
-        </select>
+        </div>
       </div>
 
-      {/* Message informatif selon l'état des filtres */}
-      {!cycleSelectionne && (
-        <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
-          Veuillez d'abord sélectionner un cycle pour filtrer par classe
-        </div>
-      )}
+      {/* Recherche */}
+      <div className="relative">
+        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary/50"
+        />
+      </div>
 
-      {cycleSelectionne && !selectedClasse && classesDisponibles.length > 0 && (
-        <div className="text-sm text-gray-500">
-          {classesDisponibles.length} classe{classesDisponibles.length > 1 ? 's' : ''} disponible{classesDisponibles.length > 1 ? 's' : ''}
-        </div>
-      )}
-
-      {/* Indicateur de filtres actifs */}
-      {(niveauSelectionne || cycleSelectionne || selectedClasse || selectedSection) && (
-        <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap">
-          <span>Filtres actifs:</span>
-          {niveauSelectionne && (
-            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
-              {niveauSelectionne}
-            </span>
-          )}
-          {cycleSelectionne && (
-            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
-              {cycleSelectionne}
-            </span>
-          )}
-          {selectedClasse && (
-            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
-              {selectedClasse}
-            </span>
-          )}
-          {selectedSection && (
-            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
-              Section {selectedSection}
-            </span>
-          )}
-          {(selectedClasse || selectedSection) && (
-            <button
-              onClick={() => {
-                setSelectedClasse("");
-                setSelectedSection("");
-              }}
-              className="text-red-500 hover:text-red-700 ml-2 text-xs"
-            >
-              Effacer filtres locaux
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Liste des élèves */}
-      <ElevesList eleves={filteredEleves} onAction={handleAction} />
-
-      {/* Message si aucun résultat */}
-      {filteredEleves.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">Aucun élève ne correspond à vos critères</p>
-        </div>
-      )}
-
-      {/* Modal pour les actions globales */}
-      <MenuModal
-        menu={menuItems}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Gestion des élèves"
-        icon={<Plus className="text-primary" size={20} />}
+      {/* Filtre par onglets */}
+      <ClasseFilter
+        data={eleves}
+        getCycle={(e) => e.cycle}
+        getNiveauClasse={(e) => e.niveauClasse}
+        getClasse={(e) => e.classe}
       />
 
-      {/* Modal pour les actions sur un élève spécifique */}
+      {/* Liste */}
+      <ElevesList 
+        eleves={filteredEleves} 
+        selectable={true} 
+        onAction={(e) => setSelectedEleve(e)}
+        selectActions={[
+          {
+            label: "Supprimer",
+            onClick: (selectedItems) => {
+              const ids = selectedItems.map(i => i.id);
+              setItemsToDelete(ids);
+            },
+            className: "bg-red-600 text-white hover:bg-red-700"
+          }
+        ]}
+      />
+
+      {/* Menu modal pour élève sélectionné */}
       {selectedEleve && (
         <MenuModal
+          title={`${selectedEleve.prenom} ${selectedEleve.nom}`}
+          isOpen={!!selectedEleve}
+          onClose={() => setSelectedEleve(null)}
+          icon={<UserPlus className="text-primary" size={20} />}
           menu={[
             {
               label: "Voir détails",
               icon: FileText,
-              onClick: () => {
-                navigate("/admin/eleves/details", { state: selectedEleve });
-                setSelectedEleve(null);
-              }
+              onClick: () => { navigate("/admin/eleves/details", { state: selectedEleve }); setSelectedEleve(null); }
             },
             {
               label: "Modifier",
               icon: UserPlus,
-              onClick: () => {
-                navigate("/admin/eleves/update", { state: selectedEleve });
-                setSelectedEleve(null);
-              }
+              onClick: () => { navigate("/admin/eleves/update", { state: selectedEleve }); setSelectedEleve(null); }
             },
             {
-              label: "Bulletin",
-              icon: Printer,
-              onClick: () => {
-                console.log("Bulletin", selectedEleve);
-                setSelectedEleve(null);
-              }
+              label: "Télécharger la carte",
+              icon: Download,
+              onClick: async () => { handleDownload(); }
             },
             {
               label: "Supprimer",
               icon: MoreVertical,
-              onClick: () => {
-                setEleveToDelete(selectedEleve); // 👈 On stocke l'élève à supprimer
-                setSelectedEleve(null); // 👈 On ferme le menu modal
-              }
+              onClick: () => { setEleveToDelete(selectedEleve); setSelectedEleve(null); }
             }
           ]}
-          isOpen={!!selectedEleve}
-          onClose={handleCloseMenuModal}
-          title={`${selectedEleve.prenom} ${selectedEleve.nom}`}
-          icon={<UserPlus className="text-primary" size={20} />}
         />
       )}
 
-      {/* Modal de confirmation de suppression - utilise eleveToDelete */}
+      {/* Modal confirmation suppression simple */}
       <DeleteConfirmationModal
         isOpen={!!eleveToDelete}
-        onClose={handleCloseDeleteModal}
+        onClose={() => setEleveToDelete(null)}
         onConfirm={handleDelete}
         title="Supprimer l'élève"
-        message={`Êtes-vous sûr de vouloir supprimer ${eleveToDelete?.prenom} ${eleveToDelete?.nom} ? Cette action est irréversible.`}
+        message={`Voulez-vous vraiment supprimer ${eleveToDelete?.prenom} ${eleveToDelete?.nom} ?`}
         confirmText="Supprimer"
         cancelText="Annuler"
       />
-    </div>
+
+      {/* Modal confirmation suppression multiple */}
+      <DeleteConfirmationModal 
+        isOpen={!!itemsToDelete && itemsToDelete.length > 0} 
+        onClose={() => setItemsToDelete(null)} 
+        onConfirm={handleDeleteMany} 
+        title="Supprimer les élèves"
+        message={`Voulez-vous vraiment supprimer ${itemsToDelete?.length} élève(s) ? Cette action est irréversible.`}
+      />
+    </PageLayout>
   );
 }

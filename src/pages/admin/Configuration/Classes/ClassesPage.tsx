@@ -1,62 +1,126 @@
 // src/pages/admin/parametres/scolarite/classes/ClassesPage.tsx
-import { useState } from "react";
-import { Plus, Download, MoreVertical, FileText, Printer, Search } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Plus, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ClassesList from "../../../../components/admin/lists/ClassesList";
-import MenuModal, { Menu } from "../../../../components/ui/MenuModal";
-
-import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
-import { classes } from "../../../../data/baseData";
+import TabsHorizontalScrollable from "../../../../components/ui/TabsHorizontalScrollable";
 import { Classe } from "../../../../utils/types/data";
+import useClasses from "../../../../hooks/classes/useClasses";
+import ClasseModals from "../../../../components/admin/modals/ClasseModals";
+import { alertError } from "../../../../helpers/alertError";
+import useNiveauxClasses from "../../../../hooks/niveauxClasses/useNiveauxClasses";
+import { useEcoleNiveau } from "../../../../hooks/filters/useEcoleNiveau";
+import PageLayout from "../../../../layouts/PageLayout";
+import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
 
-// Données fictives pour les élèves (à remplacer par les vraies données)
-const mockElevesParClasse = {
-  [classes[0]?.id]: 25,
-  [classes[1]?.id]: 23,
-  [classes[2]?.id]: 0,
-  [classes[3]?.id]: 28,
-  [classes[4]?.id]: 22,
-  [classes[5]?.id]: 24,
-};
+interface PagesProps {
+  config?: boolean
+}
 
-export default function ClassesPage() {
+export default function ClassesPage({ config }: PagesProps) {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClasse, setSelectedClasse] = useState<Classe | null>(null);
   const [classeToDelete, setClasseToDelete] = useState<Classe | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedNiveauClasseId, setSelectedNiveauClasseId] = useState<string>("tous");
+  const [itemsToDelete, setItemsToDelete] = useState<string[] | null>(null);
+
+  const { classes, deleteClasse, deleteManyClasses } = useClasses();
+  const { niveauSelectionne, cycleSelectionne } = useEcoleNiveau();
+  const { niveauxClasse } = useNiveauxClasses();
+
+  // Filtrer les niveaux de classe par cycle et niveau sélectionnés
+  const niveauxClasseFiltres = useMemo(() => {
+    let filtered = niveauxClasse;
+
+    if (cycleSelectionne) {
+      filtered = filtered.filter(nc => nc.cycle === cycleSelectionne);
+    }
+    if (niveauSelectionne) {
+      filtered = filtered.filter(nc => nc.niveauScolaire === niveauSelectionne);
+    }
+
+    return filtered;
+  }, [niveauxClasse, cycleSelectionne, niveauSelectionne]);
+
+  // Construire les tabs à partir des niveaux de classe filtrés
+  const tabs = useMemo(() => {
+    const countByNiveauClasse = classes.reduce((acc, classe) => {
+      const niveauClasseId = classe.niveauClasseId;
+      acc[niveauClasseId] = (acc[niveauClasseId] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return [
+      {
+        id: "tous",
+        label: "Tous",
+        count: classes.length
+      },
+      ...niveauxClasseFiltres.map(nc => ({
+        id: nc.id,
+        label: nc.nom,
+        count: countByNiveauClasse[nc.id] || 0
+      }))
+    ];
+  }, [classes, niveauxClasseFiltres]);
 
   // Filtrer les classes
-  const filteredClasses = classes.filter(classe =>
-    classe.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    classe.niveauClasse.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    classe.cycle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    classe.niveauScolaire.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredClasses = useMemo(() => {
+    let filtered = classes;
+
+    if (selectedNiveauClasseId !== "tous") {
+      filtered = filtered.filter(classe => classe.niveauClasseId === selectedNiveauClasseId);
+    }
+
+    if (cycleSelectionne || niveauSelectionne) {
+      const niveauxIds = niveauxClasseFiltres.map(nc => nc.id);
+      filtered = filtered.filter(classe => niveauxIds.includes(classe.niveauClasseId));
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(classe =>
+        classe.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        classe.niveauClasse.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        classe.cycle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        classe.niveauScolaire.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    return filtered;
+  }, [classes, selectedNiveauClasseId, niveauxClasseFiltres, cycleSelectionne, niveauSelectionne, searchTerm]);
+
+  // Données fictives pour les élèves
+  const mockElevesParClasse = useMemo(() => {
+    return classes.reduce((acc, classe) => {
+      acc[classe.id] = Math.floor(Math.random() * 30) + 15;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [classes]);
 
   const handleDelete = () => {
-    console.log("Suppression de la classe:", classeToDelete);
-    setClasseToDelete(null);
-    setSelectedClasse(null);
+    if (!classeToDelete?.id) {
+      alertError();
+      return;
+    }
+    try {
+      deleteClasse(classeToDelete?.id);
+      setClasseToDelete(null);
+      setSelectedClasse(null);
+    } catch (error) {
+      alertError();
+    }
   };
 
-  const menuItems: Menu[] = [
-    {
-      label: "Ajouter une classe",
-      icon: Plus,
-      onClick: () => {
-        setIsModalOpen(false);
-      }
-    },
-    {
-      label: "Importer",
-      icon: Download,
-      onClick: () => {
-        console.log("Importer des classes");
-        setIsModalOpen(false);
-      }
+  const handleDeleteMany = async () => {
+    if (!itemsToDelete || itemsToDelete.length === 0) return;
+    try {
+      await deleteManyClasses(itemsToDelete);
+      setItemsToDelete(null);
+    } catch (error) {
+      alertError();
     }
-  ];
+  };
 
   const handleAction = (classe: Classe) => {
     setSelectedClasse(classe);
@@ -75,26 +139,35 @@ export default function ClassesPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Classes</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {filteredClasses.length} classe{filteredClasses.length > 1 ? 's' : ''} configurées
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            <Plus size={18} />
-            Nouvelle classe
-          </button>
-        </div>
-      </div>
+    <PageLayout
+      title="Classes"
+      description={`${filteredClasses.length} classe${filteredClasses.length > 1 ? 's' : ''}
+        ${niveauSelectionne && ` - ${niveauSelectionne}`}
+        ${cycleSelectionne && ` / ${cycleSelectionne}`}`}
+      actions={
+        <button
+          onClick={() => {
+            if (config) {
+              navigate("/admin/configuration/classes/new")
+            } else {
+              navigate("/admin/classes/new")
+            }
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          <Plus size={18} />
+          Nouvelles classes
+        </button>
+      }
+    >
+      {/* Tabs des niveaux de classe */}
+      {niveauxClasseFiltres.length > 0 && (
+        <TabsHorizontalScrollable
+          tabs={tabs}
+          activeTab={selectedNiveauClasseId}
+          onTabChange={setSelectedNiveauClasseId}
+        />
+      )}
 
       {/* Barre de recherche */}
       <div className="flex items-center gap-4">
@@ -118,91 +191,75 @@ export default function ClassesPage() {
         </div>
       </div>
 
+      {/* Message si aucun niveau de classe */}
+      {niveauxClasseFiltres.length === 0 && (cycleSelectionne || niveauSelectionne) && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-700">
+          Aucun niveau de classe trouvé pour {niveauSelectionne} {cycleSelectionne}
+        </div>
+      )}
+
       {/* Liste */}
-      <ClassesList 
-        classes={filteredClasses} 
+      <ClassesList
+        classes={filteredClasses}
         onAction={handleAction}
         elevesCount={mockElevesParClasse}
+        selectable={true}
+        selectActions={[
+          {
+            label: "Supprimer",
+            onClick: (selectedItems) => {
+              const ids = selectedItems.map(i => i.id);
+              setItemsToDelete(ids);
+            },
+            className: "bg-red-600 text-white hover:bg-red-700"
+          }
+        ]}
       />
 
       {/* Message si aucun résultat */}
       {filteredClasses.length === 0 && (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">Aucune classe trouvée</p>
-          {searchTerm && (
+          <p className="text-gray-500">
+            {selectedNiveauClasseId !== "tous"
+              ? "Aucune classe pour ce niveau"
+              : "Aucune classe trouvée"}
+          </p>
+          {(searchTerm || selectedNiveauClasseId !== "tous") && (
             <button
-              onClick={clearSearch}
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedNiveauClasseId("tous");
+              }}
               className="mt-4 text-primary hover:text-primary/80 text-sm"
             >
-              Effacer la recherche
+              Réinitialiser les filtres
             </button>
           )}
         </div>
       )}
 
-      {/* Modal actions globales */}
-      <MenuModal
-        menu={menuItems}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Gestion des classes"
-        icon={<Plus className="text-primary" size={20} />}
+      {/* Modals pour suppression simple */}
+      <ClasseModals
+        config={config}
+        handleCloseDeleteModal={handleCloseDeleteModal}
+        handleCloseMenuModal={handleCloseMenuModal}
+        classeToDelete={classeToDelete}
+        selectedClasse={selectedClasse}
+        setClasseToDelete={setClasseToDelete}
+        setSelectedClasse={setSelectedClasse}
+        handleDelete={handleDelete}
       />
 
-      {/* Modal actions sur une classe */}
-      {selectedClasse && (
-        <MenuModal
-          menu={[
-            {
-              label: "Voir détails",
-              icon: FileText,
-              onClick: () => {
-                navigate("/admin/configuration/classes/details", { state: selectedClasse });
-                setSelectedClasse(null);
-              }
-            },
-            {
-              label: "Modifier",
-              icon: Plus,
-              onClick: () => {
-                navigate("/admin/configuration/classes/update", { state: selectedClasse });
-                setSelectedClasse(null);
-              }
-            },
-            {
-              label: "Liste des élèves",
-              icon: Printer,
-              onClick: () => {
-                navigate("/admin/eleves", { state: { classeId: selectedClasse.id } });
-                setSelectedClasse(null);
-              }
-            },
-            {
-              label: "Supprimer",
-              icon: MoreVertical,
-              onClick: () => {
-                setClasseToDelete(selectedClasse);
-                setSelectedClasse(null);
-              }
-            }
-          ]}
-          isOpen={!!selectedClasse}
-          onClose={handleCloseMenuModal}
-          title={selectedClasse.nom}
-          icon={<Plus className="text-primary" size={20} />}
-        />
-      )}
-
-      {/* Modal confirmation suppression */}
+      {/* Modal confirmation suppression multiple */}
       <DeleteConfirmationModal
-        isOpen={!!classeToDelete}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleDelete}
-        title="Supprimer la classe"
-        message={`Êtes-vous sûr de vouloir supprimer la classe "${classeToDelete?.nom}" ? Cette action est irréversible.`}
+        isOpen={!!itemsToDelete && itemsToDelete.length > 0}
+        onClose={() => setItemsToDelete(null)}
+        onConfirm={handleDeleteMany}
+        title="Supprimer les classes"
+        message={`Voulez-vous vraiment supprimer ${itemsToDelete?.length} classe(s) ? Cette action est irréversible.`}
         confirmText="Supprimer"
         cancelText="Annuler"
       />
-    </div>
+    </PageLayout>
   );
 }

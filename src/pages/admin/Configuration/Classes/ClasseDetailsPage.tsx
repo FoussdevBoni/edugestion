@@ -1,24 +1,49 @@
 // src/pages/admin/parametres/scolarite/classes/ClasseDetailsPage.tsx
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { 
-  ArrowLeft, Edit, Trash2, Calendar, BookOpen, 
-  ChevronRight, Layers, Users, User
+import {
+  ArrowLeft, Edit, Trash2, Calendar, BookOpen,
+  Layers, Users, User,
+  MoreVertical,
+  Download,
+  UserPlus,
+  FileText
 } from "lucide-react";
 import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
+import { alertError, alertServerError } from "../../../../helpers/alertError";
+import { classeService } from "../../../../services/classeService";
+import useEleves from "../../../../hooks/eleves/useEleves";
+import ElevesList from "../../../../components/admin/lists/ElevesList";
+import { Inscription } from "../../../../utils/types/data";
+import useCarte from "../../../../hooks/eleves/useCarte";
+import MenuModal from "../../../../components/ui/MenuModal";
 
-// Données fictives pour les élèves (à remplacer par les vraies données)
-const mockEleves = [
-  { id: "1", nom: "Koffi", prenom: "Abla", sexe: "F" },
-  { id: "2", nom: "Mensah", prenom: "Kofi", sexe: "M" },
-  { id: "3", nom: "Dogbe", prenom: "Yawa", sexe: "F" },
-];
 
-export default function ClasseDetailsPage() {
+interface PagesProps {
+  config?: boolean
+}
+export default function ClasseDetailsPage({ config }: PagesProps) {
   const location = useLocation();
   const classe = location.state;
   const navigate = useNavigate();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const { eleves, deleteInscription } = useEleves()
+  const [selectedEleve, setSelectedEleve] = useState<Inscription | null>(null);
+  const [eleveToDelete, setEleveToDelete] = useState<Inscription | null>(null);
+  const classeEleves = eleves.filter(item => item.classeId === classe.id)
+
+
+  const handleDeleteEleve = async () => {
+    if (!eleveToDelete?.id) return;
+    try {
+      await deleteInscription(eleveToDelete.id);
+      setEleveToDelete(null);
+    } catch (err) {
+      alertServerError(err, "Erreur suppression");
+    }
+  };
+
+  const { handleDownload } = useCarte({ eleve: selectedEleve })
 
   if (!classe) {
     return (
@@ -27,7 +52,9 @@ export default function ClasseDetailsPage() {
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Classe non trouvée</h2>
           <p className="text-gray-500 mb-4">Les informations de la classe sont introuvables.</p>
           <button
-            onClick={() => navigate("/admin/parametres/scolarite/classes")}
+            onClick={() => {
+              navigate(-1);
+            }}
             className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
             Retour à la liste
@@ -47,18 +74,31 @@ export default function ClasseDetailsPage() {
   };
 
   const handleUpdate = () => {
-    navigate("/admin/configuration/classes/update", { state: classe });
+    if (config) {
+      navigate("/admin/configuration/classes/update", { state: classe });
+
+    } else {
+      navigate("/admin/classes/update", { state: classe });
+
+    }
   };
 
-  const handleDelete = () => {
-    console.log("Suppression de la classe:", classe);
-    setOpenDeleteModal(false);
-    navigate("admin/configuration/classes");
+  const handleDelete = async () => {
+    if (!classe?.id) {
+      alertError()
+      return
+    }
+    try {
+      await classeService.delete(classe?.id)
+      setOpenDeleteModal(false);
+      navigate(-1);
+    } catch (error) {
+      alertError()
+    }
+
   };
 
-  const handleViewEleve = (eleve: any) => {
-    navigate("/admin/eleves/details", { state: eleve });
-  };
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -68,7 +108,9 @@ export default function ClasseDetailsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => navigate("/admin/parametres/scolarite/classes")}
+                onClick={() => {
+                  navigate(-1);
+                }}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <ArrowLeft size={20} className="text-gray-600" />
@@ -97,23 +139,6 @@ export default function ClasseDetailsPage() {
                 Supprimer
               </button>
             </div>
-          </div>
-
-          {/* Fil d'Ariane */}
-          <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
-            <span onClick={() => navigate("/admin")} className="hover:text-primary cursor-pointer">
-              Dashboard
-            </span>
-            <ChevronRight size={14} />
-            <span onClick={() => navigate("/admin/parametres")} className="hover:text-primary cursor-pointer">
-              Paramètres
-            </span>
-            <ChevronRight size={14} />
-            <span onClick={() => navigate("/admin/parametres/scolarite/classes")} className="hover:text-primary cursor-pointer">
-              Classes
-            </span>
-            <ChevronRight size={14} />
-            <span className="text-gray-700">{classe.nom}</span>
           </div>
         </div>
       </div>
@@ -172,33 +197,17 @@ export default function ClasseDetailsPage() {
             <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                 <User size={18} className="text-primary" />
-                Élèves ({mockEleves.length})
+                Élèves ({classeEleves.length})
               </h2>
             </div>
             <div className="p-6">
-              {mockEleves.length > 0 ? (
+              {classeEleves.length > 0 ? (
                 <div className="space-y-2">
-                  {mockEleves.map((eleve) => (
-                    <div
-                      key={eleve.id}
-                      onClick={() => handleViewEleve(eleve)}
-                      className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:shadow-md transition cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                          <User size={14} className="text-primary" />
-                        </div>
-                        <span className="font-medium text-gray-800">
-                          {eleve.nom} {eleve.prenom}
-                        </span>
-                      </div>
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        eleve.sexe === 'M' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'
-                      }`}>
-                        {eleve.sexe}
-                      </span>
-                    </div>
-                  ))}
+                  <ElevesList eleves={classeEleves}
+                    onAction={(eleve) => {
+                      setSelectedEleve(eleve)
+                    }}
+                  />
                 </div>
               ) : (
                 <div className="text-center py-8">
@@ -218,6 +227,52 @@ export default function ClasseDetailsPage() {
         onConfirm={handleDelete}
         title="Supprimer la classe"
         message={`Êtes-vous sûr de vouloir supprimer la classe "${classe.nom}" ? Cette action est irréversible.`}
+        confirmText="Supprimer"
+        cancelText="Annuler"
+      />
+
+
+
+      {selectedEleve && (
+        <MenuModal
+          title={`${selectedEleve.prenom} ${selectedEleve.nom}`}
+          isOpen={!!selectedEleve}
+          onClose={() => setSelectedEleve(null)}
+          icon={<UserPlus className="text-primary" size={20} />}
+          menu={[
+            {
+              label: "Voir détails",
+              icon: FileText,
+              onClick: () => { navigate("/admin/eleves/details", { state: selectedEleve }); setSelectedEleve(null); }
+            },
+            {
+              label: "Modifier",
+              icon: UserPlus,
+              onClick: () => { navigate("/admin/eleves/update", { state: selectedEleve }); setSelectedEleve(null); }
+            },
+            {
+              label: "Télécharger la carte",
+              icon: Download,
+              onClick: async () => {
+                handleDownload()
+
+              }
+            },
+            {
+              label: "Supprimer",
+              icon: MoreVertical,
+              onClick: () => { setEleveToDelete(selectedEleve); setSelectedEleve(null); }
+            }
+          ]}
+        />
+      )}
+
+      <DeleteConfirmationModal
+        isOpen={!!eleveToDelete}
+        onClose={() => setEleveToDelete(null)}
+        onConfirm={handleDeleteEleve}
+        title="Supprimer l'élève"
+        message={`Voulez-vous vraiment supprimer ${eleveToDelete?.prenom} ${eleveToDelete?.nom} ?`}
         confirmText="Supprimer"
         cancelText="Annuler"
       />

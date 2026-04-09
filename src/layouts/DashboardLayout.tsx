@@ -1,27 +1,29 @@
 // layouts/DashboardLayout.tsx
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardHeader from "./DashboardHeader";
 import { useEcoleNiveau } from "../hooks/filters/useEcoleNiveau";
 import { EcoleNiveauProvider } from "../contexts/EcoleNiveauProvider";
+import useNiveauxScolaires from "../hooks/niveauxScolaires/useNiveauxScolaires";
 
 interface DashboardLayoutProps {
   children: ReactNode
 }
 
-// Composant interne qui a accès au contexte
 function DashboardContent({ children }: { children: ReactNode }) {
-  const { niveauSelectionne, cycleSelectionne, niveauxScolaires, setNiveau,
+  const { niveauSelectionne, cycleSelectionne, setNiveau,
      setCycle, resetFiltres } = useEcoleNiveau();
+  const {niveauxScolaires} = useNiveauxScolaires()
+  const [collapsed , setCollapsed] = useState(false)
+
+  const onToggle = ()=>{
+    setCollapsed(!collapsed)
+  }
 
   return (
     <div className="h-screen flex bg-gray-100">
-      {/* Sidebar */}
-      <DashboardSidebar />
-
-      {/* Main content */}
+      <DashboardSidebar onToggle={onToggle} collapsed = {collapsed} />
       <main className="flex-1 flex flex-col overflow-auto">
-        {/* Header avec les filtres */}
         <DashboardHeader 
           niveauxScolaires={niveauxScolaires}
           niveauSelectionne={niveauSelectionne}
@@ -30,8 +32,6 @@ function DashboardContent({ children }: { children: ReactNode }) {
           onCycleChange={setCycle}
           onResetFiltres={resetFiltres}
         />
-
-        {/* Page content */}
         <div className="flex-1 p-6 overflow-auto">
           {children}
         </div>
@@ -40,7 +40,6 @@ function DashboardContent({ children }: { children: ReactNode }) {
   );
 }
 
-// Layout principal qui wrap avec le provider
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <EcoleNiveauProvider>

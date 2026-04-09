@@ -19,17 +19,21 @@ export default function UpdateNiveauScolairePage() {
       setIsLoading(true);
       try {
         await new Promise(resolve => setTimeout(resolve, 500));
-        
+
         if (niveauData) {
           setNiveau({
             id: niveauData.id,
-            nom: niveauData.nom
+            nom: niveauData.nom,
+            aDesCycles: niveauData.aDesCycles || false,
+            cycles: niveauData.cycles || []
           });
         } else {
           // Fallback: prendre le premier niveau pour l'exemple
           setNiveau({
             id: niveauxScolaires[0].id,
-            nom: niveauxScolaires[0].nom
+            nom: niveauxScolaires[0].nom,
+            aDesCycles: false,
+            cycles: []
           });
         }
       } catch (error) {
@@ -47,7 +51,7 @@ export default function UpdateNiveauScolairePage() {
     try {
       console.log("Mise à jour du niveau scolaire:", data);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      navigate("/admin/configuration/niveaux");
+      navigate(-1);
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error);
     } finally {
@@ -56,7 +60,8 @@ export default function UpdateNiveauScolairePage() {
   };
 
   const handleCancel = () => {
-    navigate("/admin/configuration/niveaux");
+    navigate(-1);
+
   };
 
   if (isLoading) {
@@ -75,7 +80,10 @@ export default function UpdateNiveauScolairePage() {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => navigate("/admin/configuration/niveaux")}
+            onClick={() => {
+              navigate(-1);
+
+            }}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <ArrowLeft size={20} className="text-gray-600" />
@@ -89,7 +97,9 @@ export default function UpdateNiveauScolairePage() {
             Niveau introuvable
           </h2>
           <button
-            onClick={() => navigate("/admin/configuration/niveaux")}
+            onClick={() => {
+              navigate(-1);
+            }}
             className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
             Retour à la liste
@@ -103,7 +113,7 @@ export default function UpdateNiveauScolairePage() {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <button
-          onClick={() => navigate("/admin/configuration/niveaux")}
+          onClick={() => navigate(-1)}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <ArrowLeft size={20} className="text-gray-600" />

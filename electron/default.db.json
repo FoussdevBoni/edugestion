@@ -1,0 +1,728 @@
+{
+  "senegal": [
+    {
+      "nom": "Préscolaire",
+      "ordre": 1,
+      "cycles": [
+        {
+          "nom": "Préscolaire",
+          "ordre": 1,
+          "niveaux_de_classes": [
+            {
+              "nom": "PS",
+              "nomComplet": "Petite Section",
+              "matieres": [
+                {"nom": "Langage et Communication", "coefficient": 1},
+                {"nom": "Activités Psychomotrices", "coefficient": 1},
+                {"nom": "Activités de Découverte", "coefficient": 1},
+                {"nom": "Vivre Ensemble", "coefficient": 1},
+                {"nom": "Activités Physiques", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "MS",
+              "nomComplet": "Moyenne Section",
+              "matieres": [
+                {"nom": "Langage et Communication", "coefficient": 1},
+                {"nom": "Activités Psychomotrices", "coefficient": 1},
+                {"nom": "Activités de Découverte", "coefficient": 1},
+                {"nom": "Vivre Ensemble", "coefficient": 1},
+                {"nom": "Activités Physiques", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "GS",
+              "nomComplet": "Grande Section",
+              "matieres": [
+                {"nom": "Langage et Communication", "coefficient": 1},
+                {"nom": "Activités Psychomotrices", "coefficient": 1},
+                {"nom": "Activités de Découverte", "coefficient": 1},
+                {"nom": "Vivre Ensemble", "coefficient": 1},
+                {"nom": "Activités Physiques", "coefficient": 1}
+              ]
+            }
+          ]
+        }
+      ],
+      "periodes": [
+        {"nom": "1er semestre", "ordre": 1, "evaluations": [{"nom": "Appréciation", "abreviation": "APP", "type": "devoir"}]},
+        {"nom": "2ème semestre", "ordre": 2, "evaluations": [{"nom": "Appréciation", "abreviation": "APP", "type": "devoir"}]}
+      ]
+    },
+    {
+      "nom": "Élémentaire",
+      "ordre": 2,
+      "cycles": [
+        {
+          "nom": "Élémentaire",
+          "ordre": 1,
+          "niveaux_de_classes": [
+            {
+              "nom": "CI",
+              "nomComplet": "Cours d'Initiation",
+              "matieres": [
+                {"nom": "Langue et Communication", "coefficient": 3},
+                {"nom": "Mathématiques", "coefficient": 3},
+                {"nom": "ESVS", "coefficient": 2},
+                {"nom": "Éducation Artistique", "coefficient": 1},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "CP",
+              "nomComplet": "Cours Préparatoire",
+              "matieres": [
+                {"nom": "Langue et Communication", "coefficient": 3},
+                {"nom": "Mathématiques", "coefficient": 3},
+                {"nom": "ESVS", "coefficient": 2},
+                {"nom": "Éducation Artistique", "coefficient": 1},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "CE1",
+              "nomComplet": "Cours Élémentaire 1ère année",
+              "matieres": [
+                {"nom": "Langue et Communication", "coefficient": 3},
+                {"nom": "Mathématiques", "coefficient": 3},
+                {"nom": "ESVS", "coefficient": 2},
+                {"nom": "Éducation Artistique", "coefficient": 1},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "CE2",
+              "nomComplet": "Cours Élémentaire 2ème année",
+              "matieres": [
+                {"nom": "Langue et Communication", "coefficient": 3},
+                {"nom": "Mathématiques", "coefficient": 3},
+                {"nom": "ESVS", "coefficient": 2},
+                {"nom": "Éducation Artistique", "coefficient": 1},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "CM1",
+              "nomComplet": "Cours Moyen 1ère année",
+              "matieres": [
+                {"nom": "Langue et Communication", "coefficient": 3},
+                {"nom": "Mathématiques", "coefficient": 3},
+                {"nom": "ESVS", "coefficient": 2},
+                {"nom": "Éducation Artistique", "coefficient": 1},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "CM2",
+              "nomComplet": "Cours Moyen 2ème année",
+              "matieres": [
+                {"nom": "Langue et Communication", "coefficient": 3},
+                {"nom": "Mathématiques", "coefficient": 3},
+                {"nom": "ESVS", "coefficient": 2},
+                {"nom": "Éducation Artistique", "coefficient": 1},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            }
+          ]
+        }
+      ],
+      "periodes": [
+        {"nom": "1er semestre", "ordre": 1, "evaluations": [{"nom": "Devoir", "abreviation": "DEV", "type": "devoir"}, {"nom": "Composition", "abreviation": "COMP", "type": "composition"}]},
+        {"nom": "2ème semestre", "ordre": 2, "evaluations": [{"nom": "Devoir", "abreviation": "DEV", "type": "devoir"}, {"nom": "Composition", "abreviation": "COMP", "type": "composition"}]}
+      ]
+    },
+    {
+      "nom": "Moyen",
+      "ordre": 3,
+      "cycles": [
+        {
+          "nom": "Moyen",
+          "ordre": 1,
+          "niveaux_de_classes": [
+            {
+              "nom": "6e",
+              "nomComplet": "Sixième",
+              "matieres": [
+                {"nom": "Français", "coefficient": 5},
+                {"nom": "Mathématiques", "coefficient": 4},
+                {"nom": "Anglais", "coefficient": 3},
+                {"nom": "SVT", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "5e",
+              "nomComplet": "Cinquième",
+              "matieres": [
+                {"nom": "Français", "coefficient": 5},
+                {"nom": "Mathématiques", "coefficient": 4},
+                {"nom": "Anglais", "coefficient": 3},
+                {"nom": "SVT", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "4e",
+              "nomComplet": "Quatrième",
+              "matieres": [
+                {"nom": "Français", "coefficient": 5},
+                {"nom": "Mathématiques", "coefficient": 4},
+                {"nom": "Anglais", "coefficient": 3},
+                {"nom": "Sciences Physiques", "coefficient": 2},
+                {"nom": "SVT", "coefficient": 2},
+                {"nom": "LV2", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "3e",
+              "nomComplet": "Troisième",
+              "matieres": [
+                {"nom": "Français", "coefficient": 5},
+                {"nom": "Mathématiques", "coefficient": 4},
+                {"nom": "Anglais", "coefficient": 3},
+                {"nom": "Sciences Physiques", "coefficient": 2},
+                {"nom": "SVT", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "LV2", "coefficient": 2}
+              ]
+            }
+          ]
+        }
+      ],
+      "periodes": [
+        {"nom": "1er semestre", "ordre": 1, "evaluations": [{"nom": "Devoir", "abreviation": "DEV", "type": "devoir"}, {"nom": "Composition", "abreviation": "COMP", "type": "composition"}]},
+        {"nom": "2ème semestre", "ordre": 2, "evaluations": [{"nom": "Devoir", "abreviation": "DEV", "type": "devoir"}, {"nom": "Composition", "abreviation": "COMP", "type": "composition"}]}
+      ]
+    },
+    {
+      "nom": "Secondaire Général",
+      "ordre": 4,
+      "cycles": [
+        {
+          "nom": "Lycée",
+          "ordre": 1,
+          "niveaux_de_classes": [
+            {
+              "nom": "2de L",
+              "nomComplet": "Seconde Littéraire",
+              "matieres": [
+                {"nom": "Français", "coefficient": 5},
+                {"nom": "Mathématiques", "coefficient": 4},
+                {"nom": "Anglais (LV1)", "coefficient": 3},
+                {"nom": "Histoire-Géographie", "coefficient": 3},
+                {"nom": "SVT", "coefficient": 2},
+                {"nom": "Langue Ancienne (Grec/Latin/Arabe)", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "2de S",
+              "nomComplet": "Seconde Scientifique",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 5},
+                {"nom": "SVT", "coefficient": 4},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e S1",
+              "nomComplet": "Première S1 (Maths-Sciences Physiques)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 8},
+                {"nom": "Sciences Physiques", "coefficient": 8},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "SVT", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e S2",
+              "nomComplet": "Première S2 (Sciences Expérimentales)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 6},
+                {"nom": "Sciences Physiques", "coefficient": 6},
+                {"nom": "SVT", "coefficient": 6},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e S3",
+              "nomComplet": "Première S3 (Sciences et Techniques)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 6},
+                {"nom": "Sciences Physiques", "coefficient": 5},
+                {"nom": "Construction Mécanique", "coefficient": 5},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e S4",
+              "nomComplet": "Première S4 (Agri-Environnement)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 5},
+                {"nom": "SVT", "coefficient": 5},
+                {"nom": "Phytotechnique", "coefficient": 4},
+                {"nom": "Zootechnique", "coefficient": 3},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e S5",
+              "nomComplet": "Première S5 (Agro-Alimentaire)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 5},
+                {"nom": "SVT", "coefficient": 4},
+                {"nom": "Technologies Agro-Alimentaires", "coefficient": 5},
+                {"nom": "Microbiologie", "coefficient": 3},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e L1a",
+              "nomComplet": "Première L1 option A (Grec-Latin)",
+              "matieres": [
+                {"nom": "Français", "coefficient": 6},
+                {"nom": "Philosophie", "coefficient": 6},
+                {"nom": "Grec", "coefficient": 5},
+                {"nom": "Latin ou Arabe Classique", "coefficient": 5},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "LV1", "coefficient": 2},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e L1b",
+              "nomComplet": "Première L1 option B (Latin-LV2)",
+              "matieres": [
+                {"nom": "Français", "coefficient": 6},
+                {"nom": "Philosophie", "coefficient": 6},
+                {"nom": "Latin ou Arabe Classique", "coefficient": 5},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "LV1", "coefficient": 3},
+                {"nom": "LV2", "coefficient": 2},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e L2",
+              "nomComplet": "Première L2 (Sciences Sociales)",
+              "matieres": [
+                {"nom": "Français", "coefficient": 5},
+                {"nom": "Philosophie", "coefficient": 6},
+                {"nom": "Histoire-Géographie", "coefficient": 6},
+                {"nom": "LV1", "coefficient": 4},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "LV2 ou Économie", "coefficient": 2},
+                {"nom": "Sciences de la Nature (Sciences Physiques ou SVT)", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e L'",
+              "nomComplet": "Première L prime (Langues Modernes)",
+              "matieres": [
+                {"nom": "Français", "coefficient": 6},
+                {"nom": "Philosophie", "coefficient": 4},
+                {"nom": "LV1", "coefficient": 4},
+                {"nom": "LV2", "coefficient": 4},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e LA",
+              "nomComplet": "Première Littéraire Franco-Arabe",
+              "matieres": [
+                {"nom": "Philosophie", "coefficient": 6},
+                {"nom": "Langue et Littérature Arabes", "coefficient": 6},
+                {"nom": "Histoire-Géographie", "coefficient": 4},
+                {"nom": "Français (LV1)", "coefficient": 3},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "Anglais (LV2)", "coefficient": 2},
+                {"nom": "Civilisation Arabo-Islamique", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "1e ST2S",
+              "nomComplet": "Première ST2S (Santé et Social)",
+              "matieres": [
+                {"nom": "Sciences Sanitaires et Sociales", "coefficient": 6},
+                {"nom": "Biologie et Physiopathologie Humaines", "coefficient": 5},
+                {"nom": "Mathématiques", "coefficient": 3},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle S1",
+              "nomComplet": "Terminale S1 (Maths-Sciences Physiques)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 8},
+                {"nom": "Sciences Physiques", "coefficient": 8},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "SVT", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle S2",
+              "nomComplet": "Terminale S2 (Sciences Expérimentales)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 6},
+                {"nom": "Sciences Physiques", "coefficient": 6},
+                {"nom": "SVT", "coefficient": 6},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle S3",
+              "nomComplet": "Terminale S3 (Sciences et Techniques)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 8},
+                {"nom": "Sciences Physiques", "coefficient": 8},
+                {"nom": "Construction Mécanique", "coefficient": 8},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Analyse de Fabrication et Technologies Automatisées", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "Epreuve Pratique Atelier", "coefficient": 3},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle S4",
+              "nomComplet": "Terminale S4 (Agri-Environnement)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 5},
+                {"nom": "SVT", "coefficient": 5},
+                {"nom": "Phytotechnique", "coefficient": 6},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "Ecologie-Environnement", "coefficient": 2},
+                {"nom": "Zootechnique", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle S5",
+              "nomComplet": "Terminale S5 (Agro-Alimentaire)",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 5},
+                {"nom": "SVT", "coefficient": 4},
+                {"nom": "Technologies Agro-Alimentaires", "coefficient": 5},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "Microbiologie", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle L1a",
+              "nomComplet": "Terminale L1 option A (Grec-Latin)",
+              "matieres": [
+                {"nom": "Français", "coefficient": 6},
+                {"nom": "Philosophie", "coefficient": 6},
+                {"nom": "Grec", "coefficient": 5},
+                {"nom": "Latin ou Arabe Classique", "coefficient": 5},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "LV1", "coefficient": 2},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle L1b",
+              "nomComplet": "Terminale L1 option B (Latin-LV2)",
+              "matieres": [
+                {"nom": "Français", "coefficient": 6},
+                {"nom": "Philosophie", "coefficient": 6},
+                {"nom": "Latin ou Arabe Classique", "coefficient": 5},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "LV1", "coefficient": 3},
+                {"nom": "LV2", "coefficient": 2},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle L2",
+              "nomComplet": "Terminale L2 (Sciences Sociales)",
+              "matieres": [
+                {"nom": "Français", "coefficient": 5},
+                {"nom": "Philosophie", "coefficient": 6},
+                {"nom": "Histoire-Géographie", "coefficient": 6},
+                {"nom": "LV1", "coefficient": 4},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "LV2 ou Économie", "coefficient": 2},
+                {"nom": "Sciences de la Nature (Sciences Physiques ou SVT)", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle L'",
+              "nomComplet": "Terminale L prime (Langues Modernes)",
+              "matieres": [
+                {"nom": "Français", "coefficient": 6},
+                {"nom": "Philosophie", "coefficient": 4},
+                {"nom": "LV1", "coefficient": 4},
+                {"nom": "LV2", "coefficient": 4},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle L-AR",
+              "nomComplet": "Terminale Littéraire Franco-Arabe",
+              "matieres": [
+                {"nom": "Philosophie", "coefficient": 6},
+                {"nom": "Langue et Littérature Arabes", "coefficient": 6},
+                {"nom": "Histoire-Géographie", "coefficient": 4},
+                {"nom": "Français (LV1)", "coefficient": 3},
+                {"nom": "Mathématiques", "coefficient": 2},
+                {"nom": "Anglais (LV2)", "coefficient": 2},
+                {"nom": "Civilisation Arabo-Islamique", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            },
+            {
+              "nom": "Tle ST2S",
+              "nomComplet": "Terminale ST2S (Santé et Social)",
+              "matieres": [
+                {"nom": "Sciences Sanitaires et Sociales", "coefficient": 6},
+                {"nom": "Biologie et Physiopathologie Humaines", "coefficient": 5},
+                {"nom": "Mathématiques", "coefficient": 3},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "Histoire-Géographie", "coefficient": 2},
+                {"nom": "Anglais", "coefficient": 2},
+                {"nom": "EPS", "coefficient": 1}
+              ]
+            }
+          ]
+        }
+      ],
+      "periodes": [
+        {"nom": "1er semestre", "ordre": 1, "evaluations": [{"nom": "Devoir", "abreviation": "DEV", "type": "devoir"}, {"nom": "Composition", "abreviation": "COMP", "type": "composition"}]},
+        {"nom": "2ème semestre", "ordre": 2, "evaluations": [{"nom": "Devoir", "abreviation": "DEV", "type": "devoir"}, {"nom": "Composition", "abreviation": "COMP", "type": "composition"}]}
+      ]
+    },
+    {
+      "nom": "Secondaire Technique",
+      "ordre": 5,
+      "cycles": [
+        {
+          "nom": "Lycée Technique",
+          "ordre": 1,
+          "niveaux_de_classes": [
+            {
+              "nom": "2de T",
+              "nomComplet": "Seconde Technique Industrielle",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 5},
+                {"nom": "Construction", "coefficient": 4},
+                {"nom": "Atelier", "coefficient": 4},
+                {"nom": "Français", "coefficient": 3}
+              ]
+            },
+            {
+              "nom": "2de G",
+              "nomComplet": "Seconde Gestion",
+              "matieres": [
+                {"nom": "Comptabilité", "coefficient": 4},
+                {"nom": "Économie", "coefficient": 3},
+                {"nom": "Français", "coefficient": 5},
+                {"nom": "Mathématiques", "coefficient": 4},
+                {"nom": "Anglais", "coefficient": 3}
+              ]
+            },
+            {
+              "nom": "2de H",
+              "nomComplet": "Seconde Hôtellerie",
+              "matieres": [
+                {"nom": "Français", "coefficient": 4},
+                {"nom": "Mathématiques", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 3},
+                {"nom": "Économie et Gestion Hôtelière", "coefficient": 4},
+                {"nom": "Techniques de Restauration", "coefficient": 4},
+                {"nom": "Histoire-Géographie", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "2de Adm",
+              "nomComplet": "Seconde Administration",
+              "matieres": [
+                {"nom": "Français", "coefficient": 5},
+                {"nom": "Mathématiques", "coefficient": 4},
+                {"nom": "Anglais", "coefficient": 3},
+                {"nom": "Droit", "coefficient": 3},
+                {"nom": "Comptabilité", "coefficient": 3},
+                {"nom": "Histoire-Géographie", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "Tle F1",
+              "nomComplet": "Terminale F1 (Génie Civil)",
+              "matieres": [
+                {"nom": "Étude Construction", "coefficient": 8},
+                {"nom": "Atelier", "coefficient": 8},
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 3},
+                {"nom": "Français", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "Tle F2",
+              "nomComplet": "Terminale F2 (Électronique)",
+              "matieres": [
+                {"nom": "Électronique", "coefficient": 8},
+                {"nom": "Schéma et TP", "coefficient": 6},
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 3},
+                {"nom": "Français", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "Tle F3",
+              "nomComplet": "Terminale F3 (Électrotechnique)",
+              "matieres": [
+                {"nom": "Électrotechnique", "coefficient": 8},
+                {"nom": "Essais Machines", "coefficient": 6},
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 3},
+                {"nom": "Français", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "Tle F4",
+              "nomComplet": "Terminale F4 (Topographie)",
+              "matieres": [
+                {"nom": "Étude Construction", "coefficient": 8},
+                {"nom": "Topographie", "coefficient": 6},
+                {"nom": "Mathématiques", "coefficient": 5},
+                {"nom": "Sciences Physiques", "coefficient": 3},
+                {"nom": "Français", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "Tle F6",
+              "nomComplet": "Terminale F6 (Chimie Industrielle)",
+              "matieres": [
+                {"nom": "Chimie Organique et Minérale", "coefficient": 8},
+                {"nom": "Analyses Chimiques", "coefficient": 8},
+                {"nom": "Mathématiques", "coefficient": 4},
+                {"nom": "Français", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "Tle G",
+              "nomComplet": "Terminale G (STEG)",
+              "matieres": [
+                {"nom": "Comptabilité et Finance", "coefficient": 6},
+                {"nom": "Économie Générale", "coefficient": 4},
+                {"nom": "Droit", "coefficient": 3},
+                {"nom": "Mathématiques Appliquées", "coefficient": 4},
+                {"nom": "Français", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "Anglais", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "Tle H",
+              "nomComplet": "Terminale Hôtellerie-Tourisme",
+              "matieres": [
+                {"nom": "Gestion Hôtelière", "coefficient": 6},
+                {"nom": "Techniques de Restauration", "coefficient": 5},
+                {"nom": "Accueil et Tourisme", "coefficient": 4},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Anglais", "coefficient": 3},
+                {"nom": "Philosophie", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "Tle Adm",
+              "nomComplet": "Terminale Administration",
+              "matieres": [
+                {"nom": "Droit Administratif", "coefficient": 5},
+                {"nom": "Comptabilité Publique", "coefficient": 5},
+                {"nom": "Gestion", "coefficient": 4},
+                {"nom": "Français", "coefficient": 3},
+                {"nom": "Philosophie", "coefficient": 2},
+                {"nom": "Anglais", "coefficient": 2}
+              ]
+            },
+            {
+              "nom": "Tle T",
+              "nomComplet": "Terminale Technique Industrielle",
+              "matieres": [
+                {"nom": "Mathématiques", "coefficient": 6},
+                {"nom": "Sciences Physiques", "coefficient": 5},
+                {"nom": "Techniques Industrielles", "coefficient": 5},
+                {"nom": "Français", "coefficient": 2},
+                {"nom": "Philosophie", "coefficient": 2}
+              ]
+            }
+          ]
+        }
+      ],
+      "periodes": [
+        {"nom": "1er semestre", "ordre": 1, "evaluations": [{"nom": "Devoir", "abreviation": "DEV", "type": "devoir"}, {"nom": "Composition", "abreviation": "COMP", "type": "composition"}]},
+        {"nom": "2ème semestre", "ordre": 2, "evaluations": [{"nom": "Devoir", "abreviation": "DEV", "type": "devoir"}, {"nom": "Composition", "abreviation": "COMP", "type": "composition"}]}
+      ]
+    }
+  ]
+}

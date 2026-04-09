@@ -1,18 +1,39 @@
 // src/pages/admin/configuration/niveaux-classe/NiveauClasseDetailsPage.tsx
+
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { 
-  ArrowLeft, Edit, Trash2, Calendar, BookOpen, 
+import {
+  ArrowLeft, Edit, Trash2, Calendar, BookOpen,
   ChevronRight, Layers, Users, Plus
 } from "lucide-react";
 import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
-import { classes } from "../../../../data/baseData";
+import { Classe } from "../../../../utils/types/data";
+import ClasseModals from "../../../../components/admin/modals/ClasseModals";
+import useClasses from "../../../../hooks/classes/useClasses";
+import ClassesList from "../../../../components/admin/lists/ClassesList";
+import { niveauClasseService } from "../../../../services/niveauClasseService";
 
 export default function NiveauClasseDetailsPage() {
   const location = useLocation();
   const niveauClasse = location.state;
   const navigate = useNavigate();
+  const { classes, deleteClasse } = useClasses()
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedClasse, setSelectedClasse] = useState<Classe | null>(null);
+  const [classeToDelete, setClasseToDelete] = useState<Classe | null>(null);
+
+  const handleAction = (classe: Classe) => {
+    setSelectedClasse(classe);
+  };
+
+  const handleCloseMenuModal = () => {
+    setSelectedClasse(null);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setClasseToDelete(null);
+  };
+  
 
   if (!niveauClasse) {
     return (
@@ -47,27 +68,47 @@ export default function NiveauClasseDetailsPage() {
     navigate("/admin/configuration/niveaux-classe/update", { state: niveauClasse });
   };
 
-  const handleDelete = () => {
-    console.log("Suppression du niveau de classe:", niveauClasse);
-    setOpenDeleteModal(false);
-    navigate("/admin/configuration/niveaux-classe");
+  const handleDelete = async () => {
+    if (!niveauClasse.id) {
+      alert("Une erreur s'est produite")
+      return
+    }
+    try {
+      await niveauClasseService.delete(niveauClasse.id)
+      setOpenDeleteModal(false);
+      navigate("/admin/configuration/niveaux-classe");
+    } catch (error) {
+      alert("Une erreur s'est produite")
+
+    }
   };
 
   const handleAddClasse = () => {
-    navigate("/admin/configuration/classes/new", { 
-      state: { 
-        niveauClasseId: niveauClasse.id, 
+    navigate("/admin/configuration/classes/new", {
+      state: {
+        niveauClasseId: niveauClasse.id,
         niveauClasseNom: niveauClasse.nom,
         cycle: niveauClasse.cycle,
-        niveauScolaire: niveauClasse.niveauScolaire 
-      } 
+        niveauScolaire: niveauClasse.niveauScolaire
+      }
     });
   };
 
-  const handleViewClasse = (classe: any) => {
-    navigate("/admin/configuration/classes/details", { state: classe });
-  };
 
+
+  const handleDeleteClasse = () => {
+    if (!classeToDelete?.id) {
+      alert("Une erreur s'est produite")
+      return
+    }
+    try {
+      deleteClasse(classeToDelete?.id)
+      setClasseToDelete(null)
+    } catch (error) {
+      alert("Une erreur s'est produite")
+
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-50">
       {/* En-tête */}
@@ -192,21 +233,9 @@ export default function NiveauClasseDetailsPage() {
             </div>
             <div className="p-6">
               {classesDuNiveau.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {classesDuNiveau.map((classe) => (
-                    <div
-                      key={classe.id}
-                      onClick={() => handleViewClasse(classe)}
-                      className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition cursor-pointer"
-                    >
-                      <h3 className="font-medium text-gray-800">{classe.nom}</h3>
-                      <p className="text-sm text-gray-500 mt-1">ID: {classe.id.substring(0, 8)}...</p>
-                      <p className="text-xs text-gray-400 mt-2">
-                        Créée le {formatDate(classe.createdAt)}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                <ClassesList classes={classesDuNiveau} onAction={(classe) => {
+                  handleAction(classe)
+                }} />
               ) : (
                 <div className="text-center py-8">
                   <Users size={48} className="mx-auto text-gray-300 mb-3" />
@@ -234,6 +263,16 @@ export default function NiveauClasseDetailsPage() {
         message={`Êtes-vous sûr de vouloir supprimer le niveau "${niveauClasse.nom}" ? Cette action est irréversible et supprimera également toutes les classes associées.`}
         confirmText="Supprimer"
         cancelText="Annuler"
+      />
+
+      <ClasseModals
+        handleCloseDeleteModal={handleCloseDeleteModal}
+        handleCloseMenuModal={handleCloseMenuModal}
+        classeToDelete={classeToDelete}
+        selectedClasse={selectedClasse}
+        setClasseToDelete={setClasseToDelete}
+        setSelectedClasse={setSelectedClasse}
+        handleDelete={handleDeleteClasse}
       />
     </div>
   );

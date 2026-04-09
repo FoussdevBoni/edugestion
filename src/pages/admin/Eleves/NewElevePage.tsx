@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
 import EleveForm, { EleveFormData } from "../../../components/admin/forms/EleveForm";
+import { inscriptionService } from "../../../services/inscriptionService";
+import {  alertServerError } from "../../../helpers/alertError";
 
 export default function NewElevePage() {
   const navigate = useNavigate();
@@ -12,20 +14,33 @@ export default function NewElevePage() {
   const handleSubmit = async (data: EleveFormData) => {
     setIsSubmitting(true);
     try {
-      // Simulation d'appel API
-      console.log("Création d'un nouvel élève:", data);
+      // Préparer les données pour le backend
+      const nouvelEleve = {
+        // BaseEleveData
+        nom: data.nom,
+        prenom: data.prenom,
+        dateNaissance: data.dateNaissance,
+        sexe: data.sexe,
+        lieuDeNaissance: data.lieuDeNaissance || "",
+        contact: data.contact || "",
+        photo: data.photo || "",
+        
+        // BaseInscription
+        anneeScolaire: data.anneeScolaire,
+        statutScolaire: data.statutScolaire,
+        classeId: data.classeId
+      };
+
+      console.log("Création d'un nouvel élève:", nouvelEleve);
       
-      // Ici, tu ferais ton appel API pour créer l'élève
-      // await api.post('/eleves', data);
-      
-      // Simuler un délai
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Appel API pour créer l'élève et son inscription
+      await inscriptionService.inscrireNouvelEleve(nouvelEleve);
       
       // Rediriger vers la liste des élèves
       navigate("/admin/eleves");
     } catch (error) {
       console.error("Erreur lors de la création:", error);
-      // Gérer l'erreur (afficher un message à l'utilisateur)
+      alertServerError(error, "Erreur lors de l'inscription de l'élève");
     } finally {
       setIsSubmitting(false);
     }
@@ -54,7 +69,7 @@ export default function NewElevePage() {
         </div>
       </div>
 
-      {/* Indicateur des filtres actifs (optionnel) */}
+      {/* Indicateur des filtres actifs */}
       {(niveauSelectionne || cycleSelectionne) && (
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
           <p className="text-sm text-gray-600">
@@ -63,7 +78,7 @@ export default function NewElevePage() {
             {niveauSelectionne && cycleSelectionne && " - "}
             {cycleSelectionne && <span className="text-primary">{cycleSelectionne}</span>}
             <span className="ml-2 text-gray-500">
-              (Ces valeurs seront pré-remplies dans le formulaire)
+              (La classe sera pré-filtrée en conséquence)
             </span>
           </p>
         </div>
@@ -78,12 +93,12 @@ export default function NewElevePage() {
         />
       </div>
 
-      {/* Message d'aide (optionnel) */}
+      {/* Message d'aide */}
       <div className="text-sm text-gray-500 bg-gray-50 rounded-lg p-4">
         <p className="font-medium mb-1">📝 Note :</p>
         <p>
           Les champs marqués d'un astérisque (<span className="text-red-500">*</span>) sont obligatoires.
-          Le niveau scolaire et le cycle sont automatiquement pré-remplis si vous avez appliqué des filtres.
+          Un matricule unique sera automatiquement généré pour l'élève.
         </p>
       </div>
     </div>

@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { Plus, MoreVertical, FileText, Printer, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { NiveauScolaire } from "../../../../data/systemScolaire";
-import { niveauxScolaires } from "../../../../data/baseData";
 import MenuModal from "../../../../components/ui/MenuModal";
 import NiveauScolairesList from "../../../../components/admin/lists/NiveauxScolaireList";
 import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
+import useNiveauScolaire from "../../../../hooks/niveauxScolaires/useNiveauxScolaires";
+import { NiveauScolaire } from "../../../../utils/types/data";
 
 
 export default function NiveauScolairesPage() {
@@ -15,15 +15,26 @@ export default function NiveauScolairesPage() {
     const [niveauToDelete, setNiveauToDelete] = useState<NiveauScolaire | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
 
+    const { niveauxScolaires, deleteNiveau } = useNiveauScolaire()
+
     // Filtrer les niveaux
     const filteredNiveaux = niveauxScolaires.filter(niveau =>
         niveau.nom.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleDelete = () => {
-        console.log("Suppression du niveau:", niveauToDelete);
-        setNiveauToDelete(null);
-        setSelectedNiveau(null);
+        if (!niveauToDelete?.id) {
+            alert("Une erreur s'est produite. Veillez réessayer")
+            return
+        }
+        try {
+
+            deleteNiveau(niveauToDelete?.id)
+            setNiveauToDelete(null);
+            setSelectedNiveau(null);
+        } catch (error) {
+            alert("Une erreur s'est produite. Veillez réessayer")
+        }
     };
 
 

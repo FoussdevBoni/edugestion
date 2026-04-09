@@ -23,10 +23,10 @@ export default function LandingPage() {
 
           <div className="mt-10 flex justify-center gap-4">
             <button 
-              onClick={() => navigate("/admin/dashboard")}
+              onClick={() => navigate("/auth")}
               className="bg-white text-primary px-8 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition"
             >
-              Demander une démo
+              Commencer
             </button>
             <a 
               href="#features"  

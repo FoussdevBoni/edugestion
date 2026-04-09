@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Loader2, AlertCircle } from "lucide-react";
 import CycleForm, { CycleFormData } from "../../../../components/admin/forms/CycleForm";
-import { cycles } from "../../../../data/baseData";
+import useCycles from "../../../../hooks/cycles/useCycles";
+import { cycleService } from "../../../../services/cycleService";
 
 export default function UpdateCyclePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const cycleData = location.state;
-
+  const {cycles} = useCycles()
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [cycle, setCycle] = useState<CycleFormData | null>(null);
@@ -49,8 +50,7 @@ export default function UpdateCyclePage() {
   const handleSubmit = async (data: CycleFormData) => {
     setIsSubmitting(true);
     try {
-      console.log("Mise à jour du cycle:", data);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await cycleService.update(data.id! , data)
       navigate("/admin/configuration/cycles");
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error);

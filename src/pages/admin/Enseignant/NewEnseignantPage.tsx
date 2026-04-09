@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import EnseignantForm, { EnseignantFormData } from "../../../components/admin/forms/EnseignantForm";
+import { enseignantService } from "../../../services/enseignantService";
+import { BaseEnseignant } from "../../../utils/types/base";
+import { alertServerError } from "../../../helpers/alertError";
 
 export default function NewEnseignantPage() {
   const navigate = useNavigate();
@@ -12,12 +15,20 @@ export default function NewEnseignantPage() {
     try {
       // Simulation d'appel API
       console.log("Création d'un nouvel enseignant:", data);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const newEnsigant: BaseEnseignant = {
+        nom: data.nom,
+        prenom: data.prenom,
+        email: data.email || "",
+        tel: data.tel || "",
+        enseignements: data.enseignements
+      }
+      await enseignantService.create(newEnsigant)
+
       // Rediriger vers la liste des enseignants
       navigate("/admin/enseignants");
     } catch (error) {
       console.error("Erreur lors de la création:", error);
+      alertServerError(error)
     } finally {
       setIsSubmitting(false);
     }

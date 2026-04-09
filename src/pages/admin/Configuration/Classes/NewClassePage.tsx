@@ -2,17 +2,22 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { v4 as uuidv4 } from 'uuid';
 import ClasseForm, { ClasseFormData } from "../../../../components/admin/forms/ClasseForm";
+import { classeService } from "../../../../services/classeService";
+import { alertError } from "../../../../helpers/alertError";
 
-export default function NewClassePage() {
+
+interface PagesProps {
+  config?: boolean
+}
+export default function NewClassePage({ config }: PagesProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const niveauPreselectionne = location.state?.niveauClasseId;
   const niveauNom = location.state?.niveauClasseNom;
   const cycle = location.state?.cycle;
   const niveauScolaire = location.state?.niveauScolaire;
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Pré-remplir si un niveau de classe est passé en paramètre
@@ -21,37 +26,42 @@ export default function NewClassePage() {
     niveauClasse: niveauNom || "",
     cycle: cycle || "",
     niveauScolaire: niveauScolaire || "",
-    nom: ""
+    nom: "",
+    effectifF: 0,
+    effectifM: 0
   } : undefined;
 
-  const handleSubmit = async (data: ClasseFormData) => {
+  const handleSubmit = async (dataArray: ClasseFormData[]) => {
     setIsSubmitting(true);
     try {
-      // Simulation d'appel API
-      const newClasse = {
-        id: uuidv4(),
+      // Préparer les données pour la création groupée
+      const classesToCreate = dataArray.map(data => ({
         nom: data.nom,
         niveauClasseId: data.niveauClasseId,
-        niveauClasse: data.niveauClasse,
-        cycle: data.cycle,
-        niveauScolaire: data.niveauScolaire,
-        createdAt: new Date().toISOString()
-      };
-      
-      console.log("Création d'une classe:", newClasse);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Rediriger vers la liste
-      navigate("/admin/configuration/classes");
+        effectifF: data.effectifF || 0,
+        effectifM: data.effectifM || 0
+      }));
+
+      // Appel unique à l'API avec création groupée
+      await classeService.createMany(classesToCreate);
+      if (config) {
+        navigate("/admin/configuration/classes");
+
+      } else {
+        navigate("/admin/classes");
+
+      }
+
     } catch (error) {
-      console.error("Erreur lors de la création:", error);
+      console.error(error);
+      alertError();
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleCancel = () => {
-    navigate("/admin/configuration/classes");
+    navigate(-1);
   };
 
   return (
@@ -87,7 +97,7 @@ export default function NewClassePage() {
       <div className="text-sm text-gray-500 bg-gray-50 rounded-lg p-4">
         <p className="font-medium mb-1">📝 Information :</p>
         <p>
-          Les classes sont les divisions finales (ex: 6ème A, CM1 B, etc.). 
+          Les classes sont les divisions finales (ex: 6ème A, CM1 B, etc.).
           Chaque classe est associée à un niveau de classe qui détermine son cycle et son niveau scolaire.
         </p>
       </div>

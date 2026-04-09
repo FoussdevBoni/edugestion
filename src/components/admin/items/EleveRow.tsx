@@ -1,13 +1,32 @@
-import { MoreVertical, User } from "lucide-react";
+// src/components/admin/rows/EleveRow.tsx
+import { User } from "lucide-react";
 import { Eleve } from "../../../utils/types/data";
-
+import { useElevePhoto } from "../../../hooks/photos/useElevePhoto";
+import { useState } from "react";
+import TableRow from "../../ui/tables/TableRow";
 
 interface EleveRowProps {
   eleve: Eleve;
   onAction: (eleve: Eleve) => void;
+  onSelect?: (eleve: Eleve, isSelected: boolean) => void;
+  isSelected?: boolean;
+  selectable?: boolean;
 }
 
-export default function EleveRow({ eleve, onAction }: EleveRowProps) {
+export default function EleveRow({ 
+  eleve, 
+  onAction, 
+  onSelect,
+  isSelected = false,
+  selectable = false
+}: EleveRowProps) {
+  const [imageError, setImageError] = useState(false);
+  const { photoUrl, loading } = useElevePhoto(eleve.matricule || '');
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('fr-FR', {
@@ -18,12 +37,26 @@ export default function EleveRow({ eleve, onAction }: EleveRowProps) {
   };
 
   return (
-    <tr className="hover:bg-gray-50 border-b border-gray-200">
+    <TableRow
+      item={eleve}
+      onAction={onAction}
+      onSelect={onSelect}
+      isSelected={isSelected}
+      selectable={selectable}
+      actionable={true}
+    >
       <td className="py-3 px-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
-            {eleve.photo ? (
-              <img src={eleve.photo} alt={`${eleve.prenom} ${eleve.nom}`} className="w-full h-full object-cover" />
+            {loading ? (
+              <div className="w-full h-full animate-pulse bg-gray-200" />
+            ) : photoUrl && !imageError ? (
+              <img 
+                src={photoUrl} 
+                alt={`${eleve.prenom} ${eleve.nom}`} 
+                className="w-full h-full object-cover"
+                onError={handleImageError}
+              />
             ) : (
               <User size={16} className="text-primary" />
             )}
@@ -48,16 +81,6 @@ export default function EleveRow({ eleve, onAction }: EleveRowProps) {
           {eleve.sexe}
         </span>
       </td>
-      <td className="py-3 px-4 text-right">
-        <button
-          onClick={()=>{
-            onAction(eleve)
-          }}
-          className="p-1.5 rounded hover:bg-gray-200 transition-colors"
-        >
-          <MoreVertical size={18} className="text-gray-500" />
-        </button>
-      </td>
-    </tr>
+    </TableRow>
   );
 }

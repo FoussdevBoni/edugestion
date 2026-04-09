@@ -1,18 +1,20 @@
-import { useState, useEffect } from "react";
-import { User, Mail, Phone, BookOpen, Users, X, Plus, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { User, Mail, Phone, Users, BookOpen, ChevronRight, ChevronLeft } from "lucide-react";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
+import useClasses from "../../../hooks/classes/useClasses";
+import useMatieres from "../../../hooks/matieres/useMatieres";
+import useNiveauxClasses from "../../../hooks/niveauxClasses/useNiveauxClasses";
 
-// Interface pour les données du formulaire
 export interface EnseignantFormData {
   id?: string;
   nom: string;
   prenom: string;
-  email: string;
-  tel: string;
-  niveauScolaire: string;
-  cycle: string;
-  matieres: string[];
-  classes: string[];
+  email?: string;
+  tel?: string;
+  enseignements: {
+    classeId: string;
+    matiereId: string;
+  }[];
   photo?: string;
 }
 
@@ -23,597 +25,351 @@ interface EnseignantFormProps {
   isSubmitting?: boolean;
 }
 
-// Données complètes avec hiérarchie
-const programmeScolaire = [
-  {
-    niveau: "Préscolaire",
-    cycles: [
-      {
-        nom: "Maternelle",
-        matieres: [
-          "Éveil",
-          "Psychomotricité",
-          "Chant",
-          "Dessin",
-          "Langage"
-        ],
-        classes: [
-          { nom: "Petite section", sections: [""] },
-          { nom: "Moyenne section", sections: [""] },
-          { nom: "Grande section", sections: [""] }
-        ]
-      }
-    ]
-  },
-  {
-    niveau: "Primaire",
-    cycles: [
-      {
-        nom: "Primaire",
-        matieres: [
-          "Français",
-          "Mathématiques",
-          "Sciences",
-          "Histoire-Géo",
-          "EPS",
-          "Éducation artistique",
-          "Anglais"
-        ],
-        classes: [
-          { nom: "CP1", sections: ["A", "B"] },
-          { nom: "CP2", sections: ["A", "B"] },
-          { nom: "CE1", sections: ["A", "B"] },
-          { nom: "CE2", sections: ["A", "B"] },
-          { nom: "CM1", sections: ["A", "B"] },
-          { nom: "CM2", sections: ["A", "B"] }
-        ]
-      }
-    ]
-  },
-  {
-    niveau: "Secondaire",
-    cycles: [
-      {
-        nom: "1er cycle (Collège)",
-        matieres: [
-          "Français",
-          "Mathématiques",
-          "Physique-Chimie",
-          "SVT",
-          "Histoire-Géo",
-          "Anglais",
-          "EPS",
-          "Éducation artistique",
-          "Espagnol",
-          "Allemand"
-        ],
-        classes: [
-          { nom: "6ème", sections: ["A", "B", "C"] },
-          { nom: "5ème", sections: ["A", "B", "C"] },
-          { nom: "4ème", sections: ["A", "B", "C"] },
-          { nom: "3ème", sections: ["A", "B", "C"] }
-        ]
-      },
-      {
-        nom: "2ème cycle (Lycée)",
-        matieres: [
-          "Français",
-          "Mathématiques",
-          "Physique-Chimie",
-          "SVT",
-          "Histoire-Géo",
-          "Anglais",
-          "Philosophie",
-          "EPS",
-          "Espagnol",
-          "Allemand",
-          "Éducation civique"
-        ],
-        classes: [
-          { nom: "2nde", sections: ["A", "B", "C", "D"] },
-          { nom: "1ère", sections: ["A", "B", "C", "D"] },
-          { nom: "Terminale", sections: ["A", "B", "C", "D", "S"] }
-        ]
-      }
-    ]
-  }
-];
-
-export default function EnseignantForm({ 
-  initialData, 
-  onSubmit, 
+export default function EnseignantForm({
+  initialData,
+  onSubmit,
   onCancel,
-  isSubmitting = false 
+  isSubmitting = false
 }: EnseignantFormProps) {
+  const [step, setStep] = useState(1);
   const { niveauSelectionne, cycleSelectionne } = useEcoleNiveau();
-  
+  const { classes } = useClasses();
+  const { matieres } = useMatieres();
+  const { niveauxClasse } = useNiveauxClasses();
+
+  // État pour les classes sélectionnées (étape 2)
+  const [selectedClassesIds, setSelectedClassesIds] = useState<string[]>(
+    initialData?.enseignements
+      ? Array.from(new Set(initialData.enseignements.map(e => e.classeId)))
+      : []
+  );
+
   const [formData, setFormData] = useState<EnseignantFormData>(
     initialData || {
       nom: "",
       prenom: "",
       email: "",
       tel: "",
-      niveauScolaire: niveauSelectionne || "",
-      cycle: cycleSelectionne || "",
-      matieres: [],
-      classes: [],
+      enseignements: [],
       photo: ""
     }
   );
 
   const [errors, setErrors] = useState<Partial<Record<keyof EnseignantFormData, string>>>({});
-  const [matiereInput, setMatiereInput] = useState("");
-  const [classeInput, setClasseInput] = useState("");
-  const [showMatiereSuggestions, setShowMatiereSuggestions] = useState(false);
-  const [showClasseSuggestions, setShowClasseSuggestions] = useState(false);
 
-  // Mettre à jour le formulaire quand les filtres globaux changent
-  useEffect(() => {
-    if (!initialData) {
-      setFormData(prev => ({
-        ...prev,
-        niveauScolaire: niveauSelectionne || prev.niveauScolaire,
-        cycle: cycleSelectionne || prev.cycle
-      }));
-    }
-  }, [niveauSelectionne, cycleSelectionne, initialData]);
+  // Filtrage des classes selon les filtres d'en-tête (Ecole/Niveau)
+  const classesFiltrees = classes.filter(c => {
+    if (cycleSelectionne && c.cycle !== cycleSelectionne) return false;
+    if (niveauSelectionne && c.niveauScolaire !== niveauSelectionne) return false;
+    return true;
+  });
 
-  // Obtenir les cycles disponibles pour le niveau sélectionné
-  const niveauChoisi = programmeScolaire.find(n => n.niveau === formData.niveauScolaire);
-  const cyclesDisponibles = niveauChoisi?.cycles || [];
-
-  // Obtenir le cycle choisi
-  const cycleChoisi = cyclesDisponibles.find(c => c.nom === formData.cycle);
-
-  // Matières disponibles selon le niveau et cycle
-  const matieresDisponibles = cycleChoisi?.matieres || [];
-
-  // Classes disponibles selon le niveau et cycle
-  const classesDisponibles = cycleChoisi?.classes || [];
-
-  // Réinitialiser quand le niveau change
-  useEffect(() => {
-    setFormData(prev => ({
-      ...prev,
-      cycle: "",
-      matieres: [],
-      classes: []
-    }));
-  }, [formData.niveauScolaire]);
-
-  // Réinitialiser quand le cycle change
-  useEffect(() => {
-    setFormData(prev => ({
-      ...prev,
-      matieres: [],
-      classes: []
-    }));
-  }, [formData.cycle]);
-
-  // Filtrer les suggestions de matières
-  const matieresSuggestions = matieresDisponibles.filter(
-    m => m.toLowerCase().includes(matiereInput.toLowerCase()) && !formData.matieres.includes(m)
-  );
-
-  // Filtrer les suggestions de classes
-  const classesSuggestions = classesDisponibles.filter(
-    c => c.nom.toLowerCase().includes(classeInput.toLowerCase()) && !formData.classes.includes(c.nom)
-  );
-
-  const validate = (): boolean => {
+  const validateStep1 = (): boolean => {
     const newErrors: Partial<Record<keyof EnseignantFormData, string>> = {};
-
     if (!formData.nom.trim()) newErrors.nom = "Le nom est requis";
     if (!formData.prenom.trim()) newErrors.prenom = "Le prénom est requis";
-    if (!formData.email.trim()) {
-      newErrors.email = "L'email est requis";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Email invalide";
     }
-    if (!formData.tel.trim()) newErrors.tel = "Le téléphone est requis";
-    if (!formData.niveauScolaire) newErrors.niveauScolaire = "Le niveau scolaire est requis";
-    if (!formData.cycle) newErrors.cycle = "Le cycle est requis";
-    if (formData.matieres.length === 0) newErrors.matieres = "Au moins une matière est requise";
-    if (formData.classes.length === 0) newErrors.classes = "Au moins une classe est requise";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleNext = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (validate()) {
+    if (step === 1 && validateStep1()) {
+      setStep(2);
+    } else if (step === 2 && selectedClassesIds.length > 0) {
+      setStep(3);
+    }
+  };
+
+  const handlePrev = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setStep(step - 1);
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // On ne soumet que si on est à l'étape 3 et qu'il y a des enseignements
+    if (step === 3 && formData.enseignements.length > 0) {
       onSubmit(formData);
     }
   };
 
   const handleChange = (field: keyof EnseignantFormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
-    }
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: undefined }));
   };
 
-  const addMatiere = (matiere: string) => {
-    if (!formData.matieres.includes(matiere)) {
-      setFormData(prev => ({
-        ...prev,
-        matieres: [...prev.matieres, matiere]
-      }));
-    }
-    setMatiereInput("");
-    setShowMatiereSuggestions(false);
+  // Gestion des classes (Étape 2)
+  const toggleClasseSelection = (classeId: string) => {
+    setSelectedClassesIds(prev => {
+      const isSelected = prev.includes(classeId);
+      if (isSelected) {
+        // Supprimer aussi les matières liées à cette classe dans le formData
+        setFormData(f => ({
+          ...f,
+          enseignements: f.enseignements.filter(e => e.classeId !== classeId)
+        }));
+        return prev.filter(id => id !== classeId);
+      } else {
+        return [...prev, classeId];
+      }
+    });
   };
 
-  const removeMatiere = (matiere: string) => {
-    setFormData(prev => ({
-      ...prev,
-      matieres: prev.matieres.filter(m => m !== matiere)
-    }));
+  // Gestion des matières (Étape 3)
+  const toggleEnseignement = (classeId: string, matiereId: string) => {
+    setFormData(prev => {
+      const existe = prev.enseignements.some(
+        e => e.classeId === classeId && e.matiereId === matiereId
+      );
+
+      if (existe) {
+        return {
+          ...prev,
+          enseignements: prev.enseignements.filter(
+            e => !(e.classeId === classeId && e.matiereId === matiereId)
+          )
+        };
+      } else {
+        return {
+          ...prev,
+          enseignements: [...prev.enseignements, { classeId, matiereId }]
+        };
+      }
+    });
   };
 
-  const addClasse = (classe: string) => {
-    if (!formData.classes.includes(classe)) {
-      setFormData(prev => ({
-        ...prev,
-        classes: [...prev.classes, classe]
-      }));
-    }
-    setClasseInput("");
-    setShowClasseSuggestions(false);
-  };
-
-  const removeClasse = (classe: string) => {
-    setFormData(prev => ({
-      ...prev,
-      classes: prev.classes.filter(c => c !== classe)
-    }));
+  const estMatiereSelectionnee = (classeId: string, matiereId: string) => {
+    return formData.enseignements.some(
+      e => e.classeId === classeId && e.matiereId === matiereId
+    );
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-800">
-          {initialData ? "Modifier l'enseignant" : "Nouvel enseignant"}
-        </h2>
-        {!initialData && (niveauSelectionne || cycleSelectionne) && (
-          <div className="text-sm text-gray-500">
-            Pré-rempli avec les filtres actuels
-          </div>
-        )}
-      </div>
-
-      {/* Informations personnelles */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-medium text-gray-800 mb-4 flex items-center gap-2">
-          <User size={20} className="text-primary" />
-          Informations personnelles
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Nom */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nom <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={formData.nom}
-              onChange={(e) => handleChange("nom", e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                errors.nom ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Nom de l'enseignant"
-            />
-            {errors.nom && <p className="mt-1 text-sm text-red-500">{errors.nom}</p>}
-          </div>
-
-          {/* Prénom */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Prénom <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={formData.prenom}
-              onChange={(e) => handleChange("prenom", e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                errors.prenom ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Prénom de l'enseignant"
-            />
-            {errors.prenom && <p className="mt-1 text-sm text-red-500">{errors.prenom}</p>}
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-                className={`w-full pl-9 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                  errors.email ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="email@ecole.tg"
-              />
-            </div>
-            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
-          </div>
-
-          {/* Téléphone */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Téléphone <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="tel"
-                value={formData.tel}
-                onChange={(e) => handleChange("tel", e.target.value)}
-                className={`w-full pl-9 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                  errors.tel ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="+228 XX XX XX XX"
-              />
-            </div>
-            {errors.tel && <p className="mt-1 text-sm text-red-500">{errors.tel}</p>}
-          </div>
+    <form onSubmit={handleFormSubmit} className="space-y-6 p-4">
+      {/* Barre de progression */}
+      <div className="flex items-center justify-between border-b pb-4">
+        <div>
+          <h2 className="text-xl font-bold text-gray-800">
+            {initialData ? "Modifier l'enseignant" : "Nouvel enseignant"}
+          </h2>
+          <p className="text-sm text-gray-500">Étape {step} sur 3</p>
         </div>
-      </div>
-
-      {/* Affectation pédagogique */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-medium text-gray-800 mb-4 flex items-center gap-2">
-          <BookOpen size={20} className="text-primary" />
-          Affectation pédagogique
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          {/* Niveau scolaire */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Niveau scolaire <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <select
-                value={formData.niveauScolaire}
-                onChange={(e) => handleChange("niveauScolaire", e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                  errors.niveauScolaire ? 'border-red-500' : 'border-gray-300'
-                }`}
-              >
-                <option value="">Sélectionner un niveau</option>
-                {programmeScolaire.map(niveau => (
-                  <option key={niveau.niveau} value={niveau.niveau}>
-                    {niveau.niveau}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-            </div>
-            {errors.niveauScolaire && <p className="mt-1 text-sm text-red-500">{errors.niveauScolaire}</p>}
-          </div>
-
-          {/* Cycle */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Cycle <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <select
-                value={formData.cycle}
-                onChange={(e) => handleChange("cycle", e.target.value)}
-                disabled={!formData.niveauScolaire}
-                className={`w-full px-3 py-2 border rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                  !formData.niveauScolaire ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : ''
-                } ${errors.cycle ? 'border-red-500' : 'border-gray-300'}`}
-              >
-                <option value="">Sélectionner un cycle</option>
-                {cyclesDisponibles.map(cycle => (
-                  <option key={cycle.nom} value={cycle.nom}>
-                    {cycle.nom}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-            </div>
-            {errors.cycle && <p className="mt-1 text-sm text-red-500">{errors.cycle}</p>}
-          </div>
-        </div>
-
-        {/* Message d'aide */}
-        {formData.niveauScolaire && !formData.cycle && (
-          <p className="mb-4 text-sm text-amber-600">
-            Veuillez sélectionner un cycle pour voir les matières et classes disponibles
-          </p>
-        )}
-      </div>
-
-      {/* Matières enseignées */}
-      {formData.cycle && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-medium text-gray-800 mb-4 flex items-center gap-2">
-            <BookOpen size={20} className="text-primary" />
-            Matières enseignées <span className="text-red-500">*</span>
-          </h3>
-
-          {/* Liste des matières sélectionnées */}
-          <div className="flex flex-wrap gap-2 mb-3">
-            {formData.matieres.map(matiere => (
-              <span
-                key={matiere}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
-              >
-                {matiere}
-                <button
-                  type="button"
-                  onClick={() => removeMatiere(matiere)}
-                  className="hover:text-red-500"
-                >
-                  <X size={14} />
-                </button>
-              </span>
-            ))}
-            {formData.matieres.length === 0 && (
-              <span className="text-sm text-gray-400">Aucune matière sélectionnée</span>
-            )}
-          </div>
-
-          {/* Ajout de matière */}
-          {matieresDisponibles.length > 0 ? (
-            <div className="relative">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={matiereInput}
-                  onChange={(e) => {
-                    setMatiereInput(e.target.value);
-                    setShowMatiereSuggestions(true);
-                  }}
-                  onFocus={() => setShowMatiereSuggestions(true)}
-                  placeholder="Rechercher une matière..."
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (matiereInput && !formData.matieres.includes(matiereInput)) {
-                      addMatiere(matiereInput);
-                    }
-                  }}
-                  className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
-                >
-                  <Plus size={18} />
-                </button>
+        <div className="flex items-center gap-2">
+          {[1, 2, 3].map((s) => (
+            <div key={s} className="flex items-center">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-medium transition-colors ${step >= s ? 'bg-primary text-white' : 'bg-gray-200 text-gray-500'
+                }`}>
+                {s}
               </div>
-
-              {/* Suggestions */}
-              {showMatiereSuggestions && matiereInput && matieresSuggestions.length > 0 && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                  {matieresSuggestions.map(matiere => (
-                    <button
-                      key={matiere}
-                      type="button"
-                      onClick={() => addMatiere(matiere)}
-                      className="w-full text-left px-3 py-2 hover:bg-gray-50 text-sm"
-                    >
-                      {matiere}
-                    </button>
-                  ))}
-                </div>
+              {s < 3 && (
+                <div className={`w-10 h-0.5 ${step > s ? 'bg-primary' : 'bg-gray-200'}`} />
               )}
             </div>
-          ) : (
-            <p className="text-sm text-gray-500">Aucune matière disponible pour ce cycle</p>
-          )}
-          {errors.matieres && <p className="mt-1 text-sm text-red-500">{errors.matieres}</p>}
+          ))}
+        </div>
+      </div>
+
+      {/* Étape 1: Informations Personnelles */}
+      {step === 1 && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-4">
+          <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <User size={20} className="text-primary" /> Informations personnelles
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">Nom <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                value={formData.nom}
+                onChange={(e) => handleChange("nom", e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary/20 outline-none transition-all ${errors.nom ? 'border-red-500' : 'border-gray-300 focus:border-primary'
+                  }`}
+                placeholder="Ex: DUPONT"
+              />
+              {errors.nom && <p className="text-xs text-red-500 font-medium">{errors.nom}</p>}
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">Prénom <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                value={formData.prenom}
+                onChange={(e) => handleChange("prenom", e.target.value)}
+                className={`w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-primary/20 outline-none transition-all ${errors.prenom ? 'border-red-500' : 'border-gray-300 focus:border-primary'
+                  }`}
+                placeholder="Ex: Jean"
+              />
+              {errors.prenom && <p className="text-xs text-red-500 font-medium">{errors.prenom}</p>}
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">Email</label>
+              <div className="relative">
+                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                  placeholder="jean.dupont@ecole.tg"
+                />
+              </div>
+              {errors.email && <p className="text-xs text-red-500 font-medium">{errors.email}</p>}
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">Téléphone</label>
+              <div className="relative">
+                <Phone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="tel"
+                  value={formData.tel}
+                  onChange={(e) => handleChange("tel", e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                  placeholder="+228 90 00 00 00"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Classes attribuées */}
-      {formData.cycle && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-medium text-gray-800 mb-4 flex items-center gap-2">
-            <Users size={20} className="text-primary" />
-            Classes attribuées <span className="text-red-500">*</span>
+      {/* Étape 2: Sélection des Classes */}
+      {/* Étape 2: Sélection des Classes */}
+      {step === 2 && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-4">
+          <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <Users size={20} className="text-primary" /> Sélectionner les classes
           </h3>
+          <p className="text-sm text-gray-500 italic">Cliquez sur les classes pour les attribuer à l'enseignant.</p>
 
-          {/* Liste des classes sélectionnées */}
-          <div className="flex flex-wrap gap-2 mb-3">
-            {formData.classes.map(classe => (
-              <span
-                key={classe}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm"
-              >
-                {classe}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {classesFiltrees.map(classe => {
+              // Correction ici : ajout de l'espace entre const et isSelected
+              const isSelected = selectedClassesIds.includes(classe.id);
+              return (
                 <button
+                  key={classe.id}
                   type="button"
-                  onClick={() => removeClasse(classe)}
-                  className="hover:text-red-500"
+                  onClick={() => toggleClasseSelection(classe.id)}
+                  className={`p-4 border-2 rounded-xl text-left transition-all hover:shadow-md active:scale-95 ${isSelected
+                      ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                      : 'border-gray-100 bg-gray-50/50 hover:border-gray-300'
+                    }`}
                 >
-                  <X size={14} />
+                  <p className={`font-bold ${isSelected ? 'text-primary' : 'text-gray-700'}`}>{classe.nom}</p>
+                  <p className="text-xs text-gray-500 mt-1 uppercase tracking-tight">{classe.niveauClasse}</p>
                 </button>
-              </span>
-            ))}
-            {formData.classes.length === 0 && (
-              <span className="text-sm text-gray-400">Aucune classe sélectionnée</span>
-            )}
+              );
+            })}
           </div>
 
-          {/* Ajout de classe */}
-          {classesDisponibles.length > 0 ? (
-            <div className="relative">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={classeInput}
-                  onChange={(e) => {
-                    setClasseInput(e.target.value);
-                    setShowClasseSuggestions(true);
-                  }}
-                  onFocus={() => setShowClasseSuggestions(true)}
-                  placeholder="Rechercher une classe..."
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (classeInput && !formData.classes.includes(classeInput)) {
-                      addClasse(classeInput);
-                    }
-                  }}
-                  className="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
-                >
-                  <Plus size={18} />
-                </button>
-              </div>
-
-              {/* Suggestions */}
-              {showClasseSuggestions && classeInput && classesSuggestions.length > 0 && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                  {classesSuggestions.map(classe => (
-                    <button
-                      key={classe.nom}
-                      type="button"
-                      onClick={() => addClasse(classe.nom)}
-                      className="w-full text-left px-3 py-2 hover:bg-gray-50 text-sm"
-                    >
-                      {classe.nom}
-                    </button>
-                  ))}
-                </div>
-              )}
+          {selectedClassesIds.length === 0 && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <p className="text-sm text-amber-700 font-medium text-center">
+                ⚠️ Sélectionnez au moins une classe pour passer à l'étape suivante.
+              </p>
             </div>
-          ) : (
-            <p className="text-sm text-gray-500">Aucune classe disponible pour ce cycle</p>
           )}
-          {errors.classes && <p className="mt-1 text-sm text-red-500">{errors.classes}</p>}
         </div>
       )}
 
-      {/* Boutons d'action */}
-      <div className="flex items-center justify-end gap-3">
+      {/* Étape 3: Attribution des Matières */}
+      {step === 3 && (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-6">
+          <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <BookOpen size={20} className="text-primary" /> Matières par classe
+          </h3>
+
+          <div className="space-y-8">
+            {classesFiltrees
+              .filter(c => selectedClassesIds.includes(c.id))
+              .map(classe => {
+                const matieresDisponibles = matieres.filter(m => m.niveauClasseId === classe.niveauClasseId);
+
+                return (
+                  <div key={classe.id} className="group border rounded-xl overflow-hidden shadow-sm">
+                    <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center group-hover:bg-gray-100 transition-colors">
+                      <h4 className="font-bold text-gray-800">{classe.nom}</h4>
+                      <span className="text-[10px] bg-white px-2 py-1 rounded-full border text-gray-500 font-bold uppercase">
+                        Niveau ID: {classe.niveauClasseId}
+                      </span>
+                    </div>
+
+                    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {matieresDisponibles.map(matiere => (
+                        <label
+                          key={matiere.id}
+                          className={`flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer transition-all ${estMatiereSelectionnee(classe.id, matiere.id)
+                              ? 'border-primary bg-primary/5'
+                              : 'border-gray-100 hover:border-gray-200'
+                            }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={estMatiereSelectionnee(classe.id, matiere.id)}
+                            onChange={() => toggleEnseignement(classe.id, matiere.id)}
+                            className="w-5 h-5 rounded text-primary border-gray-300 focus:ring-primary"
+                          />
+                          <div className="flex flex-col">
+                            <span className="text-sm font-semibold text-gray-700">{matiere.nom}</span>
+                            <span className="text-[10px] text-gray-500">Coeff: {matiere.coefficient}</span>
+                          </div>
+                        </label>
+                      ))}
+                      {matieresDisponibles.length === 0 && (
+                        <p className="col-span-full text-xs text-gray-400 italic py-2">
+                          Aucune matière trouvée pour ce niveau dans la base de données.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+
+          {formData.enseignements.length === 0 && (
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg text-center">
+              <p className="text-sm text-amber-700 font-medium">
+                Veuillez cocher au moins une matière dans l'une des classes.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Navigation - Boutons du bas */}
+      <div className="flex items-center justify-between pt-6 mt-6 border-t border-gray-100">
         <button
           type="button"
-          onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+          onClick={step === 1 ? onCancel : handlePrev}
+          className="flex items-center gap-2 px-6 py-2.5 font-semibold text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all active:scale-95"
         >
-          Annuler
+          {step === 1 ? 'Annuler' : <><ChevronLeft size={18} /> Précédent</>}
         </button>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50"
-        >
-          {isSubmitting ? "Enregistrement..." : initialData ? "Mettre à jour" : "Enregistrer"}
-        </button>
+
+        {step < 3 ? (
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={step === 2 && selectedClassesIds.length === 0}
+            className="flex items-center gap-2 px-8 py-2.5 font-bold text-white bg-primary rounded-xl hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-primary/20 transition-all active:scale-95"
+          >
+            Suivant <ChevronRight size={18} />
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={isSubmitting || formData.enseignements.length === 0}
+            className="flex items-center gap-2 px-10 py-2.5 font-bold text-white bg-primary rounded-xl hover:bg-primary/90 disabled:opacity-50 shadow-lg shadow-primary/30 transition-all active:scale-95"
+          >
+            {isSubmitting ? "Enregistrement..." : initialData ? "Mettre à jour" : "Finaliser l'inscription"}
+          </button>
+        )}
       </div>
     </form>
   );

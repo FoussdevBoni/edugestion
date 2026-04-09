@@ -3,10 +3,14 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
     ArrowLeft, Edit, Trash2, Calendar, Layers,
-    ChevronRight, BookOpen, Plus
+    BookOpen, Plus
 } from "lucide-react";
-import { cycles } from "../../../../data/baseData";
 import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
+import useCycles from "../../../../hooks/cycles/useCycles";
+import CyclesList from "../../../../components/admin/lists/CyclesList";
+import { Cycle } from "../../../../utils/types/data";
+import { CycleDeleModal, CycleMenuModal } from "../../../../components/admin/modals/CycleModals";
+import { niveauScolaireService } from "../../../../services/niveauScolaireService";
 
 
 export default function NiveauScolaireDetailsPage() {
@@ -14,6 +18,9 @@ export default function NiveauScolaireDetailsPage() {
     const niveau = location.state;
     const navigate = useNavigate();
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedCycle, setSelectedCycle] = useState<Cycle | null>(null);
+    const [cycleToDelete, setCycleToDelete] = useState<Cycle | null>(null);
+    const { cycles, deleteCycle } = useCycles()
 
     if (!niveau) {
         return (
@@ -22,7 +29,7 @@ export default function NiveauScolaireDetailsPage() {
                     <h2 className="text-xl font-semibold text-gray-800 mb-2">Niveau non trouvé</h2>
                     <p className="text-gray-500 mb-4">Les informations du niveau scolaire sont introuvables.</p>
                     <button
-                        onClick={() => navigate("/admin/configuration/niveaux")}
+                        onClick={() => navigate(-1)}
                         className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
                     >
                         Retour à la liste
@@ -45,22 +52,58 @@ export default function NiveauScolaireDetailsPage() {
     };
 
     const handleUpdate = () => {
-        navigate("/admin/configuration/niveaux/update", { state: niveau });
+        navigate("/admin/configuration/niveaux-scolaire/update", { state: niveau });
     };
 
-    const handleDelete = () => {
-        console.log("Suppression du niveau:", niveau);
-        setOpenDeleteModal(false);
-        navigate("/admin/configuration/niveaux");
-    };
+    const handleDelete = async () => {
+        if (!niveau?.id) {
+            alert("Une erreur s'est produite. Veillez réessayer")
+            return
+        }
+        try {
+            await niveauScolaireService.delete(niveau?.id)
+            navigate("/admin/configuration/niveaux-scolaire");
 
+        } catch (error) {
+            alert("Une erreur s'est produite. Veillez réessayer")
+        }
+    };
     const handleAddCycle = () => {
         navigate("/admin/configuration/cycles/new", { state: { niveauId: niveau.id, niveauNom: niveau.nom } });
     };
 
-    const handleViewCycle = (cycle: any) => {
-        navigate("/admin/configuration/cycles/details", { state: cycle });
+
+
+
+    const handleDeleteCycle = () => {
+        if (!cycleToDelete?.id) {
+            alert("Une erreur s'est produite")
+            return
+        }
+        try {
+            deleteCycle(cycleToDelete?.id)
+            setCycleToDelete(null);
+            setSelectedCycle(null);
+        } catch (error) {
+            alert("Une erreur s'est produite")
+        }
+
     };
+
+
+    const handleAction = (cycle: Cycle) => {
+        setSelectedCycle(cycle);
+    };
+
+    const handleCloseMenuModal = () => {
+        setSelectedCycle(null);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setCycleToDelete(null);
+    };
+
+
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -70,7 +113,7 @@ export default function NiveauScolaireDetailsPage() {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <button
-                                onClick={() => navigate("/admin/configuration/niveaux")}
+                                onClick={() => navigate(-1)}
                                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                             >
                                 <ArrowLeft size={20} className="text-gray-600" />
@@ -106,23 +149,6 @@ export default function NiveauScolaireDetailsPage() {
                                 Supprimer
                             </button>
                         </div>
-                    </div>
-
-                    {/* Fil d'Ariane */}
-                    <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
-                        <span onClick={() => navigate("/admin")} className="hover:text-primary cursor-pointer">
-                            Dashboard
-                        </span>
-                        <ChevronRight size={14} />
-                        <span onClick={() => navigate("/admin/parametres")} className="hover:text-primary cursor-pointer">
-                            Paramètres
-                        </span>
-                        <ChevronRight size={14} />
-                        <span onClick={() => navigate("/admin/configuration/niveaux")} className="hover:text-primary cursor-pointer">
-                            Niveaux scolaires
-                        </span>
-                        <ChevronRight size={14} />
-                        <span className="text-gray-700">{niveau.nom}</span>
                     </div>
                 </div>
             </div>
@@ -172,21 +198,9 @@ export default function NiveauScolaireDetailsPage() {
                         </div>
                         <div className="p-6">
                             {cyclesDuNiveau.length > 0 ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {cyclesDuNiveau.map((cycle) => (
-                                        <div
-                                            key={cycle.id}
-                                            onClick={() => handleViewCycle(cycle)}
-                                            className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition cursor-pointer"
-                                        >
-                                            <h3 className="font-medium text-gray-800">{cycle.nom}</h3>
-                                            <p className="text-sm text-gray-500 mt-1">ID: {cycle.id}</p>
-                                            <p className="text-xs text-gray-400 mt-2">
-                                                Créé le {formatDate(cycle.createdAt)}
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
+                                <CyclesList cycles={cyclesDuNiveau} onAction={(cycle) => {
+                                    handleAction(cycle)
+                                }} />
                             ) : (
                                 <div className="text-center py-8">
                                     <BookOpen size={48} className="mx-auto text-gray-300 mb-3" />
@@ -214,6 +228,26 @@ export default function NiveauScolaireDetailsPage() {
                 message={`Êtes-vous sûr de vouloir supprimer le niveau "${niveau.nom}" ? Cette action est irréversible et supprimera également tous les cycles associés.`}
                 confirmText="Supprimer"
                 cancelText="Annuler"
+            />
+
+
+
+            {/* Modal actions sur un cycle */}
+            {selectedCycle && (
+                <CycleMenuModal
+                    selectedCycle={selectedCycle}
+                    setSelectedCycle={setSelectedCycle}
+                    setCycleToDelete={setCycleToDelete}
+                    handleCloseMenuModal={handleCloseMenuModal}
+
+                />
+            )}
+
+            {/* Modal confirmation suppression */}
+            <CycleDeleModal
+                handleCloseDeleteModal={handleCloseDeleteModal}
+                handleDelete={handleDeleteCycle}
+                cycleToDelete={cycleToDelete}
             />
         </div>
     );

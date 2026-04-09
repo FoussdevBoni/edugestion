@@ -1,8 +1,8 @@
 // src/utils/fakeData/paiements.ts
-import { Payement } from '../utils/types/data';
+import { Paiement } from '../utils/types/data';
 import { inscriptions } from './inscriptions';
 
-export const paiements: Payement[] = [
+export const paiements: Paiement[] = [
   {
     id: "pay_001",
     inscriptionId: "ins_2023_001",
@@ -77,5 +77,5 @@ export const paiements: Payement[] = [
 
 // Ajouter les paiements aux inscriptions correspondantes
 inscriptions.forEach(ins => {
-  ins.payements = paiements.filter(p => p.inscriptionId === ins.id);
+  ins.paiements = paiements.filter(p => p.inscriptionId === ins.id);
 });

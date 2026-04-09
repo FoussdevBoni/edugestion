@@ -1,5 +1,6 @@
 // src/components/admin/lists/PeriodesList.tsx
 
+import useEvaluations from "../../../hooks/evaluations/useEvaluations";
 import { Periode } from "../../../utils/types/data";
 import PeriodeRow from "../items/PeriodeRow";
 
@@ -7,10 +8,16 @@ import PeriodeRow from "../items/PeriodeRow";
 interface PeriodesListProps {
   periodes: Periode[];
   onAction: (periode: Periode) => void;
-  evaluationsCount?: Record<string, number>;
 }
 
-export default function PeriodesList({ periodes, onAction, evaluationsCount = {} }: PeriodesListProps) {
+export default function PeriodesList({ periodes, onAction }: PeriodesListProps) {
+  
+    const {evaluations} = useEvaluations()
+    // Compter les classes pour chaque niveau de classe
+    const getClassesCount = (periodeId: string) => {
+      return evaluations.filter(e => e.periodeId === periodeId).length;
+    };
+  
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div className="overflow-x-auto">
@@ -21,13 +28,13 @@ export default function PeriodesList({ periodes, onAction, evaluationsCount = {}
                 Période
               </th>
               <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Niveau scolaire
+                Coefficient
               </th>
               <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Évaluations
               </th>
               <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date de création
+                Ordre
               </th>
               <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
@@ -41,7 +48,7 @@ export default function PeriodesList({ periodes, onAction, evaluationsCount = {}
                   key={periode.id} 
                   periode={periode} 
                   onAction={onAction}
-                  evaluationsCount={evaluationsCount[periode.id] || 0}
+                  evaluationsCount={getClassesCount(periode.id) || 0}
                 />
               ))
             ) : (

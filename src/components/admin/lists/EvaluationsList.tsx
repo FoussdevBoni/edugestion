@@ -23,10 +23,10 @@ export default function EvaluationsList({ evaluations, onAction }: EvaluationsLi
                 Période
               </th>
               <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Niveau scolaire
+                Abréviation
               </th>
               <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date de création
+                Type
               </th>
               <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions

@@ -3,7 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import NiveauScolaireForm, { NiveauScolaireFormData } from "../../../../components/admin/forms/NiveauScolaireForm";
-import { v4 as uuidv4 } from 'uuid';
+import { niveauScolaireService } from "../../../../services/niveauScolaireService";
+import { BaseNiveauScolaire } from "../../../../utils/types/base";
+import { cycleService } from "../../../../services/cycleService";
 
 export default function NewNiveauScolairePage() {
   const navigate = useNavigate();
@@ -13,21 +15,29 @@ export default function NewNiveauScolairePage() {
     setIsSubmitting(true);
     try {
       // Simulation d'appel API
-      const newNiveau = {
-        id: uuidv4(),
+      const newNiveau: BaseNiveauScolaire = {
         nom: data.nom,
-        createdAt: new Date().toISOString()
       };
-      
-      console.log("Création d'un niveau scolaire:", newNiveau);
-      
-      // Ici, tu ferais l'appel API réel
-      // await api.post('/niveaux-scolaires', data);
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
+      const response = await niveauScolaireService.create(newNiveau)
+      const cyclesToCreate = data.cycles.map(data => ({
+        nom: data.nom,
+        niveauScolaireId: response.id
+      }));
+      if (data.aDesCycles) {
+        await cycleService.createMany(cyclesToCreate)
+
+      } else {
+        await cycleService.create(
+          {
+            nom: data.nom,
+            niveauScolaireId: response.id
+          }
+        )
+      }
+
       // Rediriger vers la liste
-      navigate("/admin/configuration/niveaux");
+      navigate("/admin/configuration/niveaux-scolaire");
     } catch (error) {
       console.error("Erreur lors de la création:", error);
     } finally {

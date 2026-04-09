@@ -1,102 +1,119 @@
-import db from '../database/index.js';
-import { EleveData } from '../models/index.js';
+// electron/controllers/eleveDataController.js
+import { getDb } from '../db.js';
+import { v4 as uuidv4 } from 'uuid';
 
-class EleveDataController {
-  getAll() {
-    const stmt = db.prepare(`
-      SELECT * FROM eleve_data 
-      ORDER BY nom, prenom
-    `);
-    const rows = stmt.all();
-    return rows.map(row => new EleveData(row).toJSON());
-  }
-
-  create(data) {
-    const eleveData = new EleveData(data);
-    
-    const errors = eleveData.validate();
-    if (errors.length > 0) {
-      throw new Error(errors.join(', '));
+export const eleveDataController = {
+  async getAll() {
+    try {
+      const db = getDb();
+      return db.data.elevesData || [];
+    } catch (error) {
+      console.error("Erreur getAll elevesData:", error);
+      throw error;
     }
+  },
 
-    const existing = db.prepare('SELECT id FROM eleve_data WHERE matricule = ?').get(eleveData.matricule);
-    if (existing) {
-      throw new Error('Un élève avec ce matricule existe déjà');
+  async getById(id) {
+    try {
+      const db = getDb();
+      return db.data.elevesData?.find(e => e.id === id) || null;
+    } catch (error) {
+      console.error("Erreur getById eleveData:", error);
+      throw error;
     }
+  },
 
-    const stmt = db.prepare(`
-      INSERT INTO eleve_data (
-        id, nom, prenom, date_naissance, sexe, photo,
-        annee_scolaire, matricule, statut, lieu_de_naissance,
-        contact, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    const dbData = eleveData.toDB();
-    stmt.run(
-      dbData.id,
-      dbData.nom,
-      dbData.prenom,
-      dbData.date_naissance,
-      dbData.sexe,
-      dbData.photo,
-      dbData.annee_scolaire,
-      dbData.matricule,
-      dbData.statut,
-      dbData.lieu_de_naissance,
-      dbData.contact,
-      dbData.created_at,
-      dbData.updated_at
-    );
-
-    return eleveData.toJSON();
-  }
-
-  update(id, updates) {
-    const existing = db.prepare('SELECT * FROM eleve_data WHERE id = ?').get(id);
-    if (!existing) {
-      throw new Error('Élève non trouvé');
+  async getByMatricule(matricule) {
+    try {
+      const db = getDb();
+      return db.data.elevesData?.find(e => e.matricule === matricule) || null;
+    } catch (error) {
+      console.error("Erreur getByMatricule eleveData:", error);
+      throw error;
     }
+  },
 
-    const updatedData = { ...existing, ...updates };
-    const eleveData = new EleveData(updatedData);
-    eleveData.updatedAt = new Date().toISOString();
+  async create(data) {
+    try {
+      const db = getDb();
+      const now = new Date().toISOString();
 
-    const stmt = db.prepare(`
-      UPDATE eleve_data 
-      SET nom = ?, prenom = ?, date_naissance = ?, sexe = ?, photo = ?,
-          annee_scolaire = ?, matricule = ?, statut = ?, lieu_de_naissance = ?,
-          contact = ?, updated_at = ?
-      WHERE id = ?
-    `);
+      // Générer un matricule unique si non fourni
+      if (!data.matricule) {
+        const annee = new Date().getFullYear().toString().slice(-2);
+        const count = (db.data.elevesData?.length || 0) + 1;
+        data.matricule = `EL-${annee}-${count.toString().padStart(4, '0')}`;
+      }
 
-    stmt.run(
-      eleveData.nom,
-      eleveData.prenom,
-      eleveData.dateNaissance,
-      eleveData.sexe,
-      eleveData.photo,
-      eleveData.anneeScolaire,
-      eleveData.matricule,
-      eleveData.statut,
-      eleveData.lieuDeNaissance,
-      eleveData.contact,
-      eleveData.updatedAt,
-      id
-    );
+      // Vérifier que le matricule est unique
+      const existing = db.data.elevesData?.find(e => e.matricule === data.matricule);
+      if (existing) {
+        throw new Error("Un élève avec ce matricule existe déjà");
+      }
 
-    return eleveData.toJSON();
-  }
+      const newItem = {
+        id: uuidv4(),
+        ...data,
+        statut: data.statut || 'actif',
+        createdAt: now,
+        updatedAt: now
+      };
 
-  delete(id) {
-    const inscriptions = db.prepare('SELECT COUNT(*) as count FROM inscription WHERE eleve_data_id = ?').get(id);
-    if (inscriptions.count > 0) {
-      throw new Error('Impossible de supprimer : cet élève a des inscriptions');
+      await db.update((dbData) => {
+        if (!dbData.elevesData) dbData.elevesData = [];
+        dbData.elevesData.push(newItem);
+      });
+
+      return newItem;
+    } catch (error) {
+      console.error("Erreur create eleveData:", error);
+      throw error;
     }
+  },
 
-    db.prepare('DELETE FROM eleve_data WHERE id = ?').run(id);
-    return { success: true };
+  async update(id, data) {
+    try {
+      const db = getDb();
+      const now = new Date().toISOString();
+      let updatedItem = null;
+
+      await db.update((dbData) => {
+        const index = dbData.elevesData?.findIndex(e => e.id === id);
+        if (index !== -1) {
+          dbData.elevesData[index] = {
+            ...dbData.elevesData[index],
+            ...data,
+            updatedAt: now
+          };
+          updatedItem = dbData.elevesData[index];
+        }
+      });
+
+      return updatedItem;
+    } catch (error) {
+      console.error("Erreur update eleveData:", error);
+      throw error;
+    }
+  },
+
+  async delete(id) {
+    try {
+      const db = getDb();
+
+      // Vérifier si l'élève a des inscriptions
+      const inscriptions = db.data.inscriptions?.filter(i => i.eleveDataId === id) || [];
+      if (inscriptions.length > 0) {
+        throw new Error("Impossible de supprimer un élève qui a des inscriptions");
+      }
+
+      await db.update((dbData) => {
+        dbData.elevesData = dbData.elevesData?.filter(e => e.id !== id) || [];
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error("Erreur delete eleveData:", error);
+      throw error;
+    }
   }
-}
-
-export default new EleveDataController();
+};

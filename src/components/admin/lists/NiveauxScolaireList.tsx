@@ -1,5 +1,5 @@
 // src/components/admin/lists/NiveauScolairesList.tsx
-import { cycles } from "../../../data/baseData";
+import useCycles from "../../../hooks/cycles/useCycles";
 import { NiveauScolaire } from "../../../utils/types/data";
 import NiveauScolaireRow from "../items/NiveauScolaireRow";
 
@@ -10,6 +10,9 @@ interface NiveauScolairesListProps {
 
 export default function NiveauxScolaireList({ niveaux, onAction }: NiveauScolairesListProps) {
   // Compter les cycles pour chaque niveau
+
+     const {cycles} = useCycles()
+  
   const getCyclesCount = (niveauId: string) => {
     return cycles.filter(cycle => cycle.niveauScolaireId === niveauId).length;
   };

@@ -1,20 +1,21 @@
 // src/pages/admin/configuration/cycles/CyclesPage.tsx
 import { useState } from "react";
-import { Plus, MoreVertical, FileText, Printer, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Cycle } from "../../../../utils/types/data";
-import { cycles } from "../../../../data/baseData";
-import MenuModal from "../../../../components/ui/MenuModal";
 import CyclesList from "../../../../components/admin/lists/CyclesList";
-import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
-
+import useCycles from "../../../../hooks/cycles/useCycles";
+import { CycleDeleModal, CycleMenuModal } from "../../../../components/admin/modals/CycleModals";
+import { alertError } from "../../../../helpers/alertError";
+import PageLayout from "../../../../layouts/PageLayout";
 
 export default function CyclesPage() {
   const navigate = useNavigate();
   const [selectedCycle, setSelectedCycle] = useState<Cycle | null>(null);
   const [cycleToDelete, setCycleToDelete] = useState<Cycle | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const { cycles, deleteCycle } = useCycles()
+  
   // Filtrer les cycles
   const filteredCycles = cycles.filter(cycle =>
     cycle.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -22,22 +23,21 @@ export default function CyclesPage() {
   );
 
   const handleDelete = () => {
-    console.log("Suppression du cycle:", cycleToDelete);
-    setCycleToDelete(null);
-    setSelectedCycle(null);
+    if (!cycleToDelete?.id) {
+      alertError()
+      return
+    }
+    try {
+      deleteCycle(cycleToDelete?.id)
+      setCycleToDelete(null);
+      setSelectedCycle(null);
+    } catch (error) {
+      alertError()
+    }
   };
 
- 
   const handleAction = (cycle: Cycle) => {
     setSelectedCycle(cycle);
-  };
-
-  const handleCloseMenuModal = () => {
-    setSelectedCycle(null);
-  };
-
-  const handleCloseDeleteModal = () => {
-    setCycleToDelete(null);
   };
 
   const clearSearch = () => {
@@ -45,29 +45,19 @@ export default function CyclesPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Cycles scolaires</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {filteredCycles.length} cycle{filteredCycles.length > 1 ? 's' : ''} configurés
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => {
-               navigate("/admin/configuration/cycles/new");
-            }}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            <Plus size={18} />
-            Nouveau cycle
-          </button>
-        </div>
-      </div>
-
+    <PageLayout
+      title="Cycles scolaires"
+      description={`${filteredCycles.length} cycle${filteredCycles.length > 1 ? 's' : ''} configurés`}
+      actions={
+        <button
+          onClick={() => navigate("/admin/configuration/cycles/new")}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          <Plus size={18} />
+          Nouveau cycle
+        </button>
+      }
+    >
       {/* Barre de recherche */}
       <div className="flex items-center gap-4">
         <div className="flex-1 relative">
@@ -108,61 +98,22 @@ export default function CyclesPage() {
         </div>
       )}
 
-   
       {/* Modal actions sur un cycle */}
       {selectedCycle && (
-        <MenuModal
-          menu={[
-            {
-              label: "Voir détails",
-              icon: FileText,
-              onClick: () => {
-                navigate("/admin/configuration/cycles/details", { state: selectedCycle });
-                setSelectedCycle(null);
-              }
-            },
-            {
-              label: "Modifier",
-              icon: Plus,
-              onClick: () => {
-                navigate("/admin/configuration/cycles/update", { state: selectedCycle });
-                setSelectedCycle(null);
-              }
-            },
-            {
-              label: "Gérer les niveaux",
-              icon: Printer,
-              onClick: () => {
-                navigate("/admin/configuration/niveaux-classe", { state: { cycleId: selectedCycle.id } });
-                setSelectedCycle(null);
-              }
-            },
-            {
-              label: "Supprimer",
-              icon: MoreVertical,
-              onClick: () => {
-                setCycleToDelete(selectedCycle);
-                setSelectedCycle(null);
-              }
-            }
-          ]}
-          isOpen={!!selectedCycle}
-          onClose={handleCloseMenuModal}
-          title={selectedCycle.nom}
-          icon={<Plus className="text-primary" size={20} />}
+        <CycleMenuModal
+          selectedCycle={selectedCycle}
+          setSelectedCycle={setSelectedCycle}
+          setCycleToDelete={setCycleToDelete}
+          handleCloseMenuModal={() => setSelectedCycle(null)}
         />
       )}
 
       {/* Modal confirmation suppression */}
-      <DeleteConfirmationModal
-        isOpen={!!cycleToDelete}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleDelete}
-        title="Supprimer le cycle"
-        message={`Êtes-vous sûr de vouloir supprimer le cycle "${cycleToDelete?.nom}" ? Cette action est irréversible.`}
-        confirmText="Supprimer"
-        cancelText="Annuler"
+      <CycleDeleModal
+        handleCloseDeleteModal={() => setCycleToDelete(null)}
+        handleDelete={handleDelete}
+        cycleToDelete={cycleToDelete}
       />
-    </div>
+    </PageLayout>
   );
 }

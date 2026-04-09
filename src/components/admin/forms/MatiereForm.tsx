@@ -1,7 +1,5 @@
-// src/components/forms/MatiereForm.tsx
 import { useState, useEffect } from "react";
-import { niveauxClasse } from "../../../data/baseData";
-
+import useNiveauxClasses from "../../../hooks/niveauxClasses/useNiveauxClasses";
 
 export interface MatiereFormData {
   id?: string;
@@ -13,181 +11,152 @@ export interface MatiereFormData {
 
 interface MatiereFormProps {
   initialData?: MatiereFormData;
-  onSubmit: (data: MatiereFormData) => void;
+  onSubmit: (data: MatiereFormData[]) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
 }
 
-export default function MatiereForm({ 
-  initialData, 
-  onSubmit, 
-  onCancel,
-  isSubmitting = false 
-}: MatiereFormProps) {
-  const [formData, setFormData] = useState<MatiereFormData>(
-    initialData || {
-      nom: "",
-      coefficient: 1,
-      niveauClasseId: "",
-      niveauClasse: "",
-    }
+export default function MatiereForm({ initialData, onSubmit, onCancel, isSubmitting = false }: MatiereFormProps) {
+  const { niveauxClasse } = useNiveauxClasses();
+  const isUpdate = !!initialData;
+
+  const [selectedNiveauxIds, setSelectedNiveauxIds] = useState<string[]>([]);
+  const [nomsMatieres, setNomsMatieres] = useState("");
+  const [step, setStep] = useState(1);
+  const [previewData, setPreviewData] = useState<MatiereFormData[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("");
+
+  const [singleData, setSingleData] = useState<MatiereFormData>(
+    initialData || { nom: "", coefficient: 1, niveauClasseId: "", niveauClasse: "" }
   );
 
-  const [errors, setErrors] = useState<Partial<Record<keyof MatiereFormData, string>>>({});
-
-  // Mettre à jour le nom du niveau de classe quand l'ID change
-  useEffect(() => {
-    if (formData.niveauClasseId) {
-      const niveau = niveauxClasse.find(n => n.id === formData.niveauClasseId);
-      if (niveau) {
-        setFormData(prev => ({ ...prev, niveauClasse: niveau.nom }));
-      }
-    }
-  }, [formData.niveauClasseId]);
-
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof MatiereFormData, string>> = {};
-
-    if (!formData.nom.trim()) {
-      newErrors.nom = "Le nom de la matière est requis";
-    }
-    if (!formData.coefficient || formData.coefficient < 1) {
-      newErrors.coefficient = "Le coefficient doit être supérieur ou égal à 1";
-    }
-    if (!formData.niveauClasseId) {
-      newErrors.niveauClasseId = "Le niveau de classe est requis";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const handlePrepareAdjustment = () => {
+    const noms = nomsMatieres.split(",").map(s => s.trim()).filter(s => s !== "");
+    const list: MatiereFormData[] = [];
+    selectedNiveauxIds.forEach(id => {
+      const niv = niveauxClasse.find(n => n.id === id);
+      noms.forEach(nom => {
+        list.push({ nom, coefficient: 1, niveauClasseId: id, niveauClasse: niv?.nom || "" });
+      });
+    });
+    setPreviewData(list);
+    setActiveTab(selectedNiveauxIds[0]);
+    setStep(2);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
-      onSubmit(formData);
-    }
+  const handleUpdatePreviewCoef = (index: number, val: string) => {
+    const cleanValue = val.replace(",", ".").replace(/[^0-9.]/g, "");
+    const newList = [...previewData];
+    newList[index].coefficient = cleanValue === "" ? 0 : parseFloat(cleanValue);
+    setPreviewData(newList);
   };
 
-  const handleChange = (field: keyof MatiereFormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
-    }
-  };
+  if (isUpdate) {
+    return (
+      <form onSubmit={(e) => { e.preventDefault(); onSubmit([singleData]); }} className="p-4 space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <input
+            type="text"
+            value={singleData.nom}
+            onChange={(e) => setSingleData({ ...singleData, nom: e.target.value })}
+            className="p-2 border rounded outline-none focus:border-primary"
+            placeholder="Nom"
+          />
+          <input
+            type="text"
+            inputMode="decimal"
+            value={singleData.coefficient === 0 ? "" : singleData.coefficient}
+            onChange={(e) => {
+              const val = e.target.value.replace(",", ".").replace(/[^0-9.]/g, "");
+              setSingleData({ ...singleData, coefficient: val === "" ? 0 : parseFloat(val) });
+            }}
+            className="p-2 border rounded outline-none focus:border-primary"
+            placeholder="Coef"
+          />
+        </div>
+        <div className="flex justify-end gap-2 pt-4">
+          <button type="button" onClick={onCancel}>Annuler</button>
+          <button type="submit" disabled={isSubmitting} className="bg-primary text-white px-4 py-2 rounded">
+            {isSubmitting ? "..." : "Mettre à jour"}
+          </button>
+        </div>
+      </form>
+    );
+  }
 
-  // Grouper les niveaux de classe par cycle et niveau scolaire
-  const niveauxParHierarchie = niveauxClasse.reduce((acc, niveau) => {
-    const key = `${niveau.niveauScolaire} - ${niveau.cycle}`;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(niveau);
-    return acc;
-  }, {} as Record<string, typeof niveauxClasse>);
+  if (step === 2) {
+    return (
+      <div className="p-6 space-y-4">
+        <div className="flex gap-2 overflow-x-auto border-b no-scrollbar">
+          {selectedNiveauxIds.map(id => (
+            <button
+              key={`tab-${id}`}
+              type="button"
+              onClick={() => setActiveTab(id)}
+              className={`p-2 border-b-2 font-bold whitespace-nowrap ${activeTab === id ? "border-primary text-primary" : "border-transparent text-gray-400"}`}
+            >
+              {niveauxClasse.find(n => n.id === id)?.nom}
+            </button>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {previewData.map((item, idx) => {
+            if (item.niveauClasseId !== activeTab) return null;
+            return (
+              <div key={`input-${item.niveauClasseId}-${item.nom}`} className="flex justify-between items-center p-3 border rounded bg-white">
+                <span className="text-sm font-medium">{item.nom}</span>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={item.coefficient === 0 ? "" : item.coefficient}
+                  onChange={(e) => handleUpdatePreviewCoef(idx, e.target.value)}
+                  className="w-16 p-1 border rounded text-center font-bold text-primary outline-none focus:border-primary"
+                />
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex justify-end gap-4 border-t pt-4">
+          <button type="button" onClick={() => setStep(1)} className="text-gray-500">Retour</button>
+          <button type="button" onClick={() => onSubmit(previewData)} disabled={isSubmitting} className="bg-primary text-white px-6 py-2 rounded font-bold">
+            {isSubmitting ? "..." : "Valider tout"}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-medium text-gray-800 mb-4">
-          Informations de la matière
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Niveau de classe */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Niveau de classe <span className="text-red-500">*</span>
-            </label>
-            <select
-              value={formData.niveauClasseId}
-              onChange={(e) => handleChange("niveauClasseId", e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                errors.niveauClasseId ? 'border-red-500' : 'border-gray-300'
-              }`}
-            >
-              <option value="">Sélectionner un niveau</option>
-              {Object.entries(niveauxParHierarchie).map(([hierarchie, niveaux]) => (
-                <optgroup key={hierarchie} label={hierarchie}>
-                  {niveaux.map(niveau => (
-                    <option key={niveau.id} value={niveau.id}>
-                      {niveau.nom}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-            {errors.niveauClasseId && (
-              <p className="mt-1 text-sm text-red-500">{errors.niveauClasseId}</p>
-            )}
-          </div>
-
-          {/* Nom de la matière */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nom de la matière <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={formData.nom}
-              onChange={(e) => handleChange("nom", e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                errors.nom ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Ex: Mathématiques, Français, etc."
-            />
-            {errors.nom && <p className="mt-1 text-sm text-red-500">{errors.nom}</p>}
-          </div>
-
-          {/* Coefficient */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Coefficient <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="number"
-              min="1"
-              step="0.5"
-              value={formData.coefficient}
-              onChange={(e) => handleChange("coefficient", parseFloat(e.target.value))}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                errors.coefficient ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="1, 2, 3, etc."
-            />
-            {errors.coefficient && (
-              <p className="mt-1 text-sm text-red-500">{errors.coefficient}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Aperçu du niveau (lecture seule) */}
-        {formData.niveauClasse && (
-          <div className="mt-4 bg-gray-50 rounded-lg p-3 text-sm">
-            <p className="text-gray-700">
-              <span className="font-medium">Niveau de classe sélectionné :</span> {formData.niveauClasse}
-            </p>
-          </div>
-        )}
+    <div className="p-6 space-y-6">
+      <div className="flex flex-wrap gap-2">
+        {niveauxClasse.map(niv => (
+          <button
+            key={`btn-${niv.id}`}
+            type="button"
+            onClick={() => setSelectedNiveauxIds(prev => prev.includes(niv.id) ? prev.filter(i => i !== niv.id) : [...prev, niv.id])}
+            className={`px-3 py-1 border rounded-full text-xs font-bold transition ${selectedNiveauxIds.includes(niv.id) ? "bg-primary text-white border-primary" : "bg-gray-50 text-gray-400 border-gray-100"}`}
+          >
+            {niv.nom}
+          </button>
+        ))}
       </div>
-
-      {/* Boutons d'action */}
-      <div className="flex items-center justify-end gap-3">
+      <textarea
+        value={nomsMatieres}
+        onChange={(e) => setNomsMatieres(e.target.value)}
+        placeholder="Maths, Français, Anglais..."
+        className="w-full p-3 border rounded-xl outline-none focus:border-primary"
+        rows={3}
+      />
+      <div className="flex justify-end border-t pt-4">
         <button
           type="button"
-          onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+          onClick={handlePrepareAdjustment}
+          disabled={!selectedNiveauxIds.length || !nomsMatieres.trim()}
+          className="bg-primary text-white px-8 py-2 rounded-lg font-bold disabled:opacity-30"
         >
-          Annuler
-        </button>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50"
-        >
-          {isSubmitting ? "Enregistrement..." : initialData ? "Mettre à jour" : "Créer la matière"}
+          Suivant
         </button>
       </div>
-    </form>
+    </div>
   );
 }

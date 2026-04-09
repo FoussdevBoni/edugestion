@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import CycleForm, { CycleFormData } from "../../../../components/admin/forms/CycleForm";
 import { v4 as uuidv4 } from 'uuid';
+import { BaseCycle } from "../../../../utils/types/base";
+import { cycleService } from "../../../../services/cycleService";
 
 export default function NewCyclePage() {
   const navigate = useNavigate();
@@ -24,16 +26,14 @@ export default function NewCyclePage() {
     setIsSubmitting(true);
     try {
       // Simulation d'appel API
-      const newCycle = {
-        id: uuidv4(),
+      const newCycle: BaseCycle = {
         nom: data.nom,
         niveauScolaireId: data.niveauScolaireId,
-        niveauScolaire: data.niveauScolaire,
-        createdAt: new Date().toISOString()
+      
       };
       
-      console.log("Création d'un cycle:", newCycle);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      await cycleService.create(newCycle)
       
       // Rediriger vers la liste des cycles
       navigate("/admin/configuration/cycles");

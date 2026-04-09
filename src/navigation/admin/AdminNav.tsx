@@ -1,51 +1,52 @@
 import { Navigate, Route, Routes } from "react-router-dom"
-import Dashboard from "../../pages/admin/Dashboard"
-import ComptabilitePage from "../../pages/admin/ComptabilitePage"
-import CarteIdentitesPage from "../../pages/admin/CarteIdentitesPage"
-import BulletinsPage from "../../pages/admin/BulletinsPage"
-import NotesPage from "../../pages/admin/NotesPage"
-import InscriptionsPage from "../../pages/admin/InscriptionsPage"
-import LicencesPage from "../../pages/admin/LicencesPage"
-import ParamettresPage from "../../pages/admin/ParametresPage"
-import PaiementsPage from "../../pages/admin/PaiementsPage"
-import EmploieDuTempPage from "../../pages/admin/EmploieDuTempPage"
 import DashboardLayout from "../../layouts/DashboardLayout"
 import EleveNav from "./Eleve/EleveNav"
 import EnseignantNav from "./Enseignant/EnseignantNav"
 import ConfigurationNav from "./Configuration/ConfigurationNav"
+import InscriptionNav from "./Inscription/InscriptionNav"
+import PaiementNav from "./Paiement/PaiementNav"
+import EmploiDuTempNav from "./EmploieDuTemp/EmploiDuTempNav"
+import NoteNav from "./Note/NoteNav"
+import ComptabiliteNav from "./Comptabilite/ComptabiliteNav"
+import DashboardPage from "../../pages/admin/DashboardPage"
+import BulletinNav from "./Bulletin/BulletinNav"
+import ProtectedRoute from "../../components/auth/ProtectedRoutes"
+import EcoleRequired from "../../components/auth/EcoleRequired"
+import MatiereNav from "./Configuration/Matiere/MatiereNav"
+import ClasseNav from "./Configuration/Classe/ClasseNav"
+import PortailScolaire from "../../pages/admin/HomePage"
 
 const MainNav = () => {
   return (
-    <DashboardLayout>
-      <Routes>
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/configuration/*' element={<ConfigurationNav />} />
-        <Route path='/eleves/*' element={<EleveNav />} />
-        <Route path='/enseignants/*' element={<EnseignantNav />} />
-
-
-        <Route path='/comptabilite' element={<ComptabilitePage />} />
-        <Route path='/carte-identite' element={<CarteIdentitesPage />} />
-        <Route path='/bulletins' element={<BulletinsPage />} />
-        <Route path='/notes' element={<NotesPage />} />
-        <Route path='/inscriptions' element={<InscriptionsPage />} />
-        <Route path='/emploie-temps' element={<EmploieDuTempPage />} />
-        <Route path='/paiements' element={<PaiementsPage />} />
-        <Route path='/parametres' element={<ParamettresPage />} />
-        <Route path='/licences' element={<LicencesPage />} />
-
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-
-      </Routes>
-    </DashboardLayout>
-
+    <Routes>
+      <Route path='/home' element={<PortailScolaire />} />
+      <Route path='/dashboard' element={<DashboardPage />} />
+      <Route path='/configuration/*' element={<ConfigurationNav />} />
+      <Route path='/eleves/*' element={<EleveNav />} />
+      <Route path='/matieres/*' element={<MatiereNav />} />
+      <Route path='/classes/*' element={<ClasseNav />} />
+      <Route path='/enseignants/*' element={<EnseignantNav />} />
+      <Route path='/inscriptions/*' element={<InscriptionNav />} />
+      <Route path='/paiements/*' element={<PaiementNav />} />
+      <Route path='/emploie-temps/*' element={<EmploiDuTempNav />} />
+      <Route path='/notes/*' element={<NoteNav />} />
+      <Route path='/comptabilite/*' element={<ComptabiliteNav />} />
+      <Route path='/bulletins/*' element={<BulletinNav />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+    </Routes>
   )
 }
 
 export default function AdminNav() {
   return (
-    <Routes>
-      <Route path="/*" element={<MainNav />} />
-    </Routes>
+    <ProtectedRoute>
+      <EcoleRequired>
+        <DashboardLayout>
+          <Routes>
+            <Route path="/*" element={<MainNav />} />
+          </Routes>
+        </DashboardLayout>
+      </EcoleRequired>
+    </ProtectedRoute>
   )
 }

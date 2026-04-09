@@ -145,7 +145,7 @@ export default function ConfigurationLayout({ children }: ConfigurationLayoutPro
             </div>
 
             {/* Contenu de la page */}
-            <div className="px-6">
+            <div className="px-6 py-10">
                 {children}
             </div>
 

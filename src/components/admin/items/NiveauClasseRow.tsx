@@ -28,16 +28,7 @@ export default function NiveauClasseRow({ niveauClasse, onAction, classesCount =
           <span className="font-medium text-gray-800">{niveauClasse.nom}</span>
         </div>
       </td>
-      <td className="py-3 px-4 text-gray-600">
-        <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-          {niveauClasse.cycle}
-        </span>
-      </td>
-      <td className="py-3 px-4 text-gray-600">
-        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-          {niveauClasse.niveauScolaire}
-        </span>
-      </td>
+     
       <td className="py-3 px-4 text-gray-600">
         <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
           {classesCount} classe{classesCount > 1 ? 's' : ''}

@@ -1,64 +1,57 @@
 // src/components/admin/lists/CyclesList.tsx
-
-import { niveauxClasse } from "../../../data/baseData";
+import useNiveauxClasses from "../../../hooks/niveauxClasses/useNiveauxClasses";
 import { Cycle } from "../../../utils/types/data";
 import CycleRow from "../items/CycleRow";
-
+import GenericList from "../../ui/tables/TableList";
 
 interface CyclesListProps {
   cycles: Cycle[];
   onAction: (cycle: Cycle) => void;
+  onSelectCycles?: (selectedCycles: Cycle[]) => void;
+  selectable?: boolean;
 }
 
-export default function CyclesList({ cycles, onAction }: CyclesListProps) {
-  // Compter les niveaux de classe pour chaque cycle
+export default function CyclesList({ 
+  cycles, 
+  onAction, 
+  onSelectCycles,
+  selectable = true 
+}: CyclesListProps) {
+  const { niveauxClasse } = useNiveauxClasses();
+
   const getNiveauxClasseCount = (cycleId: string) => {
     return niveauxClasse.filter(nc => nc.cycleId === cycleId).length;
   };
 
+ 
+
+  const columns = [
+    { header: "Cycle", className: "w-1/4" },
+    { header: "Niveau scolaire", className: "w-1/4" },
+    { header: "Niveaux de classe", className: "w-1/4" },
+    { header: "Date de création", className: "w-1/4" },
+  ];
+
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Cycle
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Niveau scolaire
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Niveaux de classe
-              </th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date de création
-              </th>
-              <th className="py-3 px-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {cycles.length > 0 ? (
-              cycles.map((cycle) => (
-                <CycleRow
-                  key={cycle.id} 
-                  cycle={cycle} 
-                  onAction={onAction}
-                  niveauxClasseCount={getNiveauxClasseCount(cycle.id)}
-                />
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="py-8 text-center text-gray-500">
-                  Aucun cycle trouvé
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <GenericList
+      items={cycles}
+      columns={columns}
+      getId={(cycle) => cycle.id}
+      onAction={onAction}
+      onSelectItems={onSelectCycles}
+      selectable={selectable}
+      emptyMessage="Aucun cycle trouvé"
+      renderRow={(cycle, isSelected, onSelect) => (
+        <CycleRow
+          key={cycle.id}
+          cycle={cycle}
+          onAction={onAction}
+          onSelect={onSelect}
+          isSelected={isSelected}
+          niveauxClasseCount={getNiveauxClasseCount(cycle.id)}
+          selectable={selectable}
+        />
+      )}
+    />
   );
 }

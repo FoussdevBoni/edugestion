@@ -1,6 +1,6 @@
 // src/components/forms/CycleForm.tsx
 import { useState, useEffect } from "react";
-import { niveauxScolaires } from "../../../data/baseData";
+import useNiveauxScolaires from "../../../hooks/niveauxScolaires/useNiveauxScolaires";
 
 export interface CycleFormData {
   id?: string;
@@ -22,6 +22,7 @@ export default function CycleForm({
   onCancel,
   isSubmitting = false 
 }: CycleFormProps) {
+  const {niveauxScolaires} = useNiveauxScolaires()
   const [formData, setFormData] = useState<CycleFormData>(
     initialData || {
       nom: "",
@@ -71,7 +72,7 @@ export default function CycleForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 p-4">
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h3 className="text-lg font-medium text-gray-800 mb-4">
           Informations du cycle

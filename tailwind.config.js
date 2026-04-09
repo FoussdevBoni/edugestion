@@ -7,7 +7,7 @@ module.exports = {
   darkMode: 'class',
   theme: {
     fontFamily: {
-      satoshi: ['Satoshi', 'sans-serif'],
+      sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
     },
     screens: {
       '2xsm': '375px',
@@ -35,7 +35,7 @@ module.exports = {
         bodydark2: '#8A99AF',
 
         // Couleurs principales
-        primary: 'var(--primary-color, #6366F1)', // couleur dynamique
+        primary: '#3B82F6', // couleur dynamique
         secondary: '#80CAEE',
         accent: '#10B981',
         stroke: '#E2E8F0',
