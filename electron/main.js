@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { initDb } from './db.js';
@@ -41,10 +41,13 @@ function createWindow() {
     title: "EduGestion",
     // Utilise l'icône selon l'environnement
     icon: path.join(__dirname, "../assets/icon.png"),
+    titleBarStyle: 'hidden',
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.cjs') // ← Chemin complet
+      preload: path.join(__dirname, 'preload.cjs'),
+
     }
   });
 
@@ -93,7 +96,7 @@ app.whenReady().then(async () => {
     initPaiementHandlers();
     initMouvementStockHandlers();
     initStatsHandlers(),
-    initBulletinHandlers();
+      initBulletinHandlers();
     initPhotoHandlers();
     initLicenceHandlers();
     initConfigBulletinHandlers();
@@ -101,6 +104,25 @@ app.whenReady().then(async () => {
     initInitialisationHandlers()
     initResetHandlers()
     createWindow();
+
+    ipcMain.on('window:minimize', () => {
+      const win = BrowserWindow.getFocusedWindow();
+      win?.minimize();
+    });
+
+    ipcMain.on('window:maximize', () => {
+      const win = BrowserWindow.getFocusedWindow();
+      if (win?.isMaximized()) {
+        win.unmaximize();
+      } else {
+        win?.maximize();
+      }
+    });
+
+    ipcMain.on('window:close', () => {
+      const win = BrowserWindow.getFocusedWindow();
+      win?.close();
+    });
   } catch (err) {
     console.error("Échec du démarrage :", err);
   }

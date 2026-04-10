@@ -34,8 +34,8 @@ export default function DashboardHeader({
 }: DashboardHeaderProps) {
 
   const { cycles } = useCycles();
+  const navigate = useNavigate();
 
- const navigate = useNavigate()
   const {
     showNiveauxModal,
     setShowNiveauxModal,
@@ -64,55 +64,47 @@ export default function DashboardHeader({
     navigate("/admin/configuration/ecole/update", { state: ecoleInfos });
   };
 
-
-
-
- 
-
   return (
     <>
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-primary border-b border-white/20">
         {/* Ligne 1: Identité de l'école */}
-        <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100">
+        <div className="px-6 py-4 flex items-center justify-between border-b border-white/20">
           <div className="flex items-center gap-4">
-           
-              <>
-                <div className="w-10 h-10 bg-primary/10 rounded-md flex items-center justify-center overflow-hidden">
-                  {logoUrl ? (
-                    <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
-                  ) : (
-                    <School size={20} className="text-primary" />
-                  )}
-                </div>
-                <div>
-                  <h1 className="text-lg font-semibold text-gray-800">
-                    {ecoleInfos?.nom || "Votre école"}
-                  </h1>
-                  {ecoleInfos?.devise && (
-                    <p className="text-xs text-gray-400">{ecoleInfos.devise}</p>
-                  )}
-                </div>
-              </>
-            
+            <>
+              <div className="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center overflow-hidden">
+                {logoUrl ? (
+                  <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
+                ) : (
+                  <School size={20} className="text-white" />
+                )}
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold text-white">
+                  {ecoleInfos?.nom || "Votre école"}
+                </h1>
+                {ecoleInfos?.devise && (
+                  <p className="text-xs text-white/70">{ecoleInfos.devise}</p>
+                )}
+              </div>
+            </>
           </div>
 
-            <button
-              onClick={handleEdit}
-              className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1.5 transition-colors"
-            >
-              <Edit size={14} />
-              Modifier
-            </button>
-          
+          <button
+            onClick={handleEdit}
+            className="text-sm text-white/80 hover:text-white flex items-center gap-1.5 transition-colors"
+          >
+            <Edit size={14} />
+            Modifier
+          </button>
         </div>
 
         {/* Ligne 2: Filtres */}
-        <div className="bg-gray-50 px-6 py-3">
+        <div className="bg-white/10 px-6 py-3">
           <div className="flex items-center gap-4 text-sm flex-wrap">
-            <span className="text-gray-500 font-medium">Filtrer par :</span>
+            <span className="text-white/70 font-medium">Filtrer par :</span>
 
             {!plusieursNiveaux ? (
-              <span className="text-gray-700 font-medium px-2">
+              <span className="text-white font-medium px-2">
                 {niveauxScolaires[0]?.nom}
               </span>
             ) : (
@@ -120,16 +112,16 @@ export default function DashboardHeader({
                 <select
                   value={niveauSelectionne ?? ""}
                   onChange={(e) => handleNiveauChange(e.target.value)}
-                  className="appearance-none bg-white border border-gray-200 rounded-md pl-3 pr-8 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                  className="appearance-none bg-white/20 text-white border border-white/30 rounded-md pl-3 pr-8 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-white/50 focus:border-white/50"
                 >
-                  <option value="">Tous les niveaux</option>
+                  <option value="" className="text-gray-800">Tous les niveaux</option>
                   {niveauxScolaires.map((niveau) => (
-                    <option key={niveau.nom} value={niveau.nom}>
+                    <option key={niveau.nom} value={niveau.nom} className="text-gray-800">
                       {niveau.nom}
                     </option>
                   ))}
                 </select>
-                <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/60 pointer-events-none" />
               </div>
             )}
 
@@ -138,7 +130,7 @@ export default function DashboardHeader({
                 loadNiveauxDisponibles();
                 setShowNiveauxModal(true);
               }}
-              className="flex items-center gap-1 text-primary text-sm hover:text-primary/80 transition-colors"
+              className="flex items-center gap-1 text-white/80 hover:text-white text-sm transition-colors"
             >
               <Plus size={14} />
               Ajouter un niveau
@@ -146,21 +138,21 @@ export default function DashboardHeader({
 
             {plusieursCycles && (
               <>
-                <span className="text-gray-300">|</span>
+                <span className="text-white/30">|</span>
                 <div className="relative">
                   <select
                     value={cycleSelectionne ?? ""}
                     onChange={(e) => handleCycleChange(e.target.value)}
-                    className="appearance-none bg-white border border-gray-200 rounded-md pl-3 pr-8 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                    className="appearance-none bg-white/20 text-white border border-white/30 rounded-md pl-3 pr-8 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-white/50 focus:border-white/50"
                   >
-                    <option value="">Tous les cycles</option>
+                    <option value="" className="text-gray-800">Tous les cycles</option>
                     {cyclesDisponibles.map((cycle) => (
-                      <option key={cycle} value={cycle}>
+                      <option key={cycle} value={cycle} className="text-gray-800">
                         {cycle}
                       </option>
                     ))}
                   </select>
-                  <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                  <ChevronDown size={14} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/60 pointer-events-none" />
                 </div>
               </>
             )}
@@ -168,7 +160,7 @@ export default function DashboardHeader({
             {(niveauSelectionne !== "" || cycleSelectionne !== "") && (
               <button
                 onClick={handleResetFiltres}
-                className="text-gray-400 hover:text-gray-500 text-sm ml-auto transition-colors"
+                className="text-white/60 hover:text-white text-sm ml-auto transition-colors"
               >
                 Réinitialiser
               </button>

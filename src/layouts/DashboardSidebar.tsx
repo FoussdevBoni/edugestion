@@ -72,24 +72,24 @@ export default function DashboardSidebar({
   };
 
   return (
-    <aside className={`bg-white shadow-lg flex flex-col transition-all duration-300 
+    <aside className={`bg-primary shadow-lg flex flex-col transition-all duration-300 
       ${collapsed ? 'w-20' : 'w-64'}
-      border-r border-gray-100`}>
+      border-r border-white/20`}>
       
       {/* En-tête */}
-      <div className="px-4 py-4 border-b border-gray-100 flex items-center justify-between">
+      <div className="px-4 py-4 border-b border-white/20 flex items-center justify-between">
         {!collapsed ? (
-          <Link to="/admin/dashboard" className="font-bold text-lg text-primary">
+          <Link to="/admin/dashboard" className="font-bold text-lg text-white">
             EduGestion
           </Link>
         ) : (
-          <Link to="/admin/dashboard" className="font-bold text-lg text-primary mx-auto">
+          <Link to="/admin/dashboard" className="font-bold text-lg text-white mx-auto">
             EG
           </Link>
         )}
         <button
           onClick={onToggle}
-          className="p-1 rounded-md hover:bg-gray-100 transition-colors"
+          className="p-1 rounded-md hover:bg-white/10 transition-colors text-white"
         >
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
@@ -97,8 +97,8 @@ export default function DashboardSidebar({
 
       {/* Année scolaire */}
       {!collapsed && ecoleInfos?.anneeScolaire && (
-        <div className="px-4 py-2 bg-primary/5 border-b border-gray-100">
-          <p className="text-xs font-medium text-primary">Année {ecoleInfos.anneeScolaire}</p>
+        <div className="px-4 py-2 bg-white/10 border-b border-white/20">
+          <p className="text-xs font-medium text-white/80">Année {ecoleInfos.anneeScolaire}</p>
         </div>
       )}
 
@@ -108,7 +108,7 @@ export default function DashboardSidebar({
           {Object.values(groupes).map((groupe, idx) => groupe.items.length > 0 && (
             <li key={idx}>
               {!collapsed && (
-                <div className="px-2 pb-1 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                <div className="px-2 pb-1 text-[10px] font-semibold text-white/50 uppercase tracking-wider">
                   {groupe.titre}
                 </div>
               )}
@@ -116,19 +116,19 @@ export default function DashboardSidebar({
                 {groupe.items.map((item, i) => {
                   const isActive = isActivePath(item.path);
                   return (
-                    <li key={i}>
+                    <li key={i} className="relative group">
                       <div
                         onClick={() => handleNavigation(item.path)}
                         className={`
                           flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer transition-colors
                           ${isActive 
-                            ? 'bg-primary/10 text-primary' 
-                            : 'text-gray-600 hover:bg-gray-100'
+                            ? 'bg-white/20 text-white' 
+                            : 'text-white/70 hover:bg-white/10 hover:text-white'
                           }
                           ${collapsed ? 'justify-center' : ''}
                         `}
                       >
-                        <span className={isActive ? 'text-primary' : 'text-gray-500'}>
+                        <span className={isActive ? 'text-white' : 'text-white/70'}>
                           {item.icon}
                         </span>
                         {!collapsed && (
@@ -150,14 +150,14 @@ export default function DashboardSidebar({
       </nav>
 
       {/* Pied de page */}
-      <div className="p-4 border-t border-gray-100">
+      <div className="p-4 border-t border-white/20">
         {!collapsed ? (
-          <div className="text-[10px] text-gray-400 text-center">
+          <div className="text-[10px] text-white/50 text-center">
             <p>EduGestion</p>
             <p className="mt-0.5">Version 1.0.0</p>
           </div>
         ) : (
-          <div className="text-center text-gray-400 text-[10px]">
+          <div className="text-center text-white/50 text-[10px]">
             v1.0
           </div>
         )}

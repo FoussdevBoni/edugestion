@@ -20,12 +20,16 @@ try {
         ipcRenderer.removeAllListeners(channel);
       }
     },
+
+    minimizeWindow: () => ipcRenderer.send('window:minimize'),
+    maximizeWindow: () => ipcRenderer.send('window:maximize'),
+    closeWindow: () => ipcRenderer.send('window:close'),
     test: 'Hello'
   });
 
   console.log("✅ PRELOAD : API exposée avec succès");
   console.log("📦 API disponible sur window.electron.ipcRenderer");
-  
+
 } catch (error) {
   console.error("❌ PRELOAD : Erreur fatale", error);
 }
