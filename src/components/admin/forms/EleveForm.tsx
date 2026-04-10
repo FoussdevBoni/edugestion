@@ -1,29 +1,32 @@
 // src/components/admin/forms/EleveForm.tsx
 import { useState, useEffect } from "react";
-import { User, BookOpen, ChevronDown } from "lucide-react";
+import { User, BookOpen, ChevronDown, AlertCircle } from "lucide-react";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
-import useNiveauxScolaires from "../../../hooks/niveauxScolaires/useNiveauxScolaires";
-import useCycles from "../../../hooks/cycles/useCycles";
-import useNiveauxClasses from "../../../hooks/niveauxClasses/useNiveauxClasses";
 import useClasses from "../../../hooks/classes/useClasses";
+import usePeriodes from "../../../hooks/periodes/usePeriodes";
 
-// Interface pour les données du formulaire
+export interface VieScolaireItem {
+  periodeId: string;
+  score: {
+    absences: number;
+    retards: number;
+    conduite: number;
+  };
+}
+
 export interface EleveFormData {
-  // Infos élève (BaseEleveData)
   nom: string;
   prenom: string;
   dateNaissance: string;
   sexe: "M" | "F";
+  matricule?: string;
   lieuDeNaissance?: string;
   contact?: string;
   photo?: string;
-  
-  // Infos inscription (BaseInscription)
   anneeScolaire: string;
   statutScolaire: "nouveau" | "redoublant";
   classeId: string;
-  
-  // Pour la navigation dans les selects (pas envoyé au backend)
+  vieScolaire?: VieScolaireItem[];
   niveauScolaireId?: string;
   cycleId?: string;
   niveauClasseId?: string;
@@ -43,28 +46,23 @@ export default function EleveForm({
   isSubmitting = false 
 }: EleveFormProps) {
   const { niveauSelectionne, cycleSelectionne } = useEcoleNiveau();
-  const { niveauxScolaires } = useNiveauxScolaires();
-  const { cycles } = useCycles();
-  const { niveauxClasse } = useNiveauxClasses();
   const { classes } = useClasses();
+  const { periodes } = usePeriodes();
   
   const [formData, setFormData] = useState<EleveFormData>(
     initialData || {
-      // Infos élève
       nom: "",
       prenom: "",
       dateNaissance: "",
       sexe: "M",
+      matricule: "",
       lieuDeNaissance: "",
       contact: "",
       photo: "",
-      
-      // Infos inscription
       anneeScolaire: new Date().getFullYear() + "-" + (new Date().getFullYear() + 1),
       statutScolaire: "nouveau",
       classeId: "",
-      
-      // Navigation
+      vieScolaire: [],
       niveauScolaireId: "",
       cycleId: "",
       niveauClasseId: ""
@@ -73,22 +71,16 @@ export default function EleveForm({
 
   const [errors, setErrors] = useState<Partial<Record<keyof EleveFormData, string>>>({});
 
-  // Trouver la classe sélectionnée
   const classeSelectionnee = classes.find(c => c.id === formData.classeId);
-  
-  // Mettre à jour les IDs de navigation quand la classe change
+
   useEffect(() => {
     if (classeSelectionnee) {
-      setFormData(prev => ({
-        ...prev,
-      }));
+      setFormData(prev => ({ ...prev }));
     }
   }, [formData.classeId]);
 
-  // Mettre à jour quand les filtres globaux changent
   useEffect(() => {
     if (!initialData && (niveauSelectionne || cycleSelectionne)) {
-      // Trouver la première classe correspondant aux filtres
       const classeFiltree = classes.find(c => {
         const niveauOk = niveauSelectionne ? c.niveauScolaire === niveauSelectionne : true;
         const cycleOk = cycleSelectionne ? c.cycle === cycleSelectionne : true;
@@ -120,16 +112,41 @@ export default function EleveForm({
     }
   };
 
-  const handleChange = (field: keyof EleveFormData, value: string) => {
+  const handleChange = (field: keyof EleveFormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
   };
 
+  const handleVieScolaireChange = (periodeId: string, field: "absences" | "retards" | "conduite", value: number) => {
+    const vieScolaire = [...(formData.vieScolaire || [])];
+    const existingIndex = vieScolaire.findIndex(v => v.periodeId === periodeId);
+    
+    if (existingIndex >= 0) {
+      vieScolaire[existingIndex].score[field] = value;
+    } else {
+      vieScolaire.push({
+        periodeId,
+        score: { absences: 0, retards: 0, conduite: 0, [field]: value }
+      });
+    }
+    
+    setFormData(prev => ({ ...prev, vieScolaire }));
+  };
+
+  const getVieScolaireValue = (periodeId: string, field: "absences" | "retards" | "conduite"): number => {
+    const item = formData.vieScolaire?.find(v => v.periodeId === periodeId);
+    return item?.score[field] || 0;
+  };
+
+  const periodesFiltrees = periodes.filter(p => {
+    if (niveauSelectionne && p.niveauScolaire !== niveauSelectionne) return false;
+    return true;
+  });
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 p-4">
-      {/* En-tête */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-gray-800">
           {initialData ? "Modifier l'élève" : "Nouvel élève"}
@@ -149,7 +166,6 @@ export default function EleveForm({
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Nom */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Nom <span className="text-red-500">*</span>
@@ -166,7 +182,6 @@ export default function EleveForm({
             {errors.nom && <p className="mt-1 text-sm text-red-500">{errors.nom}</p>}
           </div>
 
-          {/* Prénom */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Prénom <span className="text-red-500">*</span>
@@ -183,7 +198,19 @@ export default function EleveForm({
             {errors.prenom && <p className="mt-1 text-sm text-red-500">{errors.prenom}</p>}
           </div>
 
-          {/* Date de naissance */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Matricule
+            </label>
+            <input
+              type="text"
+              value={formData.matricule}
+              onChange={(e) => handleChange("matricule", e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              placeholder="Matricule"
+            />
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Date de naissance <span className="text-red-500">*</span>
@@ -199,7 +226,6 @@ export default function EleveForm({
             {errors.dateNaissance && <p className="mt-1 text-sm text-red-500">{errors.dateNaissance}</p>}
           </div>
 
-          {/* Lieu de naissance */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Lieu de naissance
@@ -213,7 +239,6 @@ export default function EleveForm({
             />
           </div>
 
-          {/* Sexe */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Sexe
@@ -242,7 +267,6 @@ export default function EleveForm({
             </div>
           </div>
 
-          {/* Contact */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Contact
@@ -266,7 +290,6 @@ export default function EleveForm({
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Année scolaire */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Année scolaire
@@ -280,7 +303,6 @@ export default function EleveForm({
             />
           </div>
 
-          {/* Statut scolaire */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Statut
@@ -298,7 +320,6 @@ export default function EleveForm({
             </div>
           </div>
 
-          {/* Classe */}
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Classe <span className="text-red-500">*</span>
@@ -331,6 +352,64 @@ export default function EleveForm({
           </div>
         </div>
       </div>
+
+      {/* Vie scolaire */}
+      {periodesFiltrees.length > 0 && (
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-medium text-gray-800 mb-4 flex items-center gap-2">
+            <AlertCircle size={20} className="text-primary" />
+            Vie scolaire
+          </h3>
+
+          <div className="space-y-4">
+            {periodesFiltrees.map(periode => (
+              <div key={periode.id} className="border border-gray-100 rounded-lg p-4">
+                <h4 className="font-medium text-gray-700 mb-3">{periode.nom}</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      Absences 
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={getVieScolaireValue(periode.id, "absences")}
+                      onChange={(e) => handleVieScolaireChange(periode.id, "absences", parseInt(e.target.value) || 0)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      Retards
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={getVieScolaireValue(periode.id, "retards")}
+                      onChange={(e) => handleVieScolaireChange(periode.id, "retards", parseInt(e.target.value) || 0)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-600 mb-1">
+                      Note de conduite /20
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="20"
+                      step="0.5"
+                      value={getVieScolaireValue(periode.id, "conduite")}
+                      onChange={(e) => handleVieScolaireChange(periode.id, "conduite", parseFloat(e.target.value) || 0)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Boutons */}
       <div className="flex items-center justify-end gap-3">

@@ -2,23 +2,29 @@
 import { useEffect, useState, useCallback } from 'react';
 import { periodeService } from '../../services/periodeService';
 import { Periode } from '../../utils/types/data';
+import { useEcoleNiveau } from '../filters/useEcoleNiveau';
 
 export default function usePeriodes() {
   const [periodes, setPeriodes] = useState<Periode[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { niveauSelectionne } = useEcoleNiveau()
+
 
   const loadPeriodes = useCallback(async () => {
     try {
       setLoading(true);
       const periodesData = await periodeService.getAll();
-      setPeriodes(periodesData);
+      const filteredPeriodes = periodesData.filter((item) => (item.niveauScolaire === niveauSelectionne))
+      setPeriodes(filteredPeriodes);
     } catch (err: any) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [niveauSelectionne]);
+
+
 
   const createPeriode = useCallback(async (data: any) => {
     try {

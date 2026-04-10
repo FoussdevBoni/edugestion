@@ -3,7 +3,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { classeService } from '../../services/classeService';
 import { Classe } from '../../utils/types/data';
 import { useEcoleNiveau } from '../filters/useEcoleNiveau';
-import { applyFilters } from '../../helpers/filterData';
 import { filterByCycleAndNiveau } from '../../shared/filterByCycleAndNiveau';
 
 

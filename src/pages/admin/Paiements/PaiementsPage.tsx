@@ -1,6 +1,5 @@
-// src/pages/admin/paiements/PaiementsPage.tsx
 import { useState, useMemo } from "react";
-import { Plus, MoreVertical, FileText, Printer, Search } from "lucide-react";
+import { Plus, MoreVertical, FileText, Printer, Search, CreditCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Components
@@ -13,29 +12,27 @@ import ClasseFilter from "../../../components/wrappers/ClassesFilter";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
 import { Paiement } from "../../../utils/types/data";
 import usePaiements from "../../../hooks/paiements/usePaiements";
-import { alertServerError } from "../../../helpers/alertError";
+import { alertServerError, alertSuccess } from "../../../helpers/alertError";
 import useRecu from "../../../hooks/paiements/useRecu";
+import PageLayout from "../../../layouts/PageLayout";
 
 export default function PaiementsPage() {
   const navigate = useNavigate();
 
-  // 1. Context & Data Hooks
   const {
     niveauSelectionne, cycleSelectionne, niveauClasseSelectionne, classeSelectionne
   } = useEcoleNiveau();
 
   const { paiements, deletePaiement, loading } = usePaiements();
 
-  // 2. Local UI State
   const [selectedPaiement, setSelectedPaiement] = useState<Paiement | null>(null);
   const [paiementToDelete, setPaiementToDelete] = useState<Paiement | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatut, setSelectedStatut] = useState("");
   const [selectedPeriode, setSelectedPeriode] = useState("");
   const [selectedMotif, setSelectedMotif] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
-
-  // Extraire les motifs uniques
   const motifsDisponibles = useMemo(() => {
     const motifs = paiements
       .map(p => p.motif)
@@ -43,20 +40,17 @@ export default function PaiementsPage() {
     return ['', ...new Set(motifs)].sort();
   }, [paiements]);
 
-  // 3. Filtrage dynamique
   const filteredPaiements = paiements.filter(paiement => {
     const ins = paiement.inscription;
     if (!ins) return false;
 
-    // Filtres globaux (Context & Tabs)
     const matchesGlobal = (!niveauSelectionne || ins.niveauScolaire === niveauSelectionne) &&
       (!cycleSelectionne || ins.cycle === cycleSelectionne);
 
     const matchesLocalTabs = (!niveauClasseSelectionne || ins.niveauClasse === niveauClasseSelectionne) &&
       (!classeSelectionne || ins.classe === classeSelectionne);
 
-    // Filtres locaux (Search, Statut, Période, Motif)
-    const matchesSearch =
+    const matchesSearch = searchTerm === "" ||
       ins.nom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ins.prenom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ins.matricule?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -76,16 +70,19 @@ export default function PaiementsPage() {
       matchesStatut && matchesPeriode && matchesMotif;
   });
 
-  const { handleDownload } = useRecu({ paiement: selectedPaiement })
+  const { handleDownload } = useRecu({ paiement: selectedPaiement });
 
-  // 4. Handlers
   const handleDelete = async () => {
     if (!paiementToDelete?.id) return;
+    setIsDeleting(true);
     try {
       await deletePaiement(paiementToDelete.id);
       setPaiementToDelete(null);
+      alertSuccess("Paiement supprimé avec succès");
     } catch (error) {
       alertServerError(error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -96,29 +93,27 @@ export default function PaiementsPage() {
     setSelectedMotif("");
   };
 
-  if (loading) return <div className="flex justify-center p-20"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" /></div>;
+  if (loading) return (
+    <div className="flex justify-center p-20">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+    </div>
+  );
 
   return (
-    <div className="space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Paiements</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {filteredPaiements.length} paiement{filteredPaiements.length > 1 ? 's' : ''} affiché{filteredPaiements.length > 1 ? 's' : ''}
-          </p>
-        </div>
-
+    <PageLayout
+      title="Paiements"
+      description={`${filteredPaiements.length} paiement${filteredPaiements.length > 1 ? 's' : ''} affiché${filteredPaiements.length > 1 ? 's' : ''}`}
+      actions={
         <button
           onClick={() => navigate("/admin/paiements/new")}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] animate-fade-in-up"
         >
           <Plus size={18} /> Nouveau paiement
         </button>
-      </div>
-
-      {/* Filtres Locaux */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      }
+    >
+      {/* Filtres Locaux avec animation */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
         <div className="relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -126,14 +121,22 @@ export default function PaiementsPage() {
             placeholder="Rechercher un élève..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200"
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <span className="text-xs">✕</span>
+            </button>
+          )}
         </div>
 
         <select
           value={selectedStatut}
           onChange={(e) => setSelectedStatut(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 bg-white"
+          className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200 bg-white"
         >
           <option value="">Tous les statuts</option>
           <option value="paye">Payé</option>
@@ -144,7 +147,7 @@ export default function PaiementsPage() {
         <select
           value={selectedMotif}
           onChange={(e) => setSelectedMotif(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 bg-white"
+          className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200 bg-white"
         >
           <option value="">Tous les motifs</option>
           {motifsDisponibles.filter(m => m !== '').map(motif => (
@@ -156,32 +159,35 @@ export default function PaiementsPage() {
           type="month"
           value={selectedPeriode}
           onChange={(e) => setSelectedPeriode(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 bg-white"
+          className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200 bg-white"
         />
       </div>
 
-      {/* FILTRES PAR TABS (Niveau & Classe) */}
-      <ClasseFilter
-        data={paiements}
-        getCycle={(p) => p.inscription?.cycle}
-        getNiveauClasse={(p) => p.inscription?.niveauClasse}
-        getClasse={(p) => p.inscription?.classe}
-      >
+      {/* FILTRES PAR TABS avec animation */}
+      <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+        <ClasseFilter
+          data={paiements}
+          getCycle={(p) => p.inscription?.cycle}
+          getNiveauClasse={(p) => p.inscription?.niveauClasse}
+          getClasse={(p) => p.inscription?.classe}
+        />
+      </div>
 
-      </ClasseFilter>
-
-      {/* Liste */}
-      <PaiementsList
-        paiements={filteredPaiements}
-        onAction={setSelectedPaiement}
-      />
+      {/* Liste avec animation */}
+      <div className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+        <PaiementsList
+          paiements={filteredPaiements}
+          onAction={setSelectedPaiement}
+        />
+      </div>
 
       {/* Message si aucun résultat */}
       {filteredPaiements.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <div className="text-center py-12 bg-gray-50 rounded-xl animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+          <CreditCard size={48} className="mx-auto text-gray-300 mb-3" />
           <p className="text-gray-500">Aucun paiement trouvé</p>
           {(searchTerm || selectedStatut || selectedPeriode || selectedMotif) && (
-            <button onClick={clearFilters} className="mt-4 text-primary text-sm font-medium">
+            <button onClick={clearFilters} className="mt-3 text-sm text-primary hover:underline font-medium">
               Effacer les filtres
             </button>
           )}
@@ -191,10 +197,10 @@ export default function PaiementsPage() {
       {/* Modals */}
       {selectedPaiement && (
         <MenuModal
-          title={`Paiement #${selectedPaiement.id.slice(-6)}`}
+          title={`Paiement #${selectedPaiement.id?.slice(-6)}`}
           isOpen={!!selectedPaiement}
           onClose={() => setSelectedPaiement(null)}
-          icon={<FileText className="text-primary" size={20} />}
+          icon={<CreditCard className="text-primary" size={20} />}
           menu={[
             {
               label: "Voir détails",
@@ -210,7 +216,7 @@ export default function PaiementsPage() {
               label: "Imprimer le reçu",
               icon: Printer,
               onClick: () => {
-                handleDownload()
+                handleDownload();
                 setSelectedPaiement(null);
               }
             },
@@ -229,9 +235,26 @@ export default function PaiementsPage() {
         onConfirm={handleDelete}
         title="Supprimer le paiement"
         message="Voulez-vous vraiment supprimer ce paiement ? Cette action est irréversible."
-        confirmText="Supprimer"
+        confirmText={isDeleting ? "Suppression..." : "Supprimer"}
         cancelText="Annuler"
       />
-    </div>
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
+    </PageLayout>
   );
 }

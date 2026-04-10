@@ -7,6 +7,7 @@ export interface CycleFormData {
   nom: string;
   niveauScolaireId: string;
   niveauScolaire: string;
+  ordre: number
 }
 
 interface CycleFormProps {
@@ -28,6 +29,7 @@ export default function CycleForm({
       nom: "",
       niveauScolaireId: "",
       niveauScolaire: "",
+      ordre: 0
     }
   );
 

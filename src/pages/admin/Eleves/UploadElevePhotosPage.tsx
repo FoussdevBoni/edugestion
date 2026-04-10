@@ -1,11 +1,12 @@
 // src/pages/admin/photos/UploadElevePhotosPage.tsx
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, FolderOpen, Upload, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { ArrowLeft, FolderOpen, Upload, CheckCircle, XCircle, AlertTriangle, Image, Loader2 } from "lucide-react";
 import usePhotos from "../../../hooks/photos/usePhotos";
 import useEleves from "../../../hooks/eleves/useEleves";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
 import { Inscription } from "../../../utils/types/data";
+import { alertSuccess } from "../../../helpers/alertError";
 
 export default function UploadElevePhotosPage() {
   const navigate = useNavigate();
@@ -21,7 +22,6 @@ export default function UploadElevePhotosPage() {
   const [fichiersPhotos, setFichiersPhotos] = useState<File[]>([]);
   const [showResult, setShowResult] = useState(false);
 
-  // Extraire les classes disponibles
   const classesDisponibles = [...new Set(
     eleves
       .filter(ins => {
@@ -32,12 +32,10 @@ export default function UploadElevePhotosPage() {
       .map(ins => ins.classe)
   )].sort();
 
-  // Filtrer les élèves par classe
   const elevesDeLaClasse = classeSelectionnee
     ? eleves.filter(ins => ins.classe === classeSelectionnee)
     : [];
 
-  // Gérer la sélection de TOUS via le checkbox global
   const handleSelectAllChange = (checked: boolean) => {
     setSelectAll(checked);
     if (checked) {
@@ -47,7 +45,6 @@ export default function UploadElevePhotosPage() {
     }
   };
 
-  // Réinitialiser quand la classe change
   useEffect(() => {
     setElevesSelectionnes([]);
     setSelectAll(false);
@@ -104,17 +101,19 @@ export default function UploadElevePhotosPage() {
     resetUploadResult();
     
     try {
-      // Créer un mapping matricule -> fichier
       const photosData = await Promise.all(
         fichiersPhotos.map(async (file) => {
           const base64 = await fileToBase64(file);
-          const matricule = file.name.split('.')[0]; // Le nom du fichier sans extension
+          const matricule = file.name.split('.')[0];
           return { matricule, base64 };
         })
       );
       
       const result = await uploadPhotos(photosData, elevesSelectionnes);
       setShowResult(true);
+      if (result.success.length > 0) {
+        alertSuccess(`${result.success.length} photo(s) importée(s) avec succès`);
+      }
     } catch (error) {
       console.error("Erreur upload:", error);
     }
@@ -136,24 +135,25 @@ export default function UploadElevePhotosPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center gap-4">
+    <div className="space-y-6 pb-8">
+      {/* En-tête avec animation */}
+      <div className="flex items-center gap-4 animate-fade-in-up">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 hover:bg-gray-100 rounded-lg"
+          className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-300 group"
         >
-          <ArrowLeft size={20} className="text-gray-600" />
+          <ArrowLeft size={20} className="text-gray-600 group-hover:text-primary transition-colors" />
         </button>
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Importation des photos</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
+            <Image size={14} />
             Sélectionnez une classe et importez les photos par matricule
           </p>
         </div>
       </div>
 
-      {/* Input file caché pour sélectionner un dossier */}
+      {/* Input file caché */}
       <input
         type="file"
         ref={fileInputRef}
@@ -164,13 +164,16 @@ export default function UploadElevePhotosPage() {
         onChange={handleDossierSelectionne}
       />
 
-      {/* Sélection de la classe */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">1. Choisir une classe</h2>
+      {/* Étape 1 - Sélection de la classe */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-6 bg-primary rounded-full"></div>
+          <h2 className="text-lg font-semibold text-gray-800">1. Choisir une classe</h2>
+        </div>
         <select
           value={classeSelectionnee}
           onChange={(e) => setClasseSelectionnee(e.target.value)}
-          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50"
+          className="w-full max-w-md px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200"
         >
           <option value="">Sélectionner une classe</option>
           {classesDisponibles.map(classe => (
@@ -179,12 +182,15 @@ export default function UploadElevePhotosPage() {
         </select>
       </div>
 
-      {/* Sélection des élèves */}
+      {/* Étape 2 - Sélection des élèves */}
       {classeSelectionnee && elevesDeLaClasse.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">2. Sélectionner les élèves</h2>
-            <label className="flex items-center gap-2 cursor-pointer">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-6 bg-primary rounded-full"></div>
+              <h2 className="text-lg font-semibold text-gray-800">2. Sélectionner les élèves</h2>
+            </div>
+            <label className="flex items-center gap-2 cursor-pointer px-3 py-1.5 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
               <input
                 type="checkbox"
                 checked={selectAll}
@@ -195,94 +201,104 @@ export default function UploadElevePhotosPage() {
             </label>
           </div>
 
-          <div className="border rounded-lg max-h-64 overflow-y-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 sticky top-0">
-                <tr>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Sél.</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Matricule</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Élève</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Photo</th>
-                  <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Statut</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {elevesDeLaClasse.map(eleve => (
-                  <tr key={eleve.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-2">
-                      <input
-                        type="checkbox"
-                        checked={elevesSelectionnes.some(e => e.id === eleve.id)}
-                        onChange={() => toggleEleve(eleve)}
-                        className="w-4 h-4 text-primary rounded cursor-pointer"
-                      />
-                    </td>
-                    <td className="px-4 py-2 font-mono text-sm">{eleve.matricule}</td>
-                    <td className="px-4 py-2 font-medium">{eleve.prenom} {eleve.nom}</td>
-                    <td className="px-4 py-2">
-                      {eleve.photo ? (
-                        <span className="text-xs text-green-600">✓ Photo existante</span>
-                      ) : (
-                        <span className="text-xs text-gray-400">-</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-2">
-                      {showResult && getStatutIcone(eleve.matricule!)}
-                      {showResult && getMessageErreur(eleve.matricule!) && (
-                        <span className="text-xs text-red-500 ml-1">
-                          {getMessageErreur(eleve.matricule!)}
-                        </span>
-                      )}
-                    </td>
+          <div className="border border-gray-100 rounded-xl overflow-hidden">
+            <div className="overflow-x-auto max-h-80 overflow-y-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 sticky top-0">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Sél.</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Matricule</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Élève</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Photo</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600">Statut</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {elevesDeLaClasse.map((eleve, idx) => (
+                    <tr key={eleve.id} className="hover:bg-gray-50 transition-colors duration-200">
+                      <td className="px-4 py-2">
+                        <input
+                          type="checkbox"
+                          checked={elevesSelectionnes.some(e => e.id === eleve.id)}
+                          onChange={() => toggleEleve(eleve)}
+                          className="w-4 h-4 text-primary rounded cursor-pointer"
+                        />
+                      </td>
+                      <td className="px-4 py-2 font-mono text-xs text-gray-600">{eleve.matricule || '-'}</td>
+                      <td className="px-4 py-2 font-medium text-gray-800">{eleve.prenom} {eleve.nom}</td>
+                      <td className="px-4 py-2">
+                        {eleve.photo ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">
+                            <CheckCircle size={10} /> Photo existante
+                          </span>
+                        ) : (
+                          <span className="text-xs text-gray-400">-</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2">
+                        {showResult && getStatutIcone(eleve.matricule!)}
+                        {showResult && getMessageErreur(eleve.matricule!) && (
+                          <span className="text-xs text-red-500 ml-1">
+                            {getMessageErreur(eleve.matricule!)}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Sélection du dossier */}
+      {/* Étape 3 - Sélection du dossier */}
       {elevesSelectionnes.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">3. Choisir le dossier des photos</h2>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-1 h-6 bg-primary rounded-full"></div>
+            <h2 className="text-lg font-semibold text-gray-800">3. Choisir le dossier des photos</h2>
+          </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <button
               onClick={handleChoisirDossier}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-200"
             >
               <FolderOpen size={18} />
               Parcourir...
             </button>
             {dossierChoisi && (
-              <span className="text-sm text-gray-600 truncate max-w-md">
-                {dossierChoisi} ({fichiersPhotos.length} fichier(s))
+              <span className="text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-lg">
+                📁 {dossierChoisi} ({fichiersPhotos.length} fichier(s))
               </span>
             )}
           </div>
 
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-700">
-              <strong>Important :</strong> Les photos doivent être nommées avec le matricule de l'élève.
-              <br />
-              Exemples : <code className="bg-blue-100 px-1">20A053.jpg</code>, <code className="bg-blue-100 px-1">20A054.png</code>
-            </p>
+          <div className="mt-4 p-4 bg-blue-50 rounded-xl">
+            <div className="flex items-start gap-2">
+              <AlertTriangle size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-blue-700">
+                <p className="font-medium mb-1">Important :</p>
+                <p>Les photos doivent être nommées avec le matricule de l'élève.</p>
+                <p className="text-xs mt-1 font-mono">Exemples : <code className="bg-blue-100 px-1 rounded">20A053.jpg</code>, <code className="bg-blue-100 px-1 rounded">20A054.png</code></p>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {/* Bouton d'upload */}
       {dossierChoisi && elevesSelectionnes.length > 0 && (
-        <div className="flex justify-end">
+        <div className="flex justify-end animate-fade-in-up" style={{ animationDelay: '400ms' }}>
           <button
             onClick={handleUpload}
             disabled={loading}
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] disabled:opacity-50"
           >
             {loading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                <Loader2 size={18} className="animate-spin" />
                 Importation en cours...
               </>
             ) : (
@@ -297,38 +313,38 @@ export default function UploadElevePhotosPage() {
 
       {/* Résultat de l'upload */}
       {showResult && uploadResult && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Résultat de l'importation</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-green-50 rounded-lg">
+            <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-4">
               <div className="flex items-center gap-2 text-green-700 mb-2">
                 <CheckCircle size={18} />
-                <span className="font-medium">Réussis ({uploadResult.success.length})</span>
+                <span className="font-semibold">Réussis ({uploadResult.success.length})</span>
               </div>
               <ul className="space-y-1 text-sm text-green-600 max-h-32 overflow-y-auto">
                 {uploadResult.success.map((item, idx) => (
-                  <li key={idx}>✓ {item.eleve}</li>
+                  <li key={idx} className="flex items-center gap-1">✓ {item.eleve}</li>
                 ))}
               </ul>
             </div>
 
-            <div className="p-4 bg-red-50 rounded-lg">
+            <div className="bg-gradient-to-r from-red-50 to-red-100 rounded-xl p-4">
               <div className="flex items-center gap-2 text-red-700 mb-2">
                 <XCircle size={18} />
-                <span className="font-medium">Échecs ({uploadResult.errors.length})</span>
+                <span className="font-semibold">Échecs ({uploadResult.errors.length})</span>
               </div>
               <ul className="space-y-1 text-sm text-red-600 max-h-32 overflow-y-auto">
                 {uploadResult.errors.map((item, idx) => (
-                  <li key={idx}>✗ {item.eleve} - {item.error}</li>
+                  <li key={idx} className="flex items-center gap-1">✗ {item.eleve} - {item.error}</li>
                 ))}
               </ul>
             </div>
           </div>
 
           {uploadResult.errors.length > 0 && (
-            <div className="mt-4 p-4 bg-yellow-50 rounded-lg flex items-start gap-2">
-              <AlertTriangle size={18} className="text-yellow-600 mt-0.5" />
+            <div className="mt-4 p-4 bg-yellow-50 rounded-xl flex items-start gap-2">
+              <AlertTriangle size={18} className="text-yellow-600 mt-0.5 flex-shrink-0" />
               <div className="text-sm text-yellow-700">
                 <p className="font-medium">Photos manquantes ou erreurs :</p>
                 <p>Vérifiez que les photos sont nommées avec le bon matricule.</p>
@@ -337,6 +353,23 @@ export default function UploadElevePhotosPage() {
           )}
         </div>
       )}
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
     </div>
   );
 }

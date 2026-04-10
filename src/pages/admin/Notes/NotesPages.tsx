@@ -263,8 +263,6 @@ export default function NotesPage() {
     return count;
   };
 
-
-
   // Ajouter cette fonction dans le composant NotesPage
   const handleExportExcel = () => {
     if (!selectedClasse || !selectedPeriode || !selectedMatiere) {
@@ -641,7 +639,35 @@ export default function NotesPage() {
         </div>
       )}
 
-      <style>{`.scrollbar-hide::-webkit-scrollbar { display: none; }`}</style>
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out forwards;
+          opacity: 0;
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+      `}</style>
     </div>
   );
 }

@@ -9,6 +9,7 @@ export interface CycleData {
 export interface NiveauScolaireFormData {
   id?: string;
   nom: string;
+  ordre: number
   aDesCycles: boolean;
   cycles: CycleData[];
 }
@@ -32,6 +33,7 @@ export default function NiveauScolaireForm({
     initialData || {
       nom: "",
       aDesCycles: false,
+      ordre: 0,
       cycles: [],
     }
   );

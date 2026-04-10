@@ -1,9 +1,8 @@
-// src/pages/admin/emplois-du-temps/SeancesPage.tsx
 import { useState, useEffect, useRef } from "react";
 import {
   ChevronLeft, ChevronRight, Calendar, Clock,
   User, Plus, X,
-  Trash2,
+  Trash2, AlertCircle
 } from "lucide-react";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
 import DeleteConfirmationModal from "../../../components/ui/DeleteConfirmationModal";
@@ -14,7 +13,7 @@ import useEnseignants from "../../../hooks/enseignants/useEnseignants";
 
 // Types
 import { Classe, Matiere } from "../../../utils/types/data";
-import { alertServerError } from "../../../helpers/alertError";
+import { alertServerError, alertSuccess } from "../../../helpers/alertError";
 
 // Jours de la semaine
 const JOURS = [
@@ -62,25 +61,20 @@ export default function SeancesPage() {
   const [selectedClasseObj, setSelectedClasseObj] = useState<Classe | null>(null);
   const [filteredSeances, setFilteredSeances] = useState<any[]>([]);
   const [matieresDeLaClasse, setMatieresDeLaClasse] = useState<Matiere[]>([]);
-  
-  // Enseignants filtrés par classe et matière
   const [filteredEnseignants, setFilteredEnseignants] = useState<any[]>([]);
-
-  // États pour le modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedSeance, setSelectedSeance] = useState<SeanceModalData | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Filtrer les classes selon les filtres globaux
   const classesFiltrees = classes.filter(classe => {
     const matchesNiveau = niveauSelectionne ? classe.niveauScolaire === niveauSelectionne : true;
     const matchesCycle = cycleSelectionne ? classe.cycle === cycleSelectionne : true;
     return matchesNiveau && matchesCycle;
   }).sort((a, b) => a.nom.localeCompare(b.nom));
 
-  // Sélectionner la première classe par défaut
   useEffect(() => {
     if (classesFiltrees.length > 0 && !selectedClasse) {
       setSelectedClasse(classesFiltrees[0].id);
@@ -88,7 +82,6 @@ export default function SeancesPage() {
     }
   }, [classesFiltrees]);
 
-  // Mettre à jour l'objet classe sélectionné
   useEffect(() => {
     if (selectedClasse) {
       const classe = classes.find(c => c.id === selectedClasse);
@@ -96,30 +89,22 @@ export default function SeancesPage() {
     }
   }, [selectedClasse, classes]);
 
-  // Filtrer les séances pour la classe sélectionnée
   useEffect(() => {
     if (selectedClasseObj) {
-      const seancesDeLaClasse = seances.filter(s =>
-        s.classeId === selectedClasseObj.id
-      );
+      const seancesDeLaClasse = seances.filter(s => s.classeId === selectedClasseObj.id);
       setFilteredSeances(seancesDeLaClasse);
     }
   }, [selectedClasseObj, seances]);
 
-  // Récupérer les matières du niveau de classe
   useEffect(() => {
     if (selectedClasseObj) {
-      const matieresDuNiveau = matieres.filter(m =>
-        m.niveauClasseId === selectedClasseObj.niveauClasseId
-      );
+      const matieresDuNiveau = matieres.filter(m => m.niveauClasseId === selectedClasseObj.niveauClasseId);
       setMatieresDeLaClasse(matieresDuNiveau);
     }
   }, [selectedClasseObj, matieres]);
 
-  // Filtrer les enseignants par classe et matière sélectionnées
   useEffect(() => {
     if (selectedSeance?.classeId && selectedSeance?.matiereId) {
-      // Enseignants qui enseignent cette matière dans cette classe
       const enseignantsFiltres = enseignants.filter(enseignant => {
         return enseignant.enseignements?.some((enseignement: any) => 
           enseignement.classeId === selectedSeance.classeId && 
@@ -132,7 +117,6 @@ export default function SeancesPage() {
     }
   }, [selectedSeance?.classeId, selectedSeance?.matiereId, enseignants]);
 
-  // Scroll
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
@@ -145,19 +129,14 @@ export default function SeancesPage() {
     }
   };
 
-  // Obtenir la séance pour une matière et un jour donnés
   const getSeance = (matiereId: string, jour: string) => {
-    return filteredSeances.find(s =>
-      s.matiereId === matiereId && s.jour === jour
-    );
+    return filteredSeances.find(s => s.matiereId === matiereId && s.jour === jour);
   };
 
-  // Formater l'heure
   const formatHeure = (heure: string) => {
     return heure.substring(0, 5);
   };
 
-  // Gérer le clic sur une cellule
   const handleCellClick = (matiere: Matiere, jour: string) => {
     if (!selectedClasseObj) return;
 
@@ -199,7 +178,6 @@ export default function SeancesPage() {
     setIsModalOpen(true);
   };
 
-  // Sauvegarder la séance
   const handleSaveSeance = async () => {
     if (!selectedSeance || !selectedClasseObj) return;
 
@@ -216,39 +194,46 @@ export default function SeancesPage() {
 
       if (selectedSeance.id) {
         await updateSeance(selectedSeance.id, seanceData);
+        alertSuccess("Séance modifiée avec succès");
       } else {
         await createSeance(seanceData);
+        alertSuccess("Séance ajoutée avec succès");
       }
 
       setIsModalOpen(false);
     } catch (error: any) {
-      alertServerError(error)
+      alertServerError(error);
     }
   };
 
-  // Supprimer la séance
   const handleDeleteSeance = async () => {
     if (!selectedSeance?.id) return;
-
+    setIsDeleting(true);
     try {
       await deleteSeance(selectedSeance.id);
       setIsDeleteModalOpen(false);
       setIsModalOpen(false);
+      alertSuccess("Séance supprimée avec succès");
     } catch (error) {
       console.error("Erreur suppression séance:", error);
-      alert("Erreur lors de la suppression");
+      alertServerError(error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  // Loading state
   if (classesLoading || matieresLoading || seancesLoading || enseignantsLoading) {
-    return <div className="flex justify-center p-8">Chargement...</div>;
+    return (
+      <div className="flex justify-center p-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 pb-8">
+      {/* En-tête avec animation */}
+      <div className="flex items-center justify-between animate-fade-in-up">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Emplois du temps</h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -257,18 +242,18 @@ export default function SeancesPage() {
         </div>
       </div>
 
-      {/* Barre des classes */}
+      {/* Barre des classes avec animation */}
       {classesFiltrees.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '100ms' }}>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-medium text-gray-700">Classes</h2>
-            <span className="text-xs text-gray-500">{classesFiltrees.length} classe(s)</span>
+            <h2 className="text-sm font-semibold text-gray-700">Classes</h2>
+            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{classesFiltrees.length} classe(s)</span>
           </div>
 
           <div className="relative flex items-center">
             <button
               onClick={scrollLeft}
-              className="absolute left-0 z-10 bg-white h-10 w-10 rounded-full shadow-md flex items-center justify-center border border-gray-200"
+              className="absolute left-0 z-10 bg-white h-10 w-10 rounded-full shadow-md flex items-center justify-center border border-gray-200 hover:bg-gray-50 transition-all"
             >
               <ChevronLeft size={20} className="text-gray-500" />
             </button>
@@ -284,16 +269,15 @@ export default function SeancesPage() {
                     key={classe.id}
                     onClick={() => setSelectedClasse(classe.id)}
                     className={`
-                      px-6 py-3 rounded-lg border-2 transition-all whitespace-nowrap
+                      px-6 py-3 rounded-xl border-2 transition-all duration-200 whitespace-nowrap
                       ${selectedClasse === classe.id
-                        ? 'border-primary bg-primary/5 text-primary font-medium'
+                        ? 'border-primary bg-primary/5 text-primary font-semibold shadow-sm'
                         : 'border-gray-200 hover:border-gray-300 text-gray-700 hover:bg-gray-50'
                       }
                     `}
                   >
                     <div className="text-center">
                       <div className="font-medium">{classe.nom}</div>
-                      <div className="text-xs text-gray-500 mt-1">{classe.niveauClasse}</div>
                     </div>
                   </button>
                 ))}
@@ -302,7 +286,7 @@ export default function SeancesPage() {
 
             <button
               onClick={scrollRight}
-              className="absolute right-0 z-10 bg-white h-10 w-10 rounded-full shadow-md flex items-center justify-center border border-gray-200"
+              className="absolute right-0 z-10 bg-white h-10 w-10 rounded-full shadow-md flex items-center justify-center border border-gray-200 hover:bg-gray-50 transition-all"
             >
               <ChevronRight size={20} className="text-gray-500" />
             </button>
@@ -312,17 +296,18 @@ export default function SeancesPage() {
 
       {/* Message si aucune classe */}
       {classesFiltrees.length === 0 && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+        <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 border border-yellow-200 rounded-xl p-6 text-center animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+          <AlertCircle size={32} className="text-yellow-600 mx-auto mb-2" />
           <p className="text-yellow-700">
             Aucune classe trouvée. Veuillez sélectionner un niveau scolaire et un cycle.
           </p>
         </div>
       )}
 
-      {/* Emploi du temps */}
+      {/* Emploi du temps avec animation */}
       {selectedClasseObj && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="bg-primary/5 px-6 py-4 border-b border-gray-200">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+          <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-800">
               Emploi du temps - {selectedClasseObj.nom}
             </h2>
@@ -334,12 +319,12 @@ export default function SeancesPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
-                <tr className="bg-gray-50">
-                  <th className="sticky left-0 bg-gray-50 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-gray-200 min-w-[200px]">
+                <tr className="bg-gray-50 border-b border-gray-100">
+                  <th className="sticky left-0 bg-gray-50 px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-r border-gray-100 min-w-[200px]">
                     Matières
                   </th>
                   {JOURS.map((jour) => (
-                    <th key={jour} className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r last:border-r-0 border-gray-200 min-w-[180px]">
+                    <th key={jour} className="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider border-r last:border-r-0 border-gray-100 min-w-[180px]">
                       <div className="flex items-center justify-center gap-1">
                         <Calendar size={14} className="text-gray-400" />
                         {JOURS_FR[jour as keyof typeof JOURS_FR]}
@@ -348,15 +333,13 @@ export default function SeancesPage() {
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-100">
                 {matieresDeLaClasse.length > 0 ? (
                   matieresDeLaClasse.map((matiere, index) => (
-                    <tr key={matiere.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
-                      <td className="sticky left-0 bg-inherit px-4 py-3 font-medium text-gray-800 border-r border-gray-200">
-                        <div className="flex items-center gap-2">
-                          <span>{matiere.nom}</span>
-                        </div>
-                       </td>
+                    <tr key={matiere.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}>
+                      <td className="sticky left-0 bg-inherit px-4 py-3 font-semibold text-gray-800 border-r border-gray-100">
+                        {matiere.nom}
+                      </td>
 
                       {JOURS.map((jour) => {
                         const seance = getSeance(matiere.id, jour);
@@ -364,13 +347,13 @@ export default function SeancesPage() {
                           <td
                             key={`${matiere.id}-${jour}`}
                             onClick={() => handleCellClick(matiere, jour)}
-                            className="px-4 py-3 border-r last:border-r-0 border-gray-200 align-top cursor-pointer hover:bg-primary/5 transition-colors"
+                            className="px-4 py-3 border-r last:border-r-0 border-gray-100 align-top cursor-pointer hover:bg-primary/5 transition-all duration-200"
                           >
                             {seance ? (
                               <div className="space-y-2">
-                                <div className="flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-md w-fit">
+                                <div className="flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-1 rounded-lg w-fit">
                                   <Clock size={12} />
-                                  <span>{formatHeure(seance.heureDebut)} - {formatHeure(seance.heureFin)}</span>
+                                  <span className="font-medium">{formatHeure(seance.heureDebut)} - {formatHeure(seance.heureFin)}</span>
                                 </div>
                                 <div className="flex items-center gap-1 text-xs text-gray-600">
                                   <User size={12} className="text-gray-400" />
@@ -385,7 +368,7 @@ export default function SeancesPage() {
                            </td>
                         );
                       })}
-                     </tr>
+                    </tr>
                   ))
                 ) : (
                   <tr>
@@ -398,7 +381,7 @@ export default function SeancesPage() {
             </table>
           </div>
 
-          <div className="bg-gray-50 px-6 py-3 border-t border-gray-200 flex items-center gap-4 text-xs text-gray-500">
+          <div className="bg-gray-50 px-6 py-3 border-t border-gray-100 flex flex-wrap items-center gap-4 text-xs text-gray-500">
             <div className="flex items-center gap-1">
               <Clock size={14} className="text-primary" />
               <span>Horaires</span>
@@ -414,24 +397,24 @@ export default function SeancesPage() {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Modal avec animation */}
       {isModalOpen && selectedSeance && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate-fade-in">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4">
+            <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <h3 className="text-lg font-semibold text-gray-800">
                 {selectedSeance.id ? 'Modifier la séance' : 'Nouvelle séance'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 hover:bg-gray-100 rounded-lg"
+                className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <X size={20} className="text-gray-500" />
               </button>
             </div>
 
             <div className="p-6 space-y-4">
-              <div className="bg-primary/5 rounded-lg p-3">
+              <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-4">
                 <p className="text-sm text-gray-600">
                   <span className="font-medium">Classe:</span> {selectedSeance.classe}
                 </p>
@@ -451,7 +434,7 @@ export default function SeancesPage() {
                   type="time"
                   value={selectedSeance.heureDebut}
                   onChange={(e) => setSelectedSeance({ ...selectedSeance, heureDebut: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                 />
               </div>
 
@@ -463,7 +446,7 @@ export default function SeancesPage() {
                   type="time"
                   value={selectedSeance.heureFin}
                   onChange={(e) => setSelectedSeance({ ...selectedSeance, heureFin: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                 />
               </div>
 
@@ -481,7 +464,7 @@ export default function SeancesPage() {
                       enseignant: enseignant ? `${enseignant.prenom} ${enseignant.nom}` : ""
                     });
                   }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                 >
                   <option value="">Sélectionner un enseignant</option>
                   {filteredEnseignants.map(ens => (
@@ -491,18 +474,19 @@ export default function SeancesPage() {
                   ))}
                 </select>
                 {filteredEnseignants.length === 0 && (
-                  <p className="text-xs text-amber-600 mt-1">
-                    ⚠️ Aucun enseignant n'enseigne cette matière dans cette classe
+                  <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
+                    <AlertCircle size={12} />
+                    Aucun enseignant n'enseigne cette matière dans cette classe
                   </p>
                 )}
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
+            <div className="flex items-center justify-between p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl">
               {selectedSeance.id ? (
                 <button
                   onClick={() => setIsDeleteModalOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-lg hover:bg-red-50"
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-xl hover:bg-red-50 transition-all"
                 >
                   <Trash2 size={16} />
                   Supprimer
@@ -513,14 +497,14 @@ export default function SeancesPage() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all"
                 >
                   Annuler
                 </button>
                 <button
                   onClick={handleSaveSeance}
                   disabled={!selectedSeance.enseignantId}
-                  className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary to-primary/80 rounded-xl hover:shadow-md transition-all disabled:opacity-50"
                 >
                   {selectedSeance.id ? 'Modifier' : 'Ajouter'}
                 </button>
@@ -537,11 +521,37 @@ export default function SeancesPage() {
         onConfirm={handleDeleteSeance}
         title="Supprimer la séance"
         message="Êtes-vous sûr de vouloir supprimer cette séance ?"
-        confirmText="Supprimer"
+        confirmText={isDeleting ? "Suppression..." : "Supprimer"}
         cancelText="Annuler"
       />
 
       <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out forwards;
+          opacity: 0;
+        }
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }

@@ -1,35 +1,34 @@
 // src/pages/admin/configuration/periodes/PeriodesPage.tsx
 import { useState, useMemo } from "react";
-import { Plus, MoreVertical, FileText, Printer, Search } from "lucide-react";
+import { Plus, MoreVertical, FileText, Printer, Search, Calendar, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PeriodesList from "../../../../components/admin/lists/PeriodesList";
 import MenuModal from "../../../../components/ui/MenuModal";
 import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
 import { Periode } from "../../../../utils/types/data";
-import { alertError } from "../../../../helpers/alertError";
+import { alertError, alertSuccess } from "../../../../helpers/alertError";
 import usePeriodes from "../../../../hooks/periodes/usePeriodes";
 import { useEcoleNiveau } from "../../../../hooks/filters/useEcoleNiveau";
+import PageLayout from "../../../../layouts/PageLayout";
 
 export default function PeriodesPage() {
   const navigate = useNavigate();
   const [selectedPeriode, setSelectedPeriode] = useState<Periode | null>(null);
   const [periodeToDelete, setPeriodeToDelete] = useState<Periode | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const { niveauSelectionne } = useEcoleNiveau(); // C'est le nom du niveau (string)
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { niveauSelectionne } = useEcoleNiveau();
   const { periodes, deletePeriode } = usePeriodes();
 
-  // Filtrer les périodes par niveau sélectionné ET par recherche
   const filteredPeriodes = useMemo(() => {
     let filtered = periodes;
 
-    // Filtre par niveau scolaire
     if (niveauSelectionne) {
       filtered = filtered.filter(periode =>
         periode.niveauScolaire === niveauSelectionne
       );
     }
 
-    // Filtre par recherche
     if (searchTerm) {
       filtered = filtered.filter(periode =>
         periode.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -45,16 +44,18 @@ export default function PeriodesPage() {
       alertError();
       return;
     }
+    setIsDeleting(true);
     try {
-      await deletePeriode(periodeToDelete?.id);
+      await deletePeriode(periodeToDelete.id);
       setPeriodeToDelete(null);
       setSelectedPeriode(null);
+      alertSuccess("Période supprimée avec succès");
     } catch (error) {
       alertError();
+    } finally {
+      setIsDeleting(false);
     }
   };
-
-
 
   const handleAction = (periode: Periode) => {
     setSelectedPeriode(periode);
@@ -73,32 +74,22 @@ export default function PeriodesPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Périodes scolaires</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {filteredPeriodes.length} période{filteredPeriodes.length > 1 ? 's' : ''}
-            {niveauSelectionne && ` - ${niveauSelectionne}`}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => {
-              navigate("/admin/configuration/periodes/new")
-            }}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            <Plus size={18} />
-            Nouvelle période
-          </button>
-        </div>
-      </div>
-
-      {/* Barre de recherche */}
-      <div className="flex items-center gap-4">
+    <PageLayout
+      title="Périodes scolaires"
+      description={`${filteredPeriodes.length} période${filteredPeriodes.length > 1 ? 's' : ''}
+        ${niveauSelectionne && ` - ${niveauSelectionne}`}`}
+      actions={
+        <button
+          onClick={() => navigate("/admin/configuration/periodes/new")}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] animate-fade-in-up"
+        >
+          <Plus size={18} />
+          Nouvelle période
+        </button>
+      }
+    >
+      {/* Barre de recherche avec animation */}
+      <div className="flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
         <div className="flex-1 relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -106,7 +97,7 @@ export default function PeriodesPage() {
             placeholder="Rechercher une période par nom..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200"
           />
           {searchTerm && (
             <button
@@ -119,9 +110,29 @@ export default function PeriodesPage() {
         </div>
       </div>
 
-      {/* Message si aucun résultat */}
+      {/* Indicateur des filtres actifs */}
+      {niveauSelectionne && (
+        <div className="flex items-center gap-2 text-sm text-gray-600 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+          <Filter size={14} className="text-primary" />
+          <span>Filtre actif:</span>
+          <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
+            {niveauSelectionne}
+          </span>
+        </div>
+      )}
+
+      {/* Liste avec animation */}
+      <div className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+        <PeriodesList
+          periodes={filteredPeriodes}
+          onAction={handleAction}
+        />
+      </div>
+
+      {/* Message si aucun résultat avec animation */}
       {filteredPeriodes.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <div className="text-center py-12 bg-gray-50 rounded-xl animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+          <Calendar size={48} className="mx-auto text-gray-300 mb-3" />
           <p className="text-gray-500">
             {niveauSelectionne
               ? `Aucune période pour ${niveauSelectionne}`
@@ -131,20 +142,13 @@ export default function PeriodesPage() {
           {searchTerm && (
             <button
               onClick={clearSearch}
-              className="mt-4 text-primary hover:text-primary/80 text-sm"
+              className="mt-3 text-sm text-primary hover:underline"
             >
               Effacer la recherche
             </button>
           )}
         </div>
       )}
-
-      {/* Liste */}
-      <PeriodesList
-        periodes={filteredPeriodes}
-        onAction={handleAction}
-      />
-
 
       {/* Modal actions sur une période */}
       {selectedPeriode && (
@@ -191,7 +195,7 @@ export default function PeriodesPage() {
           isOpen={!!selectedPeriode}
           onClose={handleCloseMenuModal}
           title={selectedPeriode.nom}
-          icon={<Plus className="text-primary" size={20} />}
+          icon={<Calendar className="text-primary" size={20} />}
         />
       )}
 
@@ -201,10 +205,27 @@ export default function PeriodesPage() {
         onClose={handleCloseDeleteModal}
         onConfirm={handleDelete}
         title="Supprimer la période"
-        message={`Êtes-vous sûr de vouloir supprimer la période "${periodeToDelete?.nom}" ?`}
-        confirmText="Supprimer"
+        message={`Êtes-vous sûr de vouloir supprimer la période "${periodeToDelete?.nom}" ? Cette action est irréversible.`}
+        confirmText={isDeleting ? "Suppression..." : "Supprimer"}
         cancelText="Annuler"
       />
-    </div>
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
+    </PageLayout>
   );
 }

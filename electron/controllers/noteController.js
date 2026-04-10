@@ -48,7 +48,6 @@ export const noteController = {
         notesEnrichies.push(await enrichirNote(note));
       }
 
-      console.log(notesEnrichies)
       return notesEnrichies;
     } catch (error) {
       console.error("Erreur getAll notes:", error);

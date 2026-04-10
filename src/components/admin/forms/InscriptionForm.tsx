@@ -1,13 +1,14 @@
 // src/components/forms/InscriptionForm.tsx
 import { useState, useEffect } from "react";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
-import { classes } from "../../../data/baseData";
+import useClasses from "../../../hooks/classes/useClasses";
+import { BaseInscription } from "../../../utils/types/base";
 
 export interface InscriptionFormData {
   id?: string;
   anneeScolaire: string;
   dateInscription: string;
-  statutScolaire: "nouveau" | "redoublant" | "transfert";
+  statutScolaire: BaseInscription['statutScolaire'];
   classeId: string;
   classe: string;
   niveauClasse: string;
@@ -38,7 +39,7 @@ export default function InscriptionForm({
   isSubmitting = false 
 }: InscriptionFormProps) {
   const { niveauSelectionne, cycleSelectionne } = useEcoleNiveau();
-  
+   const {classes} = useClasses()
   const [formData, setFormData] = useState<InscriptionFormData>(
     initialData || {
       anneeScolaire: new Date().getFullYear() + "-" + (new Date().getFullYear() + 1),

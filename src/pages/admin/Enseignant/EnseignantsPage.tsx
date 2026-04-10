@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus, MoreVertical, UserPlus, FileText, Search } from "lucide-react";
+import { Plus, MoreVertical, UserPlus, FileText, Search, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Components
@@ -13,12 +13,14 @@ import { Enseignant } from "../../../utils/types/data";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
 import useEnseignants from "../../../hooks/enseignants/useEnseignants";
 import useMatieres from "../../../hooks/matieres/useMatieres";
-import {  alertServerError } from "../../../helpers/alertError";
+import { alertServerError, alertSuccess } from "../../../helpers/alertError";
+import PageLayout from "../../../layouts/PageLayout";
+
+
 
 export default function EnseignantsPage() {
   const navigate = useNavigate();
   
-  // 1. Context & Data
   const { 
     cycleSelectionne, niveauClasseSelectionne, classeSelectionne, niveauSelectionne
   } = useEcoleNiveau();
@@ -26,35 +28,30 @@ export default function EnseignantsPage() {
   const { enseignants, deleteEnseignant, loading } = useEnseignants();
   const { matieres } = useMatieres();
 
-  // 2. State local
   const [selectedEnseignant, setSelectedEnseignant] = useState<Enseignant | null>(null);
   const [enseignantToDelete, setEnseignantToDelete] = useState<Enseignant | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMatiere, setSelectedMatiere] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // Matières disponibles
   const matieresDisponibles = useMemo(() => 
     [...new Set(matieres.map(m => m.nom))].sort(), 
     [matieres]
   );
 
-  // 3. Premier filtre : Recherche + Matière + NiveauScolaire + Cycle (filtres de l'en-tête)
   const enseignantsFiltresLocaux = useMemo(() => {
     return enseignants.filter(enseignant => {
-      // Filtre supérieur de l'entête
       const matchesNiveauSco = !niveauSelectionne || 
         enseignant.enseignementsData?.some(ed => ed.niveauScolaire === niveauSelectionne);
       
       const matchesCycle = !cycleSelectionne || 
         enseignant.enseignementsData?.some(ed => ed.cycle === cycleSelectionne);
       
-      // Filtre recherche
       const matchesSearch = !searchTerm || 
         enseignant.nom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         enseignant.prenom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         enseignant.email?.toLowerCase().includes(searchTerm.toLowerCase());
 
-      // Filtre matière
       const matchesMatiere = !selectedMatiere || 
         enseignant.enseignementsData?.some(ed => ed.matiere === selectedMatiere);
 
@@ -62,7 +59,6 @@ export default function EnseignantsPage() {
     });
   }, [enseignants, searchTerm, selectedMatiere, niveauSelectionne, cycleSelectionne]);
 
-  // 4. Deuxième filtre : NiveauClasse + Classe (filtres des tabs)
   const enseignantsFiltresTabs = useMemo(() => {
     return enseignantsFiltresLocaux.filter(enseignant => {
       const matchesNiveauClasse = !niveauClasseSelectionne || 
@@ -75,43 +71,44 @@ export default function EnseignantsPage() {
     });
   }, [enseignantsFiltresLocaux, niveauClasseSelectionne, classeSelectionne]);
 
-  // 5. Handlers
+
+
   const handleDelete = async () => {
     if (!enseignantToDelete?.id) return;
+    setIsDeleting(true);
     try {
       await deleteEnseignant(enseignantToDelete.id);
       setEnseignantToDelete(null);
+      alertSuccess("Enseignant supprimé avec succès");
     } catch (error) {
       alertServerError(error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-
-
-  if (loading) return <div className="flex justify-center p-20">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
-    </div>;
+  if (loading) return (
+    <div className="flex justify-center p-20">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+    </div>
+  );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Gestion des enseignants</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {enseignantsFiltresTabs.length} enseignant{enseignantsFiltresTabs.length > 1 ? 's' : ''} affiché{enseignantsFiltresTabs.length > 1 ? 's' : ''}
-          </p>
-        </div>
-
+    <PageLayout
+      title="Gestion des enseignants"
+      description={`${enseignantsFiltresTabs.length} enseignant${enseignantsFiltresTabs.length > 1 ? 's' : ''} affiché${enseignantsFiltresTabs.length > 1 ? 's' : ''}`}
+      actions={
         <button
           onClick={() => navigate("/admin/enseignants/new")}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] animate-fade-in-up"
         >
           <Plus size={18} /> Nouvel enseignant
         </button>
-      </div>
-
+      }
+    >
+     
       {/* Recherche & Filtre Matière */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
         <div className="md:col-span-2 relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -119,14 +116,22 @@ export default function EnseignantsPage() {
             placeholder="Rechercher par nom, prénom ou email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200"
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <span className="text-xs">✕</span>
+            </button>
+          )}
         </div>
 
         <select
           value={selectedMatiere}
           onChange={(e) => setSelectedMatiere(e.target.value)}
-          className="px-4 py-2 border rounded-lg bg-white"
+          className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200 bg-white"
         >
           <option value="">Toutes les matières</option>
           {matieresDisponibles.map(matiere => (
@@ -135,28 +140,34 @@ export default function EnseignantsPage() {
         </select>
       </div>
 
-      {/* FILTRE GÉNÉRIQUE - Reçoit les données déjà filtrées par recherche + matière + niveau scolaire + cycle */}
-      <ClasseFilter 
-        data={enseignantsFiltresLocaux}
-        getCycle={(prof) => prof.enseignementsData?.map(ed => ed.cycle) || []}
-        getNiveauClasse={(prof) => prof.enseignementsData?.map(ed => ed.niveauClasse) || []}
-        getClasse={(prof) => prof.enseignementsData?.map(ed => ed.classe) || []}
-        showZeroCounts={false}
-      />
+      {/* Filtre générique */}
+      <div className="animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+        <ClasseFilter 
+          data={enseignantsFiltresLocaux}
+          getCycle={(prof) => prof.enseignementsData?.map(ed => ed.cycle) || []}
+          getNiveauClasse={(prof) => prof.enseignementsData?.map(ed => ed.niveauClasse) || []}
+          getClasse={(prof) => prof.enseignementsData?.map(ed => ed.classe) || []}
+          showZeroCounts={false}
+        />
+      </div>
 
       {/* Liste */}
-      <EnseignantsList 
-        enseignants={enseignantsFiltresTabs} 
-        onAction={setSelectedEnseignant} 
-      />
+      <div className="animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+        <EnseignantsList 
+          enseignants={enseignantsFiltresTabs} 
+          onAction={setSelectedEnseignant} 
+        />
+      </div>
 
       {/* Message si vide */}
       {enseignantsFiltresTabs.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg text-gray-500">
-          Aucun enseignant ne correspond à vos critères.
+        <div className="text-center py-12 bg-gray-50 rounded-xl animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+          <Users size={48} className="mx-auto text-gray-300 mb-3" />
+          <p className="text-gray-500">Aucun enseignant ne correspond à vos critères.</p>
         </div>
       )}
 
+      {/* Menu modal */}
       {selectedEnseignant && (
         <MenuModal
           title={`${selectedEnseignant.prenom} ${selectedEnseignant.nom}`}
@@ -192,15 +203,33 @@ export default function EnseignantsPage() {
         />
       )}
 
+      {/* Modal suppression */}
       <DeleteConfirmationModal
         isOpen={!!enseignantToDelete}
         onClose={() => setEnseignantToDelete(null)}
         onConfirm={handleDelete}
         title="Supprimer l'enseignant"
-        message={`Voulez-vous vraiment supprimer ${enseignantToDelete?.prenom} ${enseignantToDelete?.nom} ?`}
-        confirmText="Supprimer"
+        message={`Voulez-vous vraiment supprimer ${enseignantToDelete?.prenom} ${enseignantToDelete?.nom} ? Cette action est irréversible.`}
+        confirmText={isDeleting ? "Suppression..." : "Supprimer"}
         cancelText="Annuler"
       />
-    </div>
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
+    </PageLayout>
   );
 }

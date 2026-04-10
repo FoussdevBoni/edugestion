@@ -298,23 +298,54 @@ export const cycleController = {
   },
 
   async delete(id) {
-    try {
-      const db = getDb();
+  try {
+    const db = getDb();
+    
+    // Récupérer les niveaux de classe de ce cycle
+    const niveauxClasses = db.data.niveauxClasses?.filter(nc => nc.cycleId === id) || [];
+    const niveauClasseIds = niveauxClasses.map(nc => nc.id);
+    
+    // Récupérer les matières de ces niveaux de classe
+    const matieres = db.data.matieres?.filter(m => niveauClasseIds.includes(m.niveauClasseId)) || [];
+    const matiereIds = matieres.map(m => m.id);
+    
+    await db.update((dbData) => {
+      // Supprimer les notes liées aux matières
+      dbData.notes = dbData.notes?.filter(n => !matiereIds.includes(n.matiereId)) || [];
       
-      // Vérifier si le cycle est utilisé par des niveaux de classe
-      const niveauxClasseUtilisant = db.data.niveauxClasses?.filter(nc => nc.cycleId === id) || [];
-      if (niveauxClasseUtilisant.length > 0) {
-        throw new Error("Ce cycle est utilisé par des niveaux de classe. Supprimez d'abord ces niveaux.");
-      }
+      // Supprimer les séances liées aux matières
+      dbData.seances = dbData.seances?.filter(s => !matiereIds.includes(s.matiereId)) || [];
+      
+      // Supprimer les enseignements liés aux matières
+      dbData.enseignements = dbData.enseignements?.filter(e => !matiereIds.includes(e.matiereId)) || [];
+      
+      // Supprimer les bulletins liés aux niveaux de classe
+      dbData.bulletins = dbData.bulletins?.filter(b => !niveauClasseIds.includes(b.niveauClasseId)) || [];
+      
+      // Supprimer les inscriptions liées aux niveaux de classe
+      const inscriptions = dbData.inscriptions?.filter(i => niveauClasseIds.includes(i.niveauClasseId)) || [];
+      const inscriptionIds = inscriptions.map(i => i.id);
+      
+      // Supprimer les paiements liés aux inscriptions
+      dbData.paiements = dbData.paiements?.filter(p => !inscriptionIds.includes(p.inscriptionId)) || [];
+      
+      // Supprimer les inscriptions
+      dbData.inscriptions = dbData.inscriptions?.filter(i => !niveauClasseIds.includes(i.niveauClasseId)) || [];
+      
+      // Supprimer les matières
+      dbData.matieres = dbData.matieres?.filter(m => !niveauClasseIds.includes(m.niveauClasseId)) || [];
+      
+      // Supprimer les niveaux de classe
+      dbData.niveauxClasses = dbData.niveauxClasses?.filter(nc => nc.cycleId !== id) || [];
+      
+      // Supprimer le cycle
+      dbData.cycles = dbData.cycles?.filter(c => c.id !== id) || [];
+    });
 
-      await db.update((dbData) => {
-        dbData.cycles = dbData.cycles?.filter(c => c.id !== id) || [];
-      });
-
-      return { success: true };
-    } catch (error) {
-      console.error("Erreur delete cycle:", error);
-      throw error;
-    }
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur delete cycle:", error);
+    throw error;
   }
+}
 };

@@ -1,44 +1,36 @@
 // src/pages/admin/configuration/niveaux-classe/NiveauxClassePage.tsx
 import { useState, useMemo } from "react";
-import { Plus, Download, Search } from "lucide-react";
+import { Plus, Search, Layers, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NiveauxClasseList from "../../../../components/admin/lists/NiveauxClasseList";
-import MenuModal, { Menu } from "../../../../components/ui/MenuModal";
-
 import { NiveauClasse } from "../../../../utils/types/data";
 import useNiveauxClasses from "../../../../hooks/niveauxClasses/useNiveauxClasses";
 import NiveauClasseModals from "../../../../components/admin/modals/NiveauClasseModals";
 import { useEcoleNiveau } from "../../../../hooks/filters/useEcoleNiveau";
-import { alertError } from "../../../../helpers/alertError";
+import { alertError, alertSuccess } from "../../../../helpers/alertError";
+import PageLayout from "../../../../layouts/PageLayout";
 
 export default function NiveauxClassePage() {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNiveauClasse, setSelectedNiveauClasse] = useState<NiveauClasse | null>(null);
   const [niveauClasseToDelete, setNiveauClasseToDelete] = useState<NiveauClasse | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const { niveauxClasse, deleteNiveauClasse } = useNiveauxClasses()
+  const { niveauxClasse, deleteNiveauClasse } = useNiveauxClasses();
+  const { cycleSelectionne, niveauSelectionne } = useEcoleNiveau();
 
-  const { cycleSelectionne, niveauSelectionne } = useEcoleNiveau()
-
-  // Filtrer les niveaux de classe
   const filteredNiveauxClasse = useMemo(() => {
     return niveauxClasse.filter(nc => {
-      // Filtres globaux (du header)
       const matchesNiveauGlobal = niveauSelectionne ? nc.niveauScolaire === niveauSelectionne : true;
       const matchesCycleGlobal = cycleSelectionne ? nc.cycle === cycleSelectionne : true;
 
-      // Si les filtres globaux ne matchent pas, on exclut directement
       if (!matchesNiveauGlobal || !matchesCycleGlobal) {
         return false;
       }
 
-      // Si searchTerm est vide, on garde tous ceux qui ont passé les filtres globaux
       if (!searchTerm) {
         return true;
       }
 
-      // Sinon, on filtre par searchTerm
       const term = searchTerm.toLowerCase();
       return (
         nc.nom.toLowerCase().includes(term) ||
@@ -48,22 +40,23 @@ export default function NiveauxClassePage() {
     });
   }, [niveauxClasse, niveauSelectionne, cycleSelectionne, searchTerm]);
 
+  
+
   const handleDelete = () => {
     if (!niveauClasseToDelete?.id) {
-      alertError()
-      return
+      alertError();
+      return;
     }
     try {
-      deleteNiveauClasse(niveauClasseToDelete.id)
+      deleteNiveauClasse(niveauClasseToDelete.id);
       setNiveauClasseToDelete(null);
       setSelectedNiveauClasse(null);
+      alertSuccess("Niveau de classe supprimé avec succès");
     } catch (error) {
-      alertError()
-
+      alertError();
+    } finally {
     }
   };
-
-
 
   const handleAction = (niveauClasse: NiveauClasse) => {
     setSelectedNiveauClasse(niveauClasse);
@@ -82,31 +75,21 @@ export default function NiveauxClassePage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Niveaux de classe</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {filteredNiveauxClasse.length} niveau{filteredNiveauxClasse.length > 1 ? 'x' : ''} de classe configurés
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => {
-              navigate("/admin/configuration/niveaux-classe/new")
-            }}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            <Plus size={18} />
-            Nouveau niveau
-          </button>
-        </div>
-      </div>
-
-      {/* Barre de recherche */}
-      <div className="flex items-center gap-4">
+    <PageLayout
+      title="Niveaux de classe"
+      description={`${filteredNiveauxClasse.length} niveau${filteredNiveauxClasse.length > 1 ? 'x' : ''} de classe configurés`}
+      actions={
+        <button
+          onClick={() => navigate("/admin/configuration/niveaux-classe/new")}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] animate-fade-in-up"
+        >
+          <Plus size={18} />
+          Nouveau niveau
+        </button>
+      }
+    >
+      {/* Barre de recherche avec animation */}
+      <div className="flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
         <div className="flex-1 relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -114,7 +97,7 @@ export default function NiveauxClassePage() {
             placeholder="Rechercher par nom, cycle ou niveau scolaire..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200"
           />
           {searchTerm && (
             <button
@@ -127,43 +110,46 @@ export default function NiveauxClassePage() {
         </div>
       </div>
 
-      {/* Indicateur des filtres actifs */}
+      {/* Indicateur des filtres actifs avec animation */}
       {(niveauSelectionne || cycleSelectionne || searchTerm) && (
-        <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap">
+        <div className="flex items-center gap-2 text-sm text-gray-600 flex-wrap animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+          <Filter size={14} className="text-primary" />
           <span>Filtres actifs:</span>
           {niveauSelectionne && (
-            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
+            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
               {niveauSelectionne}
             </span>
           )}
           {cycleSelectionne && (
-            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
+            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
               {cycleSelectionne}
             </span>
           )}
           {searchTerm && (
-            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full">
+            <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
               "{searchTerm}"
             </span>
           )}
         </div>
       )}
 
-      {/* Liste */}
-      <NiveauxClasseList niveauxClasse={filteredNiveauxClasse} onAction={handleAction} />
+      {/* Liste avec animation */}
+      <div className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+        <NiveauxClasseList 
+          niveauxClasse={filteredNiveauxClasse} 
+          onAction={handleAction} 
+        />
+      </div>
 
-      {/* Message si aucun résultat */}
+      {/* Message si aucun résultat avec animation */}
       {filteredNiveauxClasse.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <div className="text-center py-12 bg-gray-50 rounded-xl animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+          <Layers size={48} className="mx-auto text-gray-300 mb-3" />
           <p className="text-gray-500">Aucun niveau de classe trouvé</p>
           {(searchTerm || niveauSelectionne || cycleSelectionne) && (
             <button
-              onClick={() => {
-                setSearchTerm("");
-                // Note: on ne réinitialise pas les filtres globaux ici
-                // car ils sont gérés ailleurs
-              }}
-              className="mt-4 text-primary hover:text-primary/80 text-sm"
+              onClick={clearSearch}
+              className="mt-3 text-sm text-primary hover:underline"
             >
               Effacer la recherche
             </button>
@@ -171,8 +157,7 @@ export default function NiveauxClassePage() {
         </div>
       )}
 
-
-      {/* Modal actions sur un niveau de classe */}
+      {/* Modals pour niveaux de classe */}
       <NiveauClasseModals
         handleDelete={handleDelete}
         niveauClasseToDelete={niveauClasseToDelete}
@@ -182,6 +167,23 @@ export default function NiveauxClassePage() {
         handleCloseDeleteModal={handleCloseDeleteModal}
         handleCloseMenuModal={handleCloseMenuModal}
       />
-    </div>
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
+    </PageLayout>
   );
 }

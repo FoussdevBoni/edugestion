@@ -1,7 +1,6 @@
 // electron/controllers/inscriptionController.js
 import { getDb } from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
-import { bulletinController } from './bulletinController.js';
 
 // Fonction utilitaire pour enrichir une inscription
 function enrichirInscription(inscription) {
@@ -314,6 +313,8 @@ export const inscriptionController = {
   },
 
   async update(id, data) {
+          console.log({id , data})
+
     try {
       const db = getDb();
       const now = new Date().toISOString();
@@ -335,7 +336,9 @@ export const inscriptionController = {
           eleve = dbData.elevesData?.find(e => e.id === updatedItem.eleveDataId);
           classe = dbData.classes?.find(c => c.id === updatedItem.classeId);
         }
+
       });
+
 
       if (!updatedItem) return null;
 
@@ -394,6 +397,7 @@ export const inscriptionController = {
       const cycle = db.data.cycles?.find(c => c.id === niveauClasse?.cycleId);
       const niveauScolaire = db.data.niveauxScolaires?.find(ns => ns.id === cycle?.niveauScolaireId);
 
+        
       return {
         ...updatedItem,
         ...eleve,

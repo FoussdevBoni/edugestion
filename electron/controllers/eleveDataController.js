@@ -96,24 +96,32 @@ export const eleveDataController = {
     }
   },
 
-  async delete(id) {
-    try {
-      const db = getDb();
+ async delete(id) {
+  try {
+    const db = getDb();
 
-      // Vérifier si l'élève a des inscriptions
-      const inscriptions = db.data.inscriptions?.filter(i => i.eleveDataId === id) || [];
-      if (inscriptions.length > 0) {
-        throw new Error("Impossible de supprimer un élève qui a des inscriptions");
-      }
+    // Récupérer les inscriptions de l'élève
+    const inscriptions = db.data.inscriptions?.filter(i => i.eleveDataId === id) || [];
+    const inscriptionIds = inscriptions.map(i => i.id);
 
-      await db.update((dbData) => {
-        dbData.elevesData = dbData.elevesData?.filter(e => e.id !== id) || [];
-      });
+    // Récupérer les paiements liés à ces inscriptions
+    const paiements = db.data.paiements?.filter(p => inscriptionIds.includes(p.inscriptionId)) || [];
 
-      return { success: true };
-    } catch (error) {
-      console.error("Erreur delete eleveData:", error);
-      throw error;
-    }
+    await db.update((dbData) => {
+      // Supprimer les paiements liés
+      dbData.paiements = dbData.paiements?.filter(p => !inscriptionIds.includes(p.inscriptionId)) || [];
+      
+      // Supprimer les inscriptions
+      dbData.inscriptions = dbData.inscriptions?.filter(i => i.eleveDataId !== id) || [];
+      
+      // Supprimer l'élève
+      dbData.elevesData = dbData.elevesData?.filter(e => e.id !== id) || [];
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur delete eleveData:", error);
+    throw error;
   }
+}
 };

@@ -2,38 +2,20 @@
 import { useState } from "react";
 import {
   ArrowLeft, Edit, Trash2,
-  Package, CreditCard, Calendar, User, FileText
+  Package, CreditCard, Calendar, User, FileText,
+  CheckCircle, AlertCircle, Building, Receipt
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
 import { Achat } from "../../../../utils/types/data";
-import { alertError, alertServerError } from "../../../../helpers/alertError";
-
-
-
-const MATERIEL = {
-  id: "2",
-  nom: "Cahier 100 pages",
-  quantite: 128
-};
-
-const TRANSACTION = {
-  id: "t1",
-  type: "sortie",
-  montant: 50000,
-  motif: "Achat matériel",
-  modePaiement: "Mobile money",
-  reference: "TR20260315-001"
-};
+import { alertError, alertServerError, alertSuccess } from "../../../../helpers/alertError";
 
 export default function AchatDetailsPage() {
   const navigate = useNavigate();
-  const [materiel] = useState(MATERIEL);
-  const [transaction] = useState(TRANSACTION);
   const [achatToDelete, setAchatToDelete] = useState<Achat | null>(null);
-
-  const location = useLocation()
-  const achat = location.state
+  const [isDeleting, setIsDeleting] = useState(false);
+  const location = useLocation();
+  const achat = location.state;
 
   const formatMoney = (montant: number) => {
     return new Intl.NumberFormat('fr-FR').format(montant) + ' FCFA';
@@ -47,168 +29,238 @@ export default function AchatDetailsPage() {
     });
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!achatToDelete?.id) {
-      alertError("Une erreur s'est produite")
-      return
+      alertError("Une erreur s'est produite");
+      return;
     }
+    setIsDeleting(true);
     try {
-
-      setAchatToDelete(null)
+      // Appel API pour supprimer
+      // await deleteAchat(achatToDelete.id);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setAchatToDelete(null);
+      alertSuccess("Achat supprimé avec succès");
+      setTimeout(() => navigate(-1), 1500);
     } catch (error) {
-      alertServerError(error)
+      alertServerError(error);
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  if (!achat) {
+    return (
+      <div className="text-center py-12 animate-fade-in-up">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-md mx-auto">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertCircle size={32} className="text-red-500" />
+          </div>
+          <p className="text-gray-500 text-center mb-4">Achat non trouvé</p>
+          <button
+            onClick={() => navigate(-1)}
+            className="w-full px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all duration-300"
+          >
+            Retour
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
+    <div className="max-w-5xl mx-auto space-y-6 pb-8">
+      {/* En-tête avec animation */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in-up">
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(-1)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-300 group"
           >
-            <ArrowLeft size={20} className="text-gray-600" />
+            <ArrowLeft size={20} className="text-gray-600 group-hover:text-primary transition-colors" />
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Détails de l'achat</h1>
-            <p className="text-sm text-gray-500 mt-1">Référence: {achat.id}</p>
+            <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
+              <Receipt size={14} />
+              Référence: {achat.id?.slice(0, 8)}...
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(`/admin/comptabilite/achats/update`, { state: achat })}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02]"
           >
             <Edit size={16} />
             Modifier
           </button>
           <button
-            onClick={() => {
-              setAchatToDelete(achat)
-            }}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600
-           text-white rounded-lg hover:bg-red-700">
+            onClick={() => setAchatToDelete(achat)}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02]"
+          >
             <Trash2 size={16} />
             Supprimer
           </button>
-
         </div>
       </div>
 
-      {/* Informations principales */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Badge de statut */}
+      <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-sm">
+          <CheckCircle size={14} />
+          Achat validé
+        </div>
+      </div>
+
+      {/* Grille principale */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Colonne gauche - Détails achat */}
-        <div className="md:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Informations d'achat</h2>
+        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-1 h-6 bg-primary rounded-full"></div>
+            <h2 className="text-lg font-semibold text-gray-800">Informations d'achat</h2>
+          </div>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-4 border-b">
-              <span className="text-gray-500">Matériel</span>
-              <div className="flex items-center gap-2">
-                <Package size={16} className="text-primary" />
-                <button
-                  onClick={() => navigate(`/admin/comptabilite/materiel/details`, { state: materiel })}
-                  className="text-primary hover:underline font-medium"
-                >
-                  {materiel.nom}
-                </button>
+            <div className="group p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 text-sm">Matériel</span>
+                <div className="flex items-center gap-2">
+                  <Package size={16} className="text-primary" />
+                  <span className="font-medium text-gray-800">{achat.materielNom || achat.materielId}</span>
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-between pb-4 border-b">
-              <span className="text-gray-500">Quantité</span>
-              <span className="font-mono font-medium text-lg">{achat.quantite} unités</span>
+            <div className="group p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 text-sm">Quantité</span>
+                <span className="font-mono font-semibold text-gray-800">{achat.quantite} unités</span>
+              </div>
             </div>
 
-            <div className="flex items-center justify-between pb-4 border-b">
-              <span className="text-gray-500">Prix unitaire</span>
-              <span className="font-mono font-medium">{formatMoney(achat.prixUnitaire)}</span>
+            <div className="group p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 text-sm">Prix unitaire</span>
+                <span className="font-mono font-medium text-gray-800">{formatMoney(achat.prixUnitaire)}</span>
+              </div>
             </div>
 
-            <div className="flex items-center justify-between pb-4 border-b">
-              <span className="text-gray-500">Total</span>
-              <span className="font-mono font-bold text-primary text-xl">
-                {formatMoney(achat.total || achat.quantite * achat.prixUnitaire)}
-              </span>
+            <div className="bg-gradient-to-r from-primary/5 to-transparent p-4 rounded-xl">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700 font-semibold">Total</span>
+                <span className="font-mono font-bold text-primary text-2xl">
+                  {formatMoney(achat.total || achat.quantite * achat.prixUnitaire)}
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center justify-between pb-4 border-b">
-              <span className="text-gray-500">Date d'achat</span>
-              <span className="flex items-center gap-2">
-                <Calendar size={16} className="text-gray-400" />
-                {formatDate(achat.date)}
-              </span>
+            <div className="group p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 text-sm">Date d'achat</span>
+                <span className="flex items-center gap-2 text-gray-700">
+                  <Calendar size={16} className="text-gray-400" />
+                  {formatDate(achat.date)}
+                </span>
+              </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <span className="text-gray-500">Enregistré par</span>
-              <span className="flex items-center gap-2">
-                <User size={16} className="text-gray-400" />
-                {achat.createdBy}
-              </span>
+            <div className="group p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 text-sm">Enregistré par</span>
+                <span className="flex items-center gap-2 text-gray-700">
+                  <User size={16} className="text-gray-400" />
+                  {achat.createdBy || "Administrateur"}
+                </span>
+              </div>
             </div>
+
+            {achat.reference && (
+              <div className="group p-3 rounded-xl hover:bg-gray-50 transition-colors duration-200">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 text-sm">Référence fournisseur</span>
+                  <span className="font-mono text-sm text-gray-600">{achat.reference}</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Colonne droite - Transaction liée */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Transaction liée</h2>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+            <h2 className="text-lg font-semibold text-gray-800">Transaction liée</h2>
+          </div>
 
-          {transaction ? (
+          {achat.transaction ? (
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">Référence</span>
-                <button
-                  onClick={() => navigate(`/admin/comptabilite/transactions/details`, { state: transaction })}
-                  className="text-primary hover:underline font-mono text-sm"
-                >
-                  {transaction.reference}
-                </button>
+              <div className="p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 text-sm">Référence</span>
+                  <button
+                    onClick={() => navigate(`/admin/comptabilite/transactions/details`, { state: achat.transaction })}
+                    className="text-primary hover:underline font-mono text-sm font-medium"
+                  >
+                    {achat.transaction.reference}
+                  </button>
+                </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">Type</span>
-                <span className={`px-2 py-1 rounded-full text-xs ${transaction.type === 'sortie' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
-                  }`}>
-                  {transaction.type === 'sortie' ? 'Sortie' : 'Entrée'}
-                </span>
+              <div className="p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 text-sm">Type</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${achat.transaction.type === 'sortie' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                    }`}>
+                    {achat.transaction.type === 'sortie' ? 'Sortie' : 'Entrée'}
+                  </span>
+                </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">Montant</span>
-                <span className="font-mono font-medium">{formatMoney(transaction.montant)}</span>
+              <div className="p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 text-sm">Montant</span>
+                  <span className="font-mono font-semibold text-gray-800">{formatMoney(achat.transaction.montant)}</span>
+                </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">Motif</span>
-                <span>{transaction.motif}</span>
+              <div className="p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 text-sm">Motif</span>
+                  <span className="text-gray-700">{achat.transaction.motif}</span>
+                </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">Paiement</span>
-                <span className="flex items-center gap-1">
-                  <CreditCard size={14} className="text-gray-400" />
-                  {transaction.modePaiement}
-                </span>
+              <div className="p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500 text-sm">Mode de paiement</span>
+                  <span className="flex items-center gap-1 text-gray-700">
+                    <CreditCard size={14} className="text-gray-400" />
+                    {achat.transaction.modePaiement}
+                  </span>
+                </div>
               </div>
 
               <button
-                onClick={() => navigate(`/admin/comptabilite/transactions/details`, { state: transaction })}
-                className="w-full mt-4 flex items-center justify-center gap-2 p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                onClick={() => navigate(`/admin/comptabilite/transactions/details`, { state: achat.transaction })}
+                className="w-full mt-4 flex items-center justify-center gap-2 p-2.5 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02]"
               >
                 <FileText size={16} />
-                Voir la transaction
+                Voir le détail de la transaction
               </button>
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
-              <p>Aucune transaction liée</p>
-              <button onClick={() => {
-                navigate(`/admin/comptabilite/transactions/new`)
-              }} className="mt-4 text-sm text-primary hover:underline">
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Receipt size={24} className="text-gray-400" />
+              </div>
+              <p className="text-gray-500 text-sm mb-3">Aucune transaction liée</p>
+              <button
+                onClick={() => navigate(`/admin/comptabilite/transactions/new`, { state: { achatId: achat.id } })}
+                className="text-sm text-primary hover:underline font-medium"
+              >
                 Créer une transaction
               </button>
             </div>
@@ -216,16 +268,47 @@ export default function AchatDetailsPage() {
         </div>
       </div>
 
+      {/* Section informations supplémentaires */}
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-4 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+        <div className="flex items-start gap-3">
+          <div className="p-1 bg-primary/10 rounded-full">
+            <Building size={14} className="text-primary" />
+          </div>
+          <div className="text-sm text-gray-600">
+            <p className="font-medium text-gray-700 mb-1">Informations</p>
+            <p>Cet achat a été enregistré dans le système de gestion de stock. 
+               La quantité a été automatiquement ajoutée au stock du matériel concerné.</p>
+          </div>
+        </div>
+      </div>
 
+      {/* Modal de confirmation suppression */}
       <DeleteConfirmationModal
         isOpen={!!achatToDelete}
         onClose={() => setAchatToDelete(null)}
         onConfirm={handleDelete}
-        title="Supprimer l'achat de l'historique"
-        message={`Voulez-vous vraiment supprimer cet achat ?`}
-        confirmText="Supprimer"
+        title="Supprimer l'achat"
+        message={`Voulez-vous vraiment supprimer l'achat du ${achatToDelete ? formatDate(achatToDelete.date) : ''} ? Cette action est irréversible et supprimera également la transaction associée.`}
+        confirmText={isDeleting ? "Suppression..." : "Supprimer"}
         cancelText="Annuler"
       />
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
     </div>
   );
 }

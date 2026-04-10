@@ -48,18 +48,19 @@ export default function useCycles() {
     }
   }, []);
 
-  const deleteCycle = useCallback(async (id: string) => {
-    try {
-      setLoading(true);
-      await cycleService.delete(id);
-      setCycles(prev => prev.filter(c => c.id !== id));
-    } catch (err: any) {
-      setError(err.message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+const deleteCycle = useCallback(async (id: string) => {
+  try {
+    setLoading(true);
+    await cycleService.delete(id);
+    setCycles(prev => prev.filter(c => c.id !== id));
+  } catch (err: any) {
+    setError(err.message);
+    throw err; // ← Important : relancer l'erreur pour qu'elle soit catchée dans le composant
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
 
   // Optionnel : méthode de filtrage par niveau scolaire
   const getCyclesByNiveauScolaire = useCallback(async (niveauScolaireId: string) => {

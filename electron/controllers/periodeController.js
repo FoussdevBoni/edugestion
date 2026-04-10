@@ -6,12 +6,12 @@ import { niveauScolaireController } from './niveauScolaireController.js';
 // Fonction utilitaire pour enrichir une période
 async function enrichirPeriode(periode) {
   if (!periode) return null;
-  
+
   let niveauScolaire = null;
   if (periode.niveauScolaireId) {
     niveauScolaire = await niveauScolaireController.getById(periode.niveauScolaireId);
   }
-  
+
   return {
     ...periode,
     niveauScolaire: niveauScolaire?.nom || 'Tous les niveaux'
@@ -23,12 +23,12 @@ export const periodeController = {
     try {
       const db = getDb();
       const periodes = db.data.periodes || [];
-      
+
       const periodesEnrichies = [];
       for (const periode of periodes) {
         periodesEnrichies.push(await enrichirPeriode(periode));
       }
-      
+
       return periodesEnrichies;
     } catch (error) {
       console.error("Erreur getAll periodes:", error);
@@ -51,12 +51,12 @@ export const periodeController = {
     try {
       const db = getDb();
       const periodes = db.data.periodes?.filter(p => p.niveauScolaireId === niveauScolaireId) || [];
-      
+
       const periodesEnrichies = [];
       for (const periode of periodes) {
         periodesEnrichies.push(await enrichirPeriode(periode));
       }
-      
+
       return periodesEnrichies;
     } catch (error) {
       console.error("Erreur getByNiveauScolaire periode:", error);
@@ -73,12 +73,12 @@ export const periodeController = {
         const anneeFin = p.dateFin.substring(0, 4);
         return anneeScolaire.includes(anneeDebut) || anneeScolaire.includes(anneeFin);
       }) || [];
-      
+
       const periodesEnrichies = [];
       for (const periode of periodes) {
         periodesEnrichies.push(await enrichirPeriode(periode));
       }
-      
+
       return periodesEnrichies;
     } catch (error) {
       console.error("Erreur getByAnneeScolaire periode:", error);
@@ -90,7 +90,7 @@ export const periodeController = {
     try {
       const db = getDb();
       const now = new Date().toISOString();
-      
+
       // Vérifier que le niveau scolaire existe si fourni
       if (data.niveauScolaireId) {
         const niveau = await niveauScolaireController.getById(data.niveauScolaireId);
@@ -100,8 +100,8 @@ export const periodeController = {
       }
 
       // Vérifier l'ordre unique pour un même niveau
-      const existing = db.data.periodes?.find(p => 
-        p.ordre === data.ordre && 
+      const existing = db.data.periodes?.find(p =>
+        p.ordre === data.ordre &&
         p.niveauScolaireId === data.niveauScolaireId
       );
       if (existing) {
@@ -145,7 +145,7 @@ export const periodeController = {
           // Vérifier les dates si elles sont modifiées
           const dateDebut = data.dateDebut || dbData.periodes[index].dateDebut;
           const dateFin = data.dateFin || dbData.periodes[index].dateFin;
-          
+
           if (new Date(dateDebut) >= new Date(dateFin)) {
             throw new Error("La date de début doit être antérieure à la date de fin");
           }
@@ -170,20 +170,22 @@ export const periodeController = {
   async delete(id) {
     try {
       const db = getDb();
-      
-      // Vérifier si la période est utilisée par des évaluations
-      const evaluationsUtilisant = db.data.evaluations?.filter(e => e.periodeId === id) || [];
-      if (evaluationsUtilisant.length > 0) {
-        throw new Error("Cette période est utilisée par des évaluations. Supprimez d'abord les évaluations.");
-      }
 
-      // Vérifier si la période est utilisée par des notes
-      const notesUtilisant = db.data.notes?.filter(n => n.periodeId === id) || [];
-      if (notesUtilisant.length > 0) {
-        throw new Error("Cette période est utilisée par des notes. Supprimez d'abord les notes.");
-      }
+      // Récupérer les évaluations de cette période
+      const evaluations = db.data.evaluations?.filter(e => e.periodeId === id) || [];
+      const evaluationIds = evaluations.map(e => e.id);
+
+      // Récupérer les notes de ces évaluations
+      const notes = db.data.notes?.filter(n => evaluationIds.includes(n.evaluationId)) || [];
 
       await db.update((dbData) => {
+        // Supprimer les notes liées à ces évaluations
+        dbData.notes = dbData.notes?.filter(n => !evaluationIds.includes(n.evaluationId)) || [];
+
+        // Supprimer les évaluations liées à cette période
+        dbData.evaluations = dbData.evaluations?.filter(e => e.periodeId !== id) || [];
+
+        // Supprimer la période
         dbData.periodes = dbData.periodes?.filter(p => p.id !== id) || [];
       });
 

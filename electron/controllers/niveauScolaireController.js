@@ -27,7 +27,7 @@ export const niveauScolaireController = {
     try {
       const db = getDb();
       const now = new Date().toISOString();
-      
+
       // Vérifier les champs obligatoires
       if (!data.nom || data.nom.trim() === '') {
         throw new Error("Le champ 'nom' est obligatoire");
@@ -39,11 +39,11 @@ export const niveauScolaireController = {
       const existingNiveau = db.data.niveauxScolaires?.find(
         n => n.nom === nomNiveauScolaire
       );
-      
+
       if (existingNiveau) {
         throw new Error(`Un niveau scolaire "${nomNiveauScolaire}" existe déjà`);
       }
-      
+
       const newItem = {
         id: uuidv4(),
         nom: nomNiveauScolaire,
@@ -78,7 +78,7 @@ export const niveauScolaireController = {
       // Valider et préparer chaque niveau scolaire
       for (let i = 0; i < niveauxData.length; i++) {
         const data = niveauxData[i];
-        
+
         try {
           // Vérifier les champs obligatoires
           if (!data.nom || data.nom.trim() === '') {
@@ -97,7 +97,7 @@ export const niveauScolaireController = {
           const existingNiveauInDb = db.data.niveauxScolaires?.find(
             n => n.nom === nomNiveauScolaire
           );
-          
+
           if (existingNiveauInDb) {
             errors.push({
               index: i,
@@ -111,7 +111,7 @@ export const niveauScolaireController = {
           const duplicateInBatch = createdItems.find(
             item => item.nom === nomNiveauScolaire
           );
-          
+
           if (duplicateInBatch) {
             errors.push({
               index: i,
@@ -130,7 +130,7 @@ export const niveauScolaireController = {
           };
 
           createdItems.push(newItem);
-          
+
         } catch (error) {
           errors.push({
             index: i,
@@ -159,7 +159,7 @@ export const niveauScolaireController = {
         errors: errors,
         totalAttempted: niveauxData.length
       };
-      
+
     } catch (error) {
       console.error("Erreur createManyNiveauScolaire:", error);
       throw error;
@@ -187,7 +187,7 @@ export const niveauScolaireController = {
         const duplicateNiveau = db.data.niveauxScolaires?.find(
           n => n.id !== id && n.nom === newNom
         );
-        
+
         if (duplicateNiveau) {
           throw new Error(`Un niveau scolaire "${newNom}" existe déjà`);
         }
@@ -215,14 +215,74 @@ export const niveauScolaireController = {
   async delete(id) {
     try {
       const db = getDb();
-      
-      // Vérifier si le niveau est utilisé par des cycles
-      const cyclesUtilisant = db.data.cycles?.filter(c => c.niveauScolaireId === id) || [];
-      if (cyclesUtilisant.length > 0) {
-        throw new Error("Ce niveau scolaire est utilisé par des cycles. Supprimez d'abord les cycles.");
-      }
+
+      // Récupérer les cycles de ce niveau
+      const cycles = db.data.cycles?.filter(c => c.niveauScolaireId === id) || [];
+      const cycleIds = cycles.map(c => c.id);
+
+      // Récupérer les niveaux de classe de ces cycles
+      const niveauxClasses = db.data.niveauxClasses?.filter(nc => cycleIds.includes(nc.cycleId)) || [];
+      const niveauClasseIds = niveauxClasses.map(nc => nc.id);
+
+      // Récupérer les classes de ces niveaux de classe
+      const classes = db.data.classes?.filter(c => niveauClasseIds.includes(c.niveauClasseId)) || [];
+      const classeIds = classes.map(c => c.id);
+
+      // Récupérer les inscriptions de ces classes
+      const inscriptions = db.data.inscriptions?.filter(i => classeIds.includes(i.classeId)) || [];
+      const inscriptionIds = inscriptions.map(i => i.id);
+
+      // Récupérer les matières de ces niveaux de classe
+      const matieres = db.data.matieres?.filter(m => niveauClasseIds.includes(m.niveauClasseId)) || [];
+      const matiereIds = matieres.map(m => m.id);
+
+      // Récupérer les notes de ces matières
+      const notes = db.data.notes?.filter(n => matiereIds.includes(n.matiereId)) || [];
+
+      // Récupérer les séances de ces matières
+      const seances = db.data.seances?.filter(s => matiereIds.includes(s.matiereId)) || [];
+
+      // Récupérer les bulletins de ces inscriptions
+      const bulletins = db.data.bulletins?.filter(b => inscriptionIds.includes(b.inscriptionId)) || [];
+
+      // Récupérer les paiements de ces inscriptions
+      const paiements = db.data.paiements?.filter(p => inscriptionIds.includes(p.inscriptionId)) || [];
+
+      // Récupérer les enseignements liés à ces matières
+      const enseignements = db.data.enseignements?.filter(e => matiereIds.includes(e.matiereId)) || [];
 
       await db.update((dbData) => {
+        // Supprimer les paiements
+        dbData.paiements = dbData.paiements?.filter(p => !inscriptionIds.includes(p.inscriptionId)) || [];
+
+        // Supprimer les bulletins
+        dbData.bulletins = dbData.bulletins?.filter(b => !inscriptionIds.includes(b.inscriptionId)) || [];
+
+        // Supprimer les inscriptions
+        dbData.inscriptions = dbData.inscriptions?.filter(i => !classeIds.includes(i.classeId)) || [];
+
+        // Supprimer les notes
+        dbData.notes = dbData.notes?.filter(n => !matiereIds.includes(n.matiereId)) || [];
+
+        // Supprimer les séances
+        dbData.seances = dbData.seances?.filter(s => !matiereIds.includes(s.matiereId)) || [];
+
+        // Supprimer les enseignements
+        dbData.enseignements = dbData.enseignements?.filter(e => !matiereIds.includes(e.matiereId)) || [];
+
+        // Supprimer les matières
+        dbData.matieres = dbData.matieres?.filter(m => !niveauClasseIds.includes(m.niveauClasseId)) || [];
+
+        // Supprimer les classes
+        dbData.classes = dbData.classes?.filter(c => !niveauClasseIds.includes(c.niveauClasseId)) || [];
+
+        // Supprimer les niveaux de classe
+        dbData.niveauxClasses = dbData.niveauxClasses?.filter(nc => !cycleIds.includes(nc.cycleId)) || [];
+
+        // Supprimer les cycles
+        dbData.cycles = dbData.cycles?.filter(c => c.niveauScolaireId !== id) || [];
+
+        // Supprimer le niveau scolaire
         dbData.niveauxScolaires = dbData.niveauxScolaires?.filter(n => n.id !== id) || [];
       });
 

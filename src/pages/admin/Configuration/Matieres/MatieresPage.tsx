@@ -6,17 +6,15 @@ import MatieresList from "../../../../components/admin/lists/MatieresList";
 import TabsHorizontalScrollable from "../../../../components/ui/TabsHorizontalScrollable";
 import { Matiere } from "../../../../utils/types/data";
 import useMatieres from "../../../../hooks/matieres/useMatieres";
-import { alertError } from "../../../../helpers/alertError";
+import { alertError, alertSuccess } from "../../../../helpers/alertError";
 import useNiveauxClasses from "../../../../hooks/niveauxClasses/useNiveauxClasses";
 import { useEcoleNiveau } from "../../../../hooks/filters/useEcoleNiveau";
 import PageLayout from "../../../../layouts/PageLayout";
 import DeleteConfirmationModal from "../../../../components/ui/DeleteConfirmationModal";
 
-
 interface PagesProps {
   config?: boolean
 }
-
 
 export default function MatieresPage({ config }: PagesProps) {
   const navigate = useNavigate();
@@ -34,7 +32,6 @@ export default function MatieresPage({ config }: PagesProps) {
     setSelectedNiveauClasseId(niveauxClasse[0]?.id);
   }, [niveauxClasse]);
 
-  // Filtrer les niveaux de classe par cycle et niveau sélectionnés
   const niveauxClasseFiltres = useMemo(() => {
     let filtered = niveauxClasse;
 
@@ -48,7 +45,6 @@ export default function MatieresPage({ config }: PagesProps) {
     return filtered;
   }, [niveauxClasse, cycleSelectionne, niveauSelectionne]);
 
-  // Construire les tabs à partir des niveaux de classe filtrés
   const tabs = useMemo(() => {
     const countByNiveauClasse = matieres.reduce((acc, matiere) => {
       const niveauClasseId = matiere.niveauClasseId;
@@ -63,7 +59,6 @@ export default function MatieresPage({ config }: PagesProps) {
     }));
   }, [matieres, niveauxClasseFiltres]);
 
-  // Filtrer les matières
   const filteredMatieres = useMemo(() => {
     let filtered = matieres;
 
@@ -94,8 +89,10 @@ export default function MatieresPage({ config }: PagesProps) {
     try {
       deleteMatiere(matiereToDelete.id);
       setMatiereToDelete(null);
+      alertSuccess("Matière supprimée avec succès");
     } catch (error) {
       alertError();
+    } finally {
     }
   };
 
@@ -104,6 +101,7 @@ export default function MatieresPage({ config }: PagesProps) {
     try {
       await deleteManyMatieres(itemsToDelete);
       setItemsToDelete(null);
+      alertSuccess(`${itemsToDelete.length} matière(s) supprimée(s) avec succès`);
     } catch (error) {
       alertError();
     }
@@ -127,12 +125,12 @@ export default function MatieresPage({ config }: PagesProps) {
         <button
           onClick={() => {
             if (config) {
-              navigate("/admin/configuration/matieres/new")
+              navigate("/admin/configuration/matieres/new");
             } else {
-              navigate("/admin/matieres/new")
+              navigate("/admin/matieres/new");
             }
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] animate-fade-in-up"
         >
           <Plus size={18} />
           Nouvelle matière
@@ -183,20 +181,22 @@ export default function MatieresPage({ config }: PagesProps) {
         onClose: () => setMatiereToDelete(null),
         onConfirm: handleDelete,
         title: "Supprimer la matière",
-        message: `Êtes-vous sûr de vouloir supprimer la matière "${matiereToDelete?.nom}" ?`
+        message: `Êtes-vous sûr de vouloir supprimer la matière "${matiereToDelete?.nom}" ? Cette action est irréversible.`
       }}
     >
-      {/* Tabs des niveaux de classe */}
+      {/* Tabs des niveaux de classe avec animation */}
       {niveauxClasseFiltres.length > 0 && (
-        <TabsHorizontalScrollable
-          tabs={tabs}
-          activeTab={selectedNiveauClasseId}
-          onTabChange={setSelectedNiveauClasseId}
-        />
+        <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+          <TabsHorizontalScrollable
+            tabs={tabs}
+            activeTab={selectedNiveauClasseId}
+            onTabChange={setSelectedNiveauClasseId}
+          />
+        </div>
       )}
 
-      {/* Barre de recherche */}
-      <div className="flex items-center gap-4">
+      {/* Barre de recherche avec animation */}
+      <div className="flex items-center gap-4 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
         <div className="flex-1 relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -204,7 +204,7 @@ export default function MatieresPage({ config }: PagesProps) {
             placeholder="Rechercher une matière par nom..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200"
           />
           {searchTerm && (
             <button
@@ -219,31 +219,33 @@ export default function MatieresPage({ config }: PagesProps) {
 
       {/* Message si aucun niveau de classe */}
       {niveauxClasseFiltres.length === 0 && (cycleSelectionne || niveauSelectionne) && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-700">
-          Aucun niveau de classe trouvé pour {niveauSelectionne} {cycleSelectionne}
+        <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 border border-yellow-200 rounded-xl p-4 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+          <p className="text-yellow-700">Aucun niveau de classe trouvé pour {niveauSelectionne} {cycleSelectionne}</p>
         </div>
       )}
 
-      {/* Liste */}
-      <MatieresList
-        matieres={filteredMatieres}
-        onAction={handleAction}
-        selectable={true}
-        selectActions={[
-          {
-            label: "Supprimer",
-            onClick: (selectedItems) => {
-              const ids = selectedItems.map(i => i.id);
-              setItemsToDelete(ids);
-            },
-            className: "bg-red-600 text-white hover:bg-red-700"
-          }
-        ]}
-      />
+      {/* Liste avec animation */}
+      <div className="animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+        <MatieresList
+          matieres={filteredMatieres}
+          onAction={handleAction}
+          selectable={true}
+          selectActions={[
+            {
+              label: "Supprimer",
+              onClick: (selectedItems) => {
+                const ids = selectedItems.map(i => i.id);
+                setItemsToDelete(ids);
+              },
+              className: "bg-gradient-to-r from-red-600 to-red-700 text-white hover:shadow-md transition-all"
+            }
+          ]}
+        />
+      </div>
 
       {/* Message si aucun résultat */}
       {filteredMatieres.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <div className="text-center py-12 bg-gray-50 rounded-xl animate-fade-in-up" style={{ animationDelay: '500ms' }}>
           <p className="text-gray-500">
             {selectedNiveauClasseId !== "tous"
               ? "Aucune matière pour ce niveau"
@@ -255,7 +257,7 @@ export default function MatieresPage({ config }: PagesProps) {
                 setSearchTerm("");
                 setSelectedNiveauClasseId("tous");
               }}
-              className="mt-4 text-primary hover:text-primary/80 text-sm"
+              className="mt-3 text-sm text-primary hover:underline"
             >
               Réinitialiser les filtres
             </button>
@@ -270,9 +272,24 @@ export default function MatieresPage({ config }: PagesProps) {
         onConfirm={handleDeleteMany}
         title="Supprimer les matières"
         message={`Voulez-vous vraiment supprimer ${itemsToDelete?.length} matière(s) ? Cette action est irréversible.`}
-        confirmText="Supprimer"
-        cancelText="Annuler"
       />
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
     </PageLayout>
   );
 }

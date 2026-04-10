@@ -154,26 +154,27 @@ export const evaluationController = {
     }
   },
 
-  async delete(id) {
-    try {
-      const db = getDb();
+ async delete(id) {
+  try {
+    const db = getDb();
+
+    // Récupérer les notes liées à cette évaluation
+    const notes = db.data.notes?.filter(n => n.evaluationId === id) || [];
+
+    await db.update((dbData) => {
+      // Supprimer les notes liées
+      dbData.notes = dbData.notes?.filter(n => n.evaluationId !== id) || [];
       
-      // Vérifier si l'évaluation est utilisée par des notes
-      const notesUtilisant = db.data.notes?.filter(n => n.evaluationId === id) || [];
-      if (notesUtilisant.length > 0) {
-        throw new Error("Cette évaluation est utilisée par des notes. Supprimez d'abord les notes.");
-      }
+      // Supprimer l'évaluation
+      dbData.evaluations = dbData.evaluations?.filter(e => e.id !== id) || [];
+    });
 
-      await db.update((dbData) => {
-        dbData.evaluations = dbData.evaluations?.filter(e => e.id !== id) || [];
-      });
-
-      return { success: true };
-    } catch (error) {
-      console.error("Erreur delete evaluation:", error);
-      throw error;
-    }
-  },
+    return { success: true };
+  } catch (error) {
+    console.error("Erreur delete evaluation:", error);
+    throw error;
+  }
+},
   // Ajouter cette méthode
   async getByPeriodeAndMatiere(periodeId, matiereId) {
     try {

@@ -14,7 +14,9 @@ export default function useAchats() {
       const data = await achatService.getAll(); // ← backend fait tout le travail
       setAchats(data);
     } catch (err: any) {
+
       setError(err.message);
+      throw err
     } finally {
       setLoading(false);
     }
@@ -28,6 +30,8 @@ export default function useAchats() {
       return newAchat;
     } catch (err: any) {
       setError(err.message);
+      throw err
+
       throw err;
     } finally {
       setLoading(false);

@@ -1,13 +1,13 @@
 // src/pages/admin/eleves/ConduitePage.tsx
 import { useState, useEffect, useMemo } from "react";
-import { Search, Save, FileSpreadsheet, Download, AlertCircle, CheckCircle, Users } from "lucide-react";
+import { Search, Save, FileSpreadsheet, Download, AlertCircle, ArrowLeft } from "lucide-react";
 import * as XLSX from 'xlsx';
+import { useNavigate } from "react-router-dom";
 
 import ClasseFilter from "../../../components/wrappers/ClassesFilter";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
 import useEleves from "../../../hooks/eleves/useEleves";
 import usePeriodes from "../../../hooks/periodes/usePeriodes";
-import PageLayout from "../../../layouts/PageLayout";
 import TableList from "../../../components/ui/tables/TableList";
 import { alertSuccess, alertServerError, alertError } from "../../../helpers/alertError";
 import { bulletinService } from "../../../services/bulletinService";
@@ -23,29 +23,8 @@ interface ConduiteData {
     isModified: boolean;
 }
 
-const StatCard = ({ label, value, color, icon, delay = 0 }: any) => {
-    const colors: any = {
-        blue: "from-blue-50 to-blue-100 border-blue-200 text-blue-700",
-        green: "from-green-50 to-green-100 border-green-200 text-green-700",
-        yellow: "from-yellow-50 to-yellow-100 border-yellow-200 text-yellow-700",
-        purple: "from-purple-50 to-purple-100 border-purple-200 text-purple-700",
-    };
-    return (
-        <div className={`bg-gradient-to-br ${colors[color]} rounded-xl border p-5 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.02] animate-fade-in-up`} style={{ animationDelay: `${delay}ms` }}>
-            <div className="flex items-center justify-between">
-                <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider opacity-70">{label}</p>
-                    <p className="text-3xl font-bold mt-1">{value}</p>
-                </div>
-                <div className="p-3 bg-white/50 rounded-xl">
-                    {icon}
-                </div>
-            </div>
-        </div>
-    );
-};
-
 export default function ConduitePage() {
+    const navigate = useNavigate();
     const { niveauSelectionne, cycleSelectionne, niveauClasseSelectionne, classeSelectionne } = useEcoleNiveau();
     const { eleves, loading } = useEleves();
     const { periodes } = usePeriodes();
@@ -305,23 +284,36 @@ export default function ConduitePage() {
     };
 
     const modifiedCount = Array.from(conduites.values()).filter(c => c.isModified).length;
-    const savedCount = Array.from(conduites.values()).filter(c => c.conduite !== null && !c.isModified).length;
-    const notFilledCount = filteredEleves.length - savedCount - modifiedCount;
 
     if (loading) {
         return (
             <div className="flex justify-center p-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
             </div>
         );
     }
 
     return (
-        <PageLayout
-            title="Noter la conduite des élèves"
-            description={`${filteredEleves.length} élèves`}
-            actions={
-                <div className="flex items-center gap-3 animate-fade-in-up" style={{ animationDelay: '0ms' }}>
+        <div className="space-y-6 pb-8">
+            {/* En-tête avec animation */}
+            <div className="flex items-center justify-between animate-fade-in-up">
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-300 group"
+                    >
+                        <ArrowLeft size={20} className="text-gray-600 group-hover:text-primary transition-colors" />
+                    </button>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-800">Noter la conduite des élèves</h1>
+                        <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
+                            <AlertCircle size={14} />
+                            {filteredEleves.length} élèves
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-3">
                     <select
                         value={selectedPeriode}
                         onChange={(e) => setSelectedPeriode(e.target.value)}
@@ -357,8 +349,8 @@ export default function ConduitePage() {
                         </button>
                     )}
                 </div>
-            }
-        >
+            </div>
+
             {!selectedPeriode ? (
                 <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 border border-yellow-200 rounded-xl p-6 text-center animate-fade-in-up">
                     <AlertCircle size={48} className="text-yellow-600 mx-auto mb-3" />
@@ -366,15 +358,8 @@ export default function ConduitePage() {
                 </div>
             ) : (
                 <>
-                    {/* Statistiques rapides */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-                        <StatCard label="Élèves" value={filteredEleves.length} color="blue" icon={<Users size={20} />} delay={100} />
-                        <StatCard label="Notés" value={savedCount} color="green" icon={<CheckCircle size={20} />} delay={200} />
-                        <StatCard label="Non renseignés" value={notFilledCount} color="yellow" icon={<AlertCircle size={20} />} delay={300} />
-                    </div>
-
                     {/* Recherche */}
-                    <div className="relative animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+                    <div className="relative animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                         <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text"
@@ -386,7 +371,7 @@ export default function ConduitePage() {
                     </div>
 
                     {/* Filtre par onglets */}
-                    <div className="animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+                    <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                         <ClasseFilter
                             data={eleves}
                             getCycle={(e) => e.cycle || ""}
@@ -398,10 +383,10 @@ export default function ConduitePage() {
                     {/* Liste des élèves */}
                     {loadingConduites ? (
                         <div className="flex justify-center py-20 animate-fade-in-up">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                         </div>
                     ) : (
-                        <div className="animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+                        <div className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                             <TableList
                                 items={filteredEleves}
                                 columns={columns}
@@ -415,7 +400,7 @@ export default function ConduitePage() {
                     )}
 
                     {/* Légende */}
-                    <div className="bg-gray-50 rounded-xl p-4 flex flex-wrap gap-4 text-xs animate-fade-in-up" style={{ animationDelay: '700ms' }}>
+                    <div className="bg-gray-50 rounded-xl p-4 flex flex-wrap gap-4 text-xs animate-fade-in-up" style={{ animationDelay: '400ms' }}>
                         <div className="flex items-center gap-2">
                             <div className="w-4 h-4 bg-yellow-50 border border-yellow-200 rounded"></div>
                             <span className="text-gray-600">Ligne jaune = modification non sauvegardée</span>
@@ -452,6 +437,6 @@ export default function ConduitePage() {
                     opacity: 0;
                 }
             `}</style>
-        </PageLayout>
+        </div>
     );
 }

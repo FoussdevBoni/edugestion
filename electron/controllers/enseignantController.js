@@ -51,10 +51,10 @@ async function verifierDoublonsMatiereClasse(enseignements, enseignantIdAExclure
     const enseignantExistant = tousLesEnseignants.find(enseignant => {
       // Exclure l'enseignant courant en cas de modification
       if (enseignantIdAExclure && enseignant.id === enseignantIdAExclure) return false;
-      
+
       // Vérifier si l'enseignant a cet enseignement
-      return enseignant.enseignements?.some(ens => 
-        ens.classeId === nouvelEns.classeId && 
+      return enseignant.enseignements?.some(ens =>
+        ens.classeId === nouvelEns.classeId &&
         ens.matiereId === nouvelEns.matiereId
       );
     });
@@ -199,12 +199,20 @@ export const enseignantController = {
     try {
       const db = getDb();
 
-      const seancesUtilisant = db.data.seances?.filter(s => s.enseignantId === id) || [];
-      if (seancesUtilisant.length > 0) {
-        throw new Error("Cet enseignant est utilisé dans l'emploi du temps. Supprimez d'abord ses séances.");
-      }
+      // Récupérer les séances de l'enseignant
+      const seances = db.data.seances?.filter(s => s.enseignantId === id) || [];
+
+      // Récupérer les IDs des matières enseignées par cet enseignant (optionnel)
+      const enseignements = db.data.enseignements?.filter(e => e.enseignantId === id) || [];
 
       await db.update((dbData) => {
+        // Supprimer les séances liées
+        dbData.seances = dbData.seances?.filter(s => s.enseignantId !== id) || [];
+
+        // Supprimer les enseignements liés
+        dbData.enseignements = dbData.enseignements?.filter(e => e.enseignantId !== id) || [];
+
+        // Supprimer l'enseignant
         dbData.enseignants = dbData.enseignants?.filter(e => e.id !== id) || [];
       });
 
@@ -214,7 +222,6 @@ export const enseignantController = {
       throw error;
     }
   },
-
   async search(searchTerm) {
     try {
       const db = getDb();

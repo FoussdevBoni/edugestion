@@ -6,10 +6,10 @@ import { cycleController } from './cycleController.js';
 // Fonction utilitaire pour enrichir un niveauClasse
 async function enrichirNiveauClasse(niveauClasse) {
   if (!niveauClasse) return null;
-  
+
   // Récupérer le cycle à partir de cycleId
   const cycle = await cycleController.getById(niveauClasse.cycleId);
-  
+
   return {
     ...niveauClasse,
     cycle: cycle?.nom || '',
@@ -22,13 +22,13 @@ export const niveauClasseController = {
     try {
       const db = getDb();
       const niveauxClasses = db.data.niveauxClasses || [];
-      
+
       // Enrichir chaque niveauClasse
       const niveauxEnrichis = [];
       for (const nc of niveauxClasses) {
         niveauxEnrichis.push(await enrichirNiveauClasse(nc));
       }
-      
+
       return niveauxEnrichis;
     } catch (error) {
       console.error("Erreur getAll niveauxClasses:", error);
@@ -51,13 +51,13 @@ export const niveauClasseController = {
     try {
       const db = getDb();
       const niveauxClasses = db.data.niveauxClasses?.filter(n => n.cycleId === cycleId) || [];
-      
+
       // Enrichir chaque niveauClasse
       const niveauxEnrichis = [];
       for (const nc of niveauxClasses) {
         niveauxEnrichis.push(await enrichirNiveauClasse(nc));
       }
-      
+
       return niveauxEnrichis;
     } catch (error) {
       console.error("Erreur getByCycle niveauClasse:", error);
@@ -69,7 +69,7 @@ export const niveauClasseController = {
     try {
       const db = getDb();
       const now = new Date().toISOString();
-      
+
       // Vérifier que le cycle existe
       const cycle = await cycleController.getById(data.cycleId);
       if (!cycle) {
@@ -87,7 +87,7 @@ export const niveauClasseController = {
       const existingNiveau = db.data.niveauxClasses?.find(
         n => n.nom === nomNiveau && n.cycleId === data.cycleId
       );
-      
+
       if (existingNiveau) {
         throw new Error(`Un niveau de classe "${nomNiveau}" existe déjà dans ce cycle`);
       }
@@ -127,7 +127,7 @@ export const niveauClasseController = {
       // Valider et préparer chaque niveau de classe
       for (let i = 0; i < niveauxData.length; i++) {
         const data = niveauxData[i];
-        
+
         try {
           // Vérifier que le cycle existe
           const cycle = await cycleController.getById(data.cycleId);
@@ -166,7 +166,7 @@ export const niveauClasseController = {
           const existingNiveauInDb = db.data.niveauxClasses?.find(
             n => n.nom === nomNiveau && n.cycleId === data.cycleId
           );
-          
+
           if (existingNiveauInDb) {
             errors.push({
               index: i,
@@ -180,7 +180,7 @@ export const niveauClasseController = {
           const duplicateInBatch = createdItems.find(
             item => item.nom === nomNiveau && item.cycleId === data.cycleId
           );
-          
+
           if (duplicateInBatch) {
             errors.push({
               index: i,
@@ -200,7 +200,7 @@ export const niveauClasseController = {
           };
 
           createdItems.push(newItem);
-          
+
         } catch (error) {
           errors.push({
             index: i,
@@ -235,7 +235,7 @@ export const niveauClasseController = {
         errors: errors,
         totalAttempted: niveauxData.length
       };
-      
+
     } catch (error) {
       console.error("Erreur createManyNiveauClasse:", error);
       throw error;
@@ -264,7 +264,7 @@ export const niveauClasseController = {
         const duplicateNiveau = db.data.niveauxClasses?.find(
           n => n.id !== id && n.nom === newNom && n.cycleId === newCycleId
         );
-        
+
         if (duplicateNiveau) {
           throw new Error(`Un niveau de classe "${newNom}" existe déjà dans ce cycle`);
         }
@@ -301,14 +301,54 @@ export const niveauClasseController = {
   async delete(id) {
     try {
       const db = getDb();
-      
-      // Vérifier si le niveau de classe est utilisé par des classes
-      const classesUtilisant = db.data.classes?.filter(c => c.niveauClasseId === id) || [];
-      if (classesUtilisant.length > 0) {
-        throw new Error("Ce niveau de classe est utilisé par des classes. Supprimez d'abord ces classes.");
-      }
+
+      // Récupérer les classes de ce niveau
+      const classes = db.data.classes?.filter(c => c.niveauClasseId === id) || [];
+      const classeIds = classes.map(c => c.id);
+
+      // Récupérer les inscriptions de ces classes
+      const inscriptions = db.data.inscriptions?.filter(i => classeIds.includes(i.classeId)) || [];
+      const inscriptionIds = inscriptions.map(i => i.id);
+
+      // Récupérer les matières de ce niveau
+      const matieres = db.data.matieres?.filter(m => m.niveauClasseId === id) || [];
+      const matiereIds = matieres.map(m => m.id);
+
+      // Récupérer les notes de ces matières
+      const notes = db.data.notes?.filter(n => matiereIds.includes(n.matiereId)) || [];
+
+      // Récupérer les séances de ces matières
+      const seances = db.data.seances?.filter(s => matiereIds.includes(s.matiereId)) || [];
+
+      // Récupérer les bulletins de ces inscriptions
+      const bulletins = db.data.bulletins?.filter(b => inscriptionIds.includes(b.inscriptionId)) || [];
+
+      // Récupérer les paiements de ces inscriptions
+      const paiements = db.data.paiements?.filter(p => inscriptionIds.includes(p.inscriptionId)) || [];
 
       await db.update((dbData) => {
+        // Supprimer les paiements
+        dbData.paiements = dbData.paiements?.filter(p => !inscriptionIds.includes(p.inscriptionId)) || [];
+
+        // Supprimer les bulletins
+        dbData.bulletins = dbData.bulletins?.filter(b => !inscriptionIds.includes(b.inscriptionId)) || [];
+
+        // Supprimer les notes
+        dbData.notes = dbData.notes?.filter(n => !matiereIds.includes(n.matiereId)) || [];
+
+        // Supprimer les séances
+        dbData.seances = dbData.seances?.filter(s => !matiereIds.includes(s.matiereId)) || [];
+
+        // Supprimer les inscriptions
+        dbData.inscriptions = dbData.inscriptions?.filter(i => !classeIds.includes(i.classeId)) || [];
+
+        // Supprimer les matières
+        dbData.matieres = dbData.matieres?.filter(m => m.niveauClasseId !== id) || [];
+
+        // Supprimer les classes
+        dbData.classes = dbData.classes?.filter(c => c.niveauClasseId !== id) || [];
+
+        // Supprimer le niveau de classe
         dbData.niveauxClasses = dbData.niveauxClasses?.filter(n => n.id !== id) || [];
       });
 
@@ -318,4 +358,5 @@ export const niveauClasseController = {
       throw error;
     }
   }
-};
+
+}

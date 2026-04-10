@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Plus, MoreVertical, FileText, Search, Calendar, Users } from "lucide-react";
+import { Plus, MoreVertical, FileText, Search, Calendar, Users, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Components
@@ -12,11 +12,13 @@ import ClasseFilter from "../../../components/wrappers/ClassesFilter";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
 import { Inscription } from "../../../utils/types/data";
 import useInscriptions from "../../../hooks/inscriptions/useInscriptions";
+import { alertSuccess } from "../../../helpers/alertError";
+import PageLayout from "../../../layouts/PageLayout";
+
 
 export default function InscriptionsPage() {
   const navigate = useNavigate();
   
-  // 1. Context & Data Hooks
   const { 
     niveauSelectionne, 
     cycleSelectionne, 
@@ -24,45 +26,36 @@ export default function InscriptionsPage() {
     classeSelectionne 
   } = useEcoleNiveau();
 
-  const { inscriptions, loading } = useInscriptions();
+  const { inscriptions, loading, deleteInscription } = useInscriptions();
 
-  // 2. Local UI State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInscription, setSelectedInscription] = useState<Inscription | null>(null);
   const [inscriptionToDelete, setInscriptionToDelete] = useState<Inscription | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedAnnee, setSelectedAnnee] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // 3. Logique des Années Disponibles
   const anneesDisponibles = useMemo(() => {
     return [...new Set(inscriptions.map(ins => ins.anneeScolaire))].sort().reverse();
   }, [inscriptions]);
 
-  // Initialisation auto sur l'année la plus récente
   useEffect(() => {
     if (anneesDisponibles.length > 0 && !selectedAnnee) {
       setSelectedAnnee(anneesDisponibles[0]);
     }
   }, [anneesDisponibles, selectedAnnee]);
 
-  // 4. LOGIQUE DE FILTRAGE EN CASCADE
-  
-  // Étape A : On filtre d'abord par l'année sélectionnée uniquement
-  // C'est cette donnée "propre" qu'on passe au ClasseFilter pour que les onglets soient cohérents
   const inscriptionsDeLAnnee = useMemo(() => {
     return inscriptions.filter(ins => !selectedAnnee || ins.anneeScolaire === selectedAnnee);
   }, [inscriptions, selectedAnnee]);
 
-  // Étape B : Filtrage final (Année + Onglets + Recherche)
   const filteredInscriptions = useMemo(() => {
     return inscriptionsDeLAnnee.filter(ins => {
-      // Filtres issus du Context (ClasseFilter)
       const matchesNiveauGlobal = !niveauSelectionne || ins.niveauScolaire === niveauSelectionne;
       const matchesCycleGlobal = !cycleSelectionne || ins.cycle === cycleSelectionne;
       const matchesNiveauClasse = !niveauClasseSelectionne || ins.niveauClasse === niveauClasseSelectionne;
       const matchesClasse = !classeSelectionne || ins.classe === classeSelectionne;
       
-      // Recherche textuelle
       const matchesSearch = 
         ins.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         ins.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -72,10 +65,20 @@ export default function InscriptionsPage() {
     });
   }, [inscriptionsDeLAnnee, niveauSelectionne, cycleSelectionne, niveauClasseSelectionne, classeSelectionne, searchTerm]);
 
-  // 5. Handlers
-  const handleDelete = () => {
-    console.log("Suppression de l'inscription:", inscriptionToDelete);
-    setInscriptionToDelete(null);
+
+
+  const handleDelete = async () => {
+    if (!inscriptionToDelete?.id) return;
+    setIsDeleting(true);
+    try {
+      await deleteInscription(inscriptionToDelete.id);
+      setInscriptionToDelete(null);
+      alertSuccess("Inscription supprimée avec succès");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const menuItems: Menu[] = [
@@ -98,26 +101,22 @@ export default function InscriptionsPage() {
   );
 
   return (
-    <div className="space-y-6">
-      {/* En-tête */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Inscriptions</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {filteredInscriptions.length} inscription{filteredInscriptions.length > 1 ? 's' : ''} affichée{filteredInscriptions.length > 1 ? 's' : ''}
-          </p>
-        </div>
-
+    <PageLayout
+      title="Inscriptions"
+      description={`${filteredInscriptions.length} inscription${filteredInscriptions.length > 1 ? 's' : ''} affichée${filteredInscriptions.length > 1 ? 's' : ''}`}
+      actions={
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] animate-fade-in-up"
         >
           <Plus size={18} /> Nouvelles inscriptions
         </button>
-      </div>
+      }
+    >
+    
 
       {/* Barre de Filtres Principaux */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
         <div className="relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
@@ -125,8 +124,16 @@ export default function InscriptionsPage() {
             placeholder="Rechercher un élève..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200"
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <span className="text-xs">✕</span>
+            </button>
+          )}
         </div>
 
         <div className="relative">
@@ -134,7 +141,7 @@ export default function InscriptionsPage() {
           <select
             value={selectedAnnee}
             onChange={(e) => setSelectedAnnee(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 appearance-none bg-white"
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200 appearance-none bg-white"
           >
             {anneesDisponibles.map(annee => (
               <option key={annee} value={annee}>{annee}</option>
@@ -143,22 +150,33 @@ export default function InscriptionsPage() {
         </div>
       </div>
 
-      {/* FILTRES PAR TABS (Niveau & Classe) */}
-      {/* On passe ici 'inscriptionsDeLAnnee' pour que les onglets se mettent à jour selon l'année */}
-      <ClasseFilter 
-        data={inscriptionsDeLAnnee}
-        getCycle={(ins) => ins.cycle}
-        getNiveauClasse={(ins) => ins.niveauClasse}
-        getClasse={(ins) => ins.classe}
-      />
+      {/* FILTRES PAR TABS */}
+      <div className="animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+        <ClasseFilter 
+          data={inscriptionsDeLAnnee}
+          getCycle={(ins) => ins.cycle}
+          getNiveauClasse={(ins) => ins.niveauClasse}
+          getClasse={(ins) => ins.classe}
+        />
+      </div>
 
       {/* Liste finale filtrée */}
-      <InscriptionsList 
-        inscriptions={filteredInscriptions} 
-        onAction={setSelectedInscription}
-      />
+      <div className="animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+        <InscriptionsList 
+          inscriptions={filteredInscriptions} 
+          onAction={setSelectedInscription}
+        />
+      </div>
 
-      {/* ... Modals (le reste du code est identique) ... */}
+      {/* Message si vide */}
+      {filteredInscriptions.length === 0 && (
+        <div className="text-center py-12 bg-gray-50 rounded-xl animate-fade-in-up" style={{ animationDelay: '700ms' }}>
+          <Users size={48} className="mx-auto text-gray-300 mb-3" />
+          <p className="text-gray-500">Aucune inscription trouvée</p>
+        </div>
+      )}
+
+      {/* Modals */}
       <MenuModal
         menu={menuItems}
         isOpen={isModalOpen}
@@ -198,10 +216,27 @@ export default function InscriptionsPage() {
         onClose={() => setInscriptionToDelete(null)}
         onConfirm={handleDelete}
         title="Supprimer l'inscription"
-        message={`Voulez-vous vraiment supprimer l'inscription de ${inscriptionToDelete?.prenom} ${inscriptionToDelete?.nom} ?`}
-        confirmText="Supprimer"
+        message={`Voulez-vous vraiment supprimer l'inscription de ${inscriptionToDelete?.prenom} ${inscriptionToDelete?.nom} ? Cette action est irréversible.`}
+        confirmText={isDeleting ? "Suppression..." : "Supprimer"}
         cancelText="Annuler"
       />
-    </div>
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
+    </PageLayout>
   );
 }

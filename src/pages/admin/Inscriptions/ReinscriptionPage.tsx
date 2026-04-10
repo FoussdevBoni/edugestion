@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Save, Search,
   ChevronRight, Info,
-  Trash2, History, CheckCircle2, GraduationCap, School
+   History, CheckCircle2, GraduationCap, School,
+  Users
 } from 'lucide-react';
 import { useEcoleNiveau } from '../../../hooks/filters/useEcoleNiveau';
 import useClasses from '../../../hooks/classes/useClasses';
@@ -11,13 +12,14 @@ import useEleves from '../../../hooks/eleves/useEleves';
 import { alertError, alertServerError, alertSuccess } from '../../../helpers/alertError';
 import useEcoleInfos from '../../../hooks/ecoleInfos/useEcoleInfos';
 
-// Type pour l'historique de session
 interface ActionHistory {
   classeSource: string;
   classeCible: string | 'SORTIE';
   nombre: number;
   type: 'REINSCRIPTION' | 'SORTIE_SIMPLE' | 'FIN_CYCLE';
 }
+
+
 
 export default function ReinscriptionPage() {
   const navigate = useNavigate();
@@ -26,7 +28,6 @@ export default function ReinscriptionPage() {
   const { eleves, reinscrireEleves, desactiverEleves } = useEleves();
   const { ecoleInfos, updateEcoleInfos } = useEcoleInfos();
 
-  // États locaux
   const [nouvelleAnnee, setNouvelleAnnee] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClasseSource, setSelectedClasseSource] = useState('');
@@ -35,14 +36,12 @@ export default function ReinscriptionPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [historique, setHistorique] = useState<ActionHistory[]>([]);
 
-  // Initialiser l'année scolaire locale quand les infos arrivent
   useEffect(() => {
     if (ecoleInfos?.anneeScolaire) {
       setNouvelleAnnee(ecoleInfos.anneeScolaire);
     }
   }, [ecoleInfos]);
 
-  // Classes filtrées selon le cycle et le niveau
   const classesFiltrees = classes.filter(classe => {
     const matchesNiveau = niveauSelectionne ? classe.niveauScolaire === niveauSelectionne : true;
     const matchesCycle = cycleSelectionne ? classe.cycle === cycleSelectionne : true;
@@ -60,7 +59,6 @@ export default function ReinscriptionPage() {
     eleve.matricule?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // --- LOGIQUE DE SELECTION ---
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedEleves(new Set(elevesFiltres.map(e => e.id)));
@@ -78,8 +76,6 @@ export default function ReinscriptionPage() {
     });
   };
 
-  // --- ACTIONS ---
-
   const handleUpdateAnnee = async () => {
     try {
       await updateEcoleInfos({ anneeScolaire: nouvelleAnnee });
@@ -87,10 +83,6 @@ export default function ReinscriptionPage() {
     } catch (e) { alertServerError(e); }
   };
 
-  /**
-   * CAS 2 : Changement d'école
-   * On désactive les sélectionnés, mais on ne touche ABSOLUMENT PAS au reste.
-   */
   const handleSortieSimple = async () => {
     if (selectedEleves.size === 0) return alertError('Sélectionnez les élèves qui quittent');
     if (!window.confirm(`Confirmer la sortie de ${selectedEleves.size} élèves pour changement d'école ?`)) return;
@@ -114,10 +106,6 @@ export default function ReinscriptionPage() {
     finally { setIsSubmitting(false); }
   };
 
-  /**
-   * CAS 1 : Fin de Cycle (BAC / Diplôme)
-   * On désactive les diplômés sélectionnés, et on réinscrit le RESTE comme redoublants.
-   */
   const handleFinCycle = async () => {
     if (selectedEleves.size === 0) return alertError('Sélectionnez les élèves diplômés');
     if (!window.confirm(`Action Fin de Cycle : Les diplômés seront sortis et TOUT le reste sera réinscrit comme redoublant. Confirmer ?`)) return;
@@ -127,10 +115,8 @@ export default function ReinscriptionPage() {
       const diplomesIds = Array.from(selectedEleves);
       const restants = elevesDeLaClasse.filter(e => !selectedEleves.has(e.id));
 
-      // 1. Sortie des bacheliers
       await desactiverEleves(diplomesIds);
 
-      // 2. Réinscription automatique des restants en Redoublant
       if (restants.length > 0) {
         await reinscrireEleves(restants, selectedClasseSource, nouvelleAnnee, "Redoublant");
       }
@@ -149,10 +135,6 @@ export default function ReinscriptionPage() {
     finally { setIsSubmitting(false); }
   };
 
-  /**
-   * ACTION 3 : Passage de classe
-   * Sélectionnés = Admis (Nouveau dans cible). Reste = Redoublant (dans source).
-   */
   const handleReinscrire = async () => {
     if (nouvelleAnnee !== ecoleInfos?.anneeScolaire) {
       alertError("Veuillez modifier l'année scolaire d'abord");
@@ -166,10 +148,8 @@ export default function ReinscriptionPage() {
       const admis = elevesDeLaClasse.filter(e => selectedEleves.has(e.id));
       const redoublants = elevesDeLaClasse.filter(e => !selectedEleves.has(e.id));
 
-      // Passage des admis
-           await reinscrireEleves(admis, selectedClasseCible, nouvelleAnnee, "Nouveau");
+      await reinscrireEleves(admis, selectedClasseCible, nouvelleAnnee, "Nouveau");
 
-      // Redoublement auto des autres
       if (redoublants.length > 0) {
         await reinscrireEleves(redoublants, selectedClasseSource, nouvelleAnnee, "Redoublant");
       }
@@ -193,45 +173,48 @@ export default function ReinscriptionPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-20">
       {/* HEADER & ANNÉE SCOLAIRE */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100 animate-fade-in-up">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/admin/eleves')} className="p-2 hover:bg-gray-100 rounded-lg">
-            <ArrowLeft size={20} />
+          <button onClick={() => navigate('/admin/eleves')} className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-300 group">
+            <ArrowLeft size={20} className="text-gray-600 group-hover:text-primary transition-colors" />
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Réinscription & Passage</h1>
-            <p className="text-sm text-gray-500">Gérez la transition vers la nouvelle année scolaire</p>
+            <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
+              <Users size={14} />
+              Gérez la transition vers la nouvelle année scolaire
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 bg-primary/5 p-2 rounded-lg border border-primary/10">
-          <span className="text-sm font-medium text-primary px-2">Année Scolaire :</span>
+        <div className="flex items-center gap-2 bg-gradient-to-r from-primary/5 to-primary/10 p-2 rounded-xl border border-primary/20">
+          <span className="text-sm font-semibold text-primary px-2">Année Scolaire :</span>
           <input
             type="text"
             value={nouvelleAnnee}
             onChange={(e) => setNouvelleAnnee(e.target.value)}
-            className="w-32 px-2 py-1 border rounded bg-white text-sm focus:ring-2 focus:ring-primary"
+            className="w-32 px-3 py-1.5 border border-gray-200 rounded-lg bg-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
           />
-          <button onClick={handleUpdateAnnee} className="p-1.5 bg-primary text-white rounded hover:bg-primary/90 shadow-sm">
+          <button onClick={handleUpdateAnnee} className="p-1.5 bg-gradient-to-r from-primary to-primary/80 text-white rounded-lg hover:shadow-md transition-all">
             <Save size={16} />
           </button>
         </div>
       </div>
 
-      {/* MESSAGE INFOS - TON DESIGN EXACT */}
-      <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg flex gap-3">
-        <Info className="text-blue-500 shrink-0" size={24} />
-        <div className="text-sm text-blue-800">
-          <p className="font-bold">Instructions importantes :</p>
+      {/* MESSAGE INFOS */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-primary rounded-r-xl p-5 flex gap-3 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+        <Info className="text-primary shrink-0" size={24} />
+        <div className="text-sm text-gray-700">
+          <p className="font-bold text-primary mb-1">Instructions importantes :</p>
           <p>1. <b>Sortie :</b> Gérez d'abord les départs via les boutons de désactivation.</p>
-          <p className="font-semibold text-red-700 underline mt-1">
+          <p className="font-semibold text-red-600 underline mt-1">
             2. <b>CAS 1 (Fin Cycle) :</b> Les élèves restants après la sortie des diplômés sont considérés comme REDOUBLANTS.
           </p>
-          <p className="font-semibold text-red-700 underline">
-            2. <b>CAS 2 (Sortie Simple) :</b> Si un élève change d'école, le reste n'est pas réinscrit automatiquement.
+          <p className="font-semibold text-red-600 underline">
+            3. <b>CAS 2 (Sortie Simple) :</b> Si un élève change d'école, le reste n'est pas réinscrit automatiquement.
           </p>
           <p className="mt-1">
-            3. <b>Réinscrire :</b> Les sélectionnés passent en classe supérieure, le reste est réinscrit en Redoublant.
+            4. <b>Réinscrire :</b> Les sélectionnés passent en classe supérieure, le reste est réinscrit en Redoublant.
           </p>
         </div>
       </div>
@@ -239,13 +222,15 @@ export default function ReinscriptionPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* SÉLECTION CLASSES */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Classe Source (Actuelle)</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md">
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-2 flex items-center gap-1">
+                <School size={14} /> Classe Source (Actuelle)
+              </label>
               <select
                 value={selectedClasseSource}
                 onChange={(e) => setSelectedClasseSource(e.target.value)}
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary"
+                className="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
               >
                 <option value="">-- Choisir la source --</option>
                 {classesFiltrees.map(c => (
@@ -254,16 +239,18 @@ export default function ReinscriptionPage() {
               </select>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-              <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Classe Cible (Destination)</label>
+            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md">
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-2 flex items-center gap-1">
+                <GraduationCap size={14} /> Classe Cible (Destination)
+              </label>
               <select
                 value={selectedClasseCible}
                 onChange={(e) => setSelectedClasseCible(e.target.value)}
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary"
+                className="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
               >
                 <option value="">-- Choisir la cible --</option>
                 {classes.map(c => (
-                  <option key={c.id} value={c.id}>{c.nom} - {c.niveauClasse}</option>
+                  <option key={c.id} value={c.id}>{c.nom}</option>
                 ))}
               </select>
             </div>
@@ -271,35 +258,34 @@ export default function ReinscriptionPage() {
 
           {/* LISTE ÉLÈVES */}
           {selectedClasseSource && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-4 border-b bg-gray-50 flex flex-wrap items-center justify-between gap-4">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+              <div className="p-5 border-b bg-gradient-to-r from-gray-50 to-gray-100 flex flex-wrap items-center justify-between gap-4">
                 <div className="relative flex-1 min-w-[200px]">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                    <Search size={18} />
-                  </span>
+                  <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
-                    type="text" placeholder="Rechercher..."
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg"
+                    type="text" placeholder="Rechercher un élève..."
+                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                     value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <label className="flex items-center gap-2 cursor-pointer select-none">
+                <label className="flex items-center gap-2 cursor-pointer select-none px-3 py-1.5 bg-white rounded-lg hover:bg-gray-50 transition-colors">
                   <input
                     type="checkbox"
                     checked={selectedEleves.size === elevesFiltres.length && elevesFiltres.length > 0}
                     onChange={(e) => handleSelectAll(e.target.checked)}
                     className="w-4 h-4 rounded text-primary"
                   />
-                  <span className="text-sm font-medium">Tout sélectionner</span>
+                  <span className="text-sm font-medium text-gray-700">Tout sélectionner</span>
                 </label>
               </div>
 
-              <div className="divide-y max-h-[400px] overflow-y-auto">
-                {elevesFiltres.map(eleve => (
+              <div className="divide-y divide-gray-100 max-h-[400px] overflow-y-auto">
+                {elevesFiltres.map((eleve, idx) => (
                   <div
                     key={eleve.id}
                     onClick={() => toggleEleve(eleve.id)}
-                    className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors ${selectedEleves.has(eleve.id) ? 'bg-primary/5' : ''}`}
+                    className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-all duration-200 ${selectedEleves.has(eleve.id) ? 'bg-primary/5' : ''} animate-fade-in-up`}
+                    style={{ animationDelay: `${400 + idx * 20}ms` }}
                   >
                     <input
                       type="checkbox" readOnly
@@ -307,41 +293,39 @@ export default function ReinscriptionPage() {
                       className="w-4 h-4 rounded text-primary mr-4"
                     />
                     <div className="flex-1">
-                      <p className="font-bold text-gray-800">{eleve.prenom} {eleve.nom}</p>
-                      <p className="text-xs text-gray-500">{eleve.matricule || 'Sans matricule'}</p>
+                      <p className="font-semibold text-gray-800">{eleve.prenom} {eleve.nom}</p>
+                      <p className="text-xs text-gray-500 font-mono">{eleve.matricule || 'Sans matricule'}</p>
                     </div>
-                    <div className="text-right text-xs text-gray-400 uppercase font-bold">{eleve.sexe}</div>
+                    <div className="text-right text-xs font-bold text-gray-400 uppercase">{eleve.sexe}</div>
                   </div>
                 ))}
               </div>
 
-              {/* BARRE D'ACTIONS FIXE - SÉPARATION DES CAS */}
-              <div className="p-4 bg-gray-50 border-t flex flex-wrap justify-between items-center gap-4">
-                <div className="flex flex-wrap gap-2">
+              {/* BARRE D'ACTIONS */}
+              <div className="p-5 bg-gray-50 border-t border-gray-100 flex flex-wrap justify-between items-center gap-4">
+                <div className="flex flex-wrap gap-3">
                   <button
                     disabled={isSubmitting || selectedEleves.size === 0}
                     onClick={handleSortieSimple}
-                    className="flex items-center gap-2 px-3 py-2 bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-50 text-xs font-bold"
-                    title="L'élève change d'établissement"
+                    className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-100 disabled:opacity-50 text-sm font-semibold transition-all"
                   >
                     <School size={16} /> Changement École
                   </button>
                   <button
                     disabled={isSubmitting || selectedEleves.size === 0}
                     onClick={handleFinCycle}
-                    className="flex items-center gap-2 px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 disabled:opacity-50 text-xs font-bold"
-                    title="Obtention diplôme (BAC) : Réinscrit le reste en redoublant"
+                    className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-xl hover:bg-red-100 disabled:opacity-50 text-sm font-semibold transition-all"
                   >
                     <GraduationCap size={16} /> Fin Cycle (Diplôme)
                   </button>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <span className="hidden sm:inline text-sm font-bold text-gray-600">{selectedEleves.size} sélectionné(s)</span>
+                  <span className="hidden sm:inline text-sm font-bold text-primary">{selectedEleves.size} sélectionné(s)</span>
                   <button
                     disabled={isSubmitting || selectedEleves.size === 0 || !selectedClasseCible}
                     onClick={handleReinscrire}
-                    className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 shadow-md transition-all font-bold"
+                    className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md disabled:opacity-50 transition-all font-bold"
                   >
                     {isSubmitting ? 'Traitement...' : 'Réinscrire'} <ChevronRight size={18} />
                   </button>
@@ -352,26 +336,26 @@ export default function ReinscriptionPage() {
         </div>
 
         {/* COLONNE HISTORIQUE */}
-        <div className="space-y-4">
-          <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+        <div className="space-y-4 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+          <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md">
             <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <History size={20} className="text-gray-400" />
+              <History size={20} className="text-primary" />
               Classes déjà gérées
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[500px] overflow-y-auto">
               {historique.length === 0 ? (
-                <div className="text-center py-8 border-2 border-dashed border-gray-100 rounded-lg">
+                <div className="text-center py-8 border-2 border-dashed border-gray-100 rounded-xl">
                   <p className="text-sm text-gray-400 italic">Aucune classe traitée dans cette session</p>
                 </div>
               ) : (
                 historique.map((h, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 bg-green-50 border border-green-100 rounded-lg">
+                  <div key={i} className="flex items-start gap-3 p-3 bg-green-50 border border-green-100 rounded-xl transition-all duration-200 hover:shadow-sm">
                     <CheckCircle2 className="text-green-500 shrink-0" size={18} />
                     <div>
                       <p className="text-sm font-bold text-green-900">{h.classeSource}</p>
                       <p className="text-xs text-green-700">
-                        {h.type === 'REINSCRIPTION' && `Passage vers ${h.classeCible}`}
+                        {h.type === 'REINSCRIPTION' && `Passage vers ${h.classeCible} (${h.nombre} élèves)`}
                         {h.type === 'SORTIE_SIMPLE' && `Sortie simple (${h.nombre} élèves)`}
                         {h.type === 'FIN_CYCLE' && `Fin de cycle (${h.nombre} diplômés)`}
                       </p>
@@ -383,6 +367,23 @@ export default function ReinscriptionPage() {
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+// src/hooks/ecoleInfos/useEcoleImages.ts
+import { useEffect, useState, useCallback } from 'react';
 import useEcoleInfos from './useEcoleInfos';
 import { photoService } from '../../services/photoService';
 
@@ -10,33 +11,38 @@ export default function useEcoleImages() {
   const [imageError, setImageError] = useState<string | null>(null);
   const [uploadLoading, setUploadLoading] = useState(false);
 
-  // Charger les images en base64 pour l'affichage
-  useEffect(() => {
-    const loadImages = async () => {
-      if (!ecole) return;
-      
-      setImageLoading(true);
-      setImageError(null);
-      
-      try {
-        if (ecole.logo) {
-          const base64 = await photoService.getFileBase64(ecole.logo, 'upload');
-          setLogoUrl(base64);
-        }
-        if (ecole.enTeteCarte) {
-          const base64 = await photoService.getFileBase64(ecole.enTeteCarte, 'upload');
-          setEnTeteUrl(base64);
-        }
-      } catch (error) {
-        console.error("Erreur chargement images:", error);
-        setImageError("Erreur lors du chargement des images");
-      } finally {
-        setImageLoading(false);
+  // Fonction de chargement des images
+  const loadImages = useCallback(async () => {
+    if (!ecole) return;
+    
+    setImageLoading(true);
+    setImageError(null);
+    
+    try {
+      if (ecole.logo) {
+        const base64 = await photoService.getFileBase64(ecole.logo, 'upload');
+        setLogoUrl(base64);
+      } else {
+        setLogoUrl(null);
       }
-    };
-
-    loadImages();
+      if (ecole.enTeteCarte) {
+        const base64 = await photoService.getFileBase64(ecole.enTeteCarte, 'upload');
+        setEnTeteUrl(base64);
+      } else {
+        setEnTeteUrl(null);
+      }
+    } catch (error) {
+      console.error("Erreur chargement images:", error);
+      setImageError("Erreur lors du chargement des images");
+    } finally {
+      setImageLoading(false);
+    }
   }, [ecole]);
+
+  // Recharger les images quand l'école change
+  useEffect(() => {
+    loadImages();
+  }, [loadImages]);
 
   // Upload du logo
   const uploadLogo = async (file: File) => {
@@ -61,9 +67,6 @@ export default function useEcoleImages() {
         nom: `logo_${Date.now()}.jpg`
       });
 
-      // Mettre à jour l'URL locale pour affichage
-      setLogoUrl(base64);
-
       // Mettre à jour l'école avec le nouveau nom de fichier
       if (ecole) {
         await updateEcoleInfos({
@@ -71,6 +74,11 @@ export default function useEcoleImages() {
           logo: result.fileName
         });
       }
+
+      // Forcer le rechargement des images après mise à jour
+      // Le useEffect se déclenchera automatiquement car ecole change
+      // Mais pour être immédiat, on met à jour l'URL localement
+      setLogoUrl(base64);
 
       return result;
     } catch (error) {
@@ -82,6 +90,11 @@ export default function useEcoleImages() {
     }
   };
 
+  // Fonction pour forcer le rechargement manuel (utile après suppression d'image)
+  const refreshImages = useCallback(() => {
+    loadImages();
+  }, [loadImages]);
+
   return {
     logoUrl,
     enTeteUrl,
@@ -90,6 +103,7 @@ export default function useEcoleImages() {
     uploadLoading,
     ecoleLoading,
     ecoleError,
-    uploadLogo
+    uploadLogo,
+    refreshImages
   };
 }

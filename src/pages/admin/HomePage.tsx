@@ -1,13 +1,11 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // --- Composant pour chaque bouton de raccourci ---
 const MenuShortcut = ({ icon, label, path, onNavigate }: { icon: string; label: string; path: string; onNavigate: (path: string) => void }) => (
   <div 
     onClick={() => onNavigate(path)}
-    className="flex flex-col items-center justify-center p-4 transition-all duration-300 hover:scale-105 hover:shadow-xl rounded-2xl cursor-pointer group bg-white/80 backdrop-blur-sm border border-white/50 hover:border-primary/30"
+    className="flex flex-col items-center justify-center p-4 transition-all duration-300 hover:scale-105 hover:shadow-xl rounded-2xl cursor-pointer group bg-white/90 backdrop-blur-sm border border-white/50 hover:border-primary/30"
   >
-    {/* Conteneur de l'image */}
     <div className="w-20 h-20 flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
       <img 
         src={icon} 
@@ -15,7 +13,6 @@ const MenuShortcut = ({ icon, label, path, onNavigate }: { icon: string; label: 
         className="max-w-full max-h-full object-contain"
       />
     </div>
-    {/* Texte */}
     <span className="text-[13px] font-bold text-slate-700 text-center leading-tight uppercase tracking-wide group-hover:text-primary transition-colors">
       {label}
     </span>
@@ -45,14 +42,8 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50
-     to-indigo-100 font-sans overflow-x-hidden py-5">
-      {/* Header avec dégradé */}
-      <header className="w-full bg-gradient-to-r from-primary/90 to-primary/70 backdrop-blur-sm border-b border-white/20 py-6 mb-10 shadow-lg">
-        <h1 className="text-center text-2xl font-extrabold text-white tracking-tight drop-shadow-md">
-          APPLICATION DE GESTION SCOLAIRE
-        </h1>
-      </header>
+<div className="min-h-screen bg-primary font-sans overflow-x-hidden py-5 rounded-3xl">
+      
 
       {/* Zone de contenu principale */}
       <main className="max-w-5xl mx-auto px-4">
@@ -60,16 +51,16 @@ const HomePage = () => {
         <div className="flex flex-col items-center mb-12">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-16 h-px bg-primary/30"></div>
+              <div className="w-16 h-px bg-white/40"></div>
             </div>
-            <h2 className="relative px-6 text-xl font-bold text-slate-700 uppercase tracking-widest bg-gradient-to-r from-slate-50 via-blue-50 to-indigo-100 inline-block">
+            <h2 className="relative px-6 text-xl font-bold text-white uppercase tracking-widest bg-white/20 backdrop-blur-sm inline-block rounded-full">
               Portail Scolaire
             </h2>
             <div className="absolute inset-0 flex items-center justify-end">
-              <div className="w-16 h-px bg-primary/30"></div>
+              <div className="w-16 h-px bg-white/40"></div>
             </div>
           </div>
-          <div className="w-20 h-1 bg-primary/50 rounded-full mt-3"></div>
+          <div className="w-20 h-1 bg-white/60 rounded-full mt-3"></div>
         </div>
 
         {/* Grille de 4 colonnes avec animation */}
@@ -91,7 +82,10 @@ const HomePage = () => {
         </div>
       </main>
 
-
+      {/* Footer */}
+      <footer className="mt-12 py-4 text-center text-sm text-white/70 border-t border-white/20">
+        <p>© {new Date().getFullYear()} - Application de Gestion Scolaire</p>
+      </footer>
 
       {/* Styles d'animation */}
       <style>{`

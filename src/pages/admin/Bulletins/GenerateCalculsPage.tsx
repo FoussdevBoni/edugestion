@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, RefreshCw, CheckCircle, Filter, Search, X, Settings, ChevronDown, ChevronUp, Save, AlertCircle } from "lucide-react";
+import { ArrowLeft, RefreshCw, CheckCircle, Filter, Search, X, Settings, ChevronDown, ChevronUp, Save, AlertCircle, Users, BookOpen, GraduationCap } from "lucide-react";
 import useBulletins from "../../../hooks/bulletins/useBulletins";
 import usePeriodes from "../../../hooks/periodes/usePeriodes";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
@@ -22,24 +22,19 @@ export default function GenerateCalculsPage() {
   const [generating, setGenerating] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
-  // Filtres par statut
   const [statusFilter, setStatusFilter] = useState<"all" | "complet" | "incomplet" | "a_finaliser">("all");
-
   const [activeFilterTab, setActiveFilterTab] = useState<"niveaux" | "classes" | "tous">("tous");
   const [selectedNiveaux, setSelectedNiveaux] = useState<string[]>([]);
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
 
-  // Configuration
   const [showConfig, setShowConfig] = useState(false);
   const [configData, setConfigData] = useState<BaseConfigBulletin>({
     interrogation: { actif: true, mode: 'moyenne' },
     devoir: { actif: true, mode: 'conserver' },
     composition: { actif: true, mode: 'conserver' }
   });
-
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // LOGIQUE DE SYNCHRONISATION : On ne synchronise que si config est chargé et qu'on n'a pas de modifs en cours
   useEffect(() => {
     if (config) {
       setConfigData({
@@ -70,7 +65,6 @@ export default function GenerateCalculsPage() {
 
   const handleSaveConfig = async () => {
     try {
-      console.log('configData' , configData)
       await saveConfig(configData);
       setHasUnsavedChanges(false);
       setMessage({ type: 'success', text: 'Configuration sauvegardée avec succès !' });
@@ -81,36 +75,30 @@ export default function GenerateCalculsPage() {
     }
   };
 
-  // Filtrer les bulletins selon les filtres
   const bulletinsFiltres = useMemo(() => {
     let filtered = bulletins;
 
     if (selectedPeriode) {
       filtered = filtered.filter(b => b.periodeId === selectedPeriode);
     }
-
     if (statusFilter !== "all") {
       filtered = filtered.filter(b => b.status === statusFilter);
     }
-
     if (cycleSelectionne) {
-      filtered = filtered.filter(b => b.eleve.cycle === cycleSelectionne);
+      filtered = filtered.filter(b => b.eleve?.cycle === cycleSelectionne);
     }
-
     if (activeFilterTab === "niveaux" && selectedNiveaux.length > 0) {
-      filtered = filtered.filter(b => selectedNiveaux.includes(b.eleve.niveauClasse));
+      filtered = filtered.filter(b => selectedNiveaux.includes(b.eleve?.niveauClasse));
     }
-
     if (activeFilterTab === "classes" && selectedClasses.length > 0) {
-      filtered = filtered.filter(b => selectedClasses.includes(b.eleve.classe));
+      filtered = filtered.filter(b => selectedClasses.includes(b.eleve?.classe));
     }
-
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(b =>
-        b.eleve.nom.toLowerCase().includes(term) ||
-        b.eleve.prenom.toLowerCase().includes(term) ||
-        b.eleve.matricule.toLowerCase().includes(term)
+        b.eleve?.nom?.toLowerCase().includes(term) ||
+        b.eleve?.prenom?.toLowerCase().includes(term) ||
+        b.eleve?.matricule?.toLowerCase().includes(term)
       );
     }
 
@@ -118,11 +106,11 @@ export default function GenerateCalculsPage() {
   }, [bulletins, selectedPeriode, statusFilter, cycleSelectionne, activeFilterTab, selectedNiveaux, selectedClasses, searchTerm]);
 
   const niveauxUniques = useMemo(() => {
-    return [...new Set(bulletins.map(b => b.eleve.niveauClasse).filter(Boolean))].sort();
+    return [...new Set(bulletins.map(b => b.eleve?.niveauClasse).filter(Boolean))].sort();
   }, [bulletins]);
 
   const classesUniques = useMemo(() => {
-    return [...new Set(bulletins.map(b => b.eleve.classe).filter(Boolean))].sort();
+    return [...new Set(bulletins.map(b => b.eleve?.classe).filter(Boolean))].sort();
   }, [bulletins]);
 
   const handleSelectAll = () => {
@@ -162,7 +150,6 @@ export default function GenerateCalculsPage() {
       setTimeout(() => setMessage(null), 3000);
       return;
     }
-
     if (selectedBulletins.length === 0) {
       setMessage({ type: 'error', text: 'Veuillez sélectionner au moins un bulletin' });
       setTimeout(() => setMessage(null), 3000);
@@ -172,16 +159,11 @@ export default function GenerateCalculsPage() {
     setGenerating(true);
     try {
       const result = await generateMultiple(selectedPeriode, selectedBulletins, configData);
-
       if (result.success.length > 0) {
-        setMessage({
-          type: 'success',
-          text: `Calculs terminés : ${result.success.length} bulletins traités avec succès`
-        });
+        setMessage({ type: 'success', text: `Calculs terminés : ${result.success.length} bulletins traités avec succès` });
       } else {
         setMessage({ type: 'error', text: 'Aucun bulletin n\'a pu être traité' });
       }
-
       setTimeout(() => setMessage(null), 5000);
     } catch (error) {
       setMessage({ type: 'error', text: 'Erreur lors des calculs' });
@@ -213,10 +195,14 @@ export default function GenerateCalculsPage() {
   }, [bulletinsFiltres]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-lg">
-          <ArrowLeft size={20} className="text-gray-600" />
+    <div className="space-y-6 pb-8">
+      {/* En-tête avec animation */}
+      <div className="flex items-center gap-4 animate-fade-in-up">
+        <button 
+          onClick={() => navigate(-1)} 
+          className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-300 group"
+        >
+          <ArrowLeft size={20} className="text-gray-600 group-hover:text-primary transition-colors" />
         </button>
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Génération des calculs</h1>
@@ -226,25 +212,28 @@ export default function GenerateCalculsPage() {
         </div>
       </div>
 
+      {/* Message flottant */}
       {message && (
-        <div className={`fixed bottom-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg ${message.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' :
-          message.type === 'error' ? 'bg-red-50 text-red-700 border border-red-200' :
-            'bg-blue-50 text-blue-700 border border-blue-200'
+        <div className={`fixed bottom-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg animate-slide-in-right ${message.type === 'success' ? 'bg-gradient-to-r from-green-50 to-green-100 text-green-700 border border-green-200' :
+          message.type === 'error' ? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 border border-red-200' :
+            'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border border-blue-200'
           }`}>
           {message.type === 'success' && <CheckCircle size={18} />}
           {message.type === 'error' && <AlertCircle size={18} />}
-          <span>{message.text}</span>
+          <span className="text-sm font-medium">{message.text}</span>
         </div>
       )}
 
       {/* Section Configuration */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '100ms' }}>
         <button
           onClick={() => setShowConfig(!showConfig)}
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
         >
-          <div className="flex items-center gap-2">
-            <Settings size={18} className="text-primary" />
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Settings size={18} className="text-primary" />
+            </div>
             <span className="font-semibold text-gray-800">Configuration du calcul des notes</span>
             {!config && (
               <span className="ml-2 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">
@@ -252,107 +241,57 @@ export default function GenerateCalculsPage() {
               </span>
             )}
             {hasUnsavedChanges && (
-              <span className="ml-2 px-2 py-0.5 bg-orange-100 text-orange-700 text-xs rounded-full">
+              <span className="ml-2 px-2 py-0.5 bg-orange-100 text-orange-700 text-xs rounded-full animate-pulse">
                 Modifications non sauvegardées
               </span>
             )}
           </div>
-          {showConfig ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          {showConfig ? <ChevronUp size={18} className="text-gray-500" /> : <ChevronDown size={18} className="text-gray-500" />}
         </button>
 
         {showConfig && (
-          <div className="px-6 pb-6 border-t pt-4">
+          <div className="px-6 pb-6 border-t pt-4 animate-fade-in">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-medium text-gray-800">Interrogations</h3>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={configData.interrogation.actif}
-                      onChange={(e) => handleConfigChange('interrogation', 'actif', e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-                  </label>
-                </div>
-                {configData.interrogation.actif && (
-                  <div>
-                    <label className="text-sm text-gray-600">Mode</label>
-                    <select
-                      value={configData.interrogation.mode}
-                      onChange={(e) => handleConfigChange('interrogation', 'mode', e.target.value as ModeCalcule)}
-                      className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50"
-                    >
-                      <option value="moyenne">Moyenne des interrogations</option>
-                      <option value="conserver">Conserver chaque note</option>
-                    </select>
+              {[
+                { type: 'interrogation', title: 'Interrogations', color: 'blue' },
+                { type: 'devoir', title: 'Devoirs', color: 'green' },
+                { type: 'composition', title: 'Compositions', color: 'purple' }
+              ].map((item, idx) => (
+                <div key={item.type} className={`border-2 rounded-xl p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up`} style={{ animationDelay: `${200 + idx * 100}ms` }}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-gray-800">{item.title}</h3>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={configData[item.type as keyof BaseConfigBulletin].actif}
+                        onChange={(e) => handleConfigChange(item.type as keyof BaseConfigBulletin, 'actif', e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
                   </div>
-                )}
-              </div>
-
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-medium text-gray-800">Devoirs</h3>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={configData.devoir.actif}
-                      onChange={(e) => handleConfigChange('devoir', 'actif', e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-                  </label>
+                  {configData[item.type as keyof BaseConfigBulletin].actif && (
+                    <div>
+                      <label className="text-sm text-gray-600">Mode de calcul</label>
+                      <select
+                        value={configData[item.type as keyof BaseConfigBulletin].mode}
+                        onChange={(e) => handleConfigChange(item.type as keyof BaseConfigBulletin, 'mode', e.target.value as ModeCalcule)}
+                        className="w-full mt-2 px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200"
+                      >
+                        <option value="moyenne">Moyenne des {item.title.toLowerCase()}</option>
+                        <option value="conserver">Conserver chaque note</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
-                {configData.devoir.actif && (
-                  <div>
-                    <label className="text-sm text-gray-600">Mode</label>
-                    <select
-                      value={configData.devoir.mode}
-                      onChange={(e) => handleConfigChange('devoir', 'mode', e.target.value as ModeCalcule)}
-                      className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50"
-                    >
-                      <option value="moyenne">Moyenne des devoirs</option>
-                      <option value="conserver">Conserver chaque note</option>
-                    </select>
-                  </div>
-                )}
-              </div>
-
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-medium text-gray-800">Compositions</h3>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={configData.composition.actif}
-                      onChange={(e) => handleConfigChange('composition', 'actif', e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-                  </label>
-                </div>
-                {configData.composition.actif && (
-                  <div>
-                    <label className="text-sm text-gray-600">Mode</label>
-                    <select
-                      value={configData.composition.mode}
-                      onChange={(e) => handleConfigChange('composition', 'mode', e.target.value as ModeCalcule)}
-                      className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50"
-                    >
-                      <option value="moyenne">Moyenne des compositions</option>
-                      <option value="conserver">Conserver chaque note</option>
-                    </select>
-                  </div>
-                )}
-              </div>
+              ))}
             </div>
 
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end mt-6">
               <button
                 onClick={handleSaveConfig}
                 disabled={saving || !hasUnsavedChanges}
-                className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50"
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] disabled:opacity-50"
               >
                 <Save size={16} />
                 {saving ? "Sauvegarde..." : "Sauvegarder la configuration"}
@@ -362,33 +301,66 @@ export default function GenerateCalculsPage() {
         )}
       </div>
 
+      {/* Statistiques (si période sélectionnée) */}
       {selectedPeriode && (
-        <div className="grid grid-cols-4 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-            <span className="text-sm text-blue-600">Total</span>
-            <p className="text-2xl font-bold text-blue-700">{stats.total}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 p-4 transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Total</p>
+                <p className="text-3xl font-bold text-blue-800 mt-1">{stats.total}</p>
+              </div>
+              <div className="p-2 bg-white/50 rounded-xl">
+                <Users size={20} className="text-blue-600" />
+              </div>
+            </div>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg border border-green-100">
-            <span className="text-sm text-green-600">Complets</span>
-            <p className="text-2xl font-bold text-green-700">{stats.complets}</p>
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl border border-green-200 p-4 transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-green-700 uppercase tracking-wider">Complets</p>
+                <p className="text-3xl font-bold text-green-800 mt-1">{stats.complets}</p>
+              </div>
+              <div className="p-2 bg-white/50 rounded-xl">
+                <CheckCircle size={20} className="text-green-600" />
+              </div>
+            </div>
           </div>
-          <div className="bg-orange-50 p-4 rounded-lg border border-orange-100">
-            <span className="text-sm text-orange-600">Incomplets</span>
-            <p className="text-2xl font-bold text-orange-700">{stats.incomplets}</p>
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200 p-4 transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-orange-700 uppercase tracking-wider">Incomplets</p>
+                <p className="text-3xl font-bold text-orange-800 mt-1">{stats.incomplets}</p>
+              </div>
+              <div className="p-2 bg-white/50 rounded-xl">
+                <AlertCircle size={20} className="text-orange-600" />
+              </div>
+            </div>
           </div>
-          <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
-            <span className="text-sm text-yellow-600">À finaliser</span>
-            <p className="text-2xl font-bold text-yellow-700">{stats.aFinaliser}</p>
+          <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl border border-yellow-200 p-4 transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-yellow-700 uppercase tracking-wider">À finaliser</p>
+                <p className="text-3xl font-bold text-yellow-800 mt-1">{stats.aFinaliser}</p>
+              </div>
+              <div className="p-2 bg-white/50 rounded-xl">
+                <GraduationCap size={20} className="text-yellow-600" />
+              </div>
+            </div>
           </div>
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">1. Sélectionner une période</h2>
+      {/* Sélection période */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <div className="w-1 h-6 bg-primary rounded-full"></div>
+          1. Sélectionner une période
+        </h2>
         <select
           value={selectedPeriode}
           onChange={(e) => setSelectedPeriode(e.target.value)}
-          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50"
+          className="w-full max-w-md px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200 bg-white"
         >
           <option value="">Choisir une période</option>
           {periodes.map(p => (
@@ -397,55 +369,40 @@ export default function GenerateCalculsPage() {
         </select>
       </div>
 
+      {/* Filtres et sélection */}
       {selectedPeriode && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '500ms' }}>
           <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="w-1 h-6 bg-primary rounded-full"></div>
             <Filter size={18} className="text-primary" />
             2. Filtrer les bulletins
           </h2>
 
+          {/* Filtre statut */}
           <div className="mb-6">
             <p className="text-sm font-medium text-gray-700 mb-2">Statut</p>
             <div className="flex gap-2 flex-wrap">
-              <button
-                onClick={() => setStatusFilter("all")}
-                className={`px-4 py-2 rounded-lg text-sm transition-colors ${statusFilter === "all"
-                  ? 'bg-primary text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-              >
-                Tous
-              </button>
-              <button
-                onClick={() => setStatusFilter("complet")}
-                className={`px-4 py-2 rounded-lg text-sm transition-colors ${statusFilter === "complet"
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-              >
-                Complets
-              </button>
-              <button
-                onClick={() => setStatusFilter("incomplet")}
-                className={`px-4 py-2 rounded-lg text-sm transition-colors ${statusFilter === "incomplet"
-                  ? 'bg-orange-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-              >
-                Incomplets
-              </button>
-              <button
-                onClick={() => setStatusFilter("a_finaliser")}
-                className={`px-4 py-2 rounded-lg text-sm transition-colors ${statusFilter === "a_finaliser"
-                  ? 'bg-yellow-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-              >
-                À finaliser
-              </button>
+              {[
+                { id: "all", label: "Tous", color: "gray" },
+                { id: "complet", label: "Complets", color: "green" },
+                { id: "incomplet", label: "Incomplets", color: "orange" },
+                { id: "a_finaliser", label: "À finaliser", color: "yellow" }
+              ].map(btn => (
+                <button
+                  key={btn.id}
+                  onClick={() => setStatusFilter(btn.id as any)}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${statusFilter === btn.id
+                      ? `bg-${btn.color}-600 text-white shadow-md`
+                      : `bg-gray-100 text-gray-700 hover:bg-gray-200`
+                    }`}
+                >
+                  {btn.label}
+                </button>
+              ))}
             </div>
           </div>
 
+          {/* Tabs filtres */}
           <div className="mb-6">
             <TabsHorizontalScrollable
               tabs={[
@@ -455,7 +412,7 @@ export default function GenerateCalculsPage() {
               ]}
               activeTab={activeFilterTab}
               onTabChange={(tab) => {
-                setActiveFilterTab(tab as "niveaux" | "classes" | "tous");
+                setActiveFilterTab(tab as any);
                 setSelectedNiveaux([]);
                 setSelectedClasses([]);
                 setSelectedBulletins([]);
@@ -464,17 +421,18 @@ export default function GenerateCalculsPage() {
             />
           </div>
 
-          {activeFilterTab === "niveaux" && (
-            <div className="mb-4">
+          {/* Filtres par niveau */}
+          {activeFilterTab === "niveaux" && niveauxUniques.length > 0 && (
+            <div className="mb-4 animate-fade-in">
               <p className="text-sm text-gray-600 mb-2">Cliquez sur les niveaux :</p>
               <div className="flex flex-wrap gap-2">
                 {niveauxUniques.map(niveau => (
                   <button
                     key={niveau}
                     onClick={() => toggleNiveau(niveau)}
-                    className={`px-4 py-2 rounded-full text-sm transition-colors ${selectedNiveaux.includes(niveau)
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${selectedNiveaux.includes(niveau)
+                        ? 'bg-gradient-to-r from-primary to-primary/80 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                   >
                     {niveau}
@@ -484,17 +442,18 @@ export default function GenerateCalculsPage() {
             </div>
           )}
 
-          {activeFilterTab === "classes" && (
-            <div className="mb-4">
+          {/* Filtres par classe */}
+          {activeFilterTab === "classes" && classesUniques.length > 0 && (
+            <div className="mb-4 animate-fade-in">
               <p className="text-sm text-gray-600 mb-2">Cliquez sur les classes :</p>
               <div className="flex flex-wrap gap-2">
                 {classesUniques.map(classe => (
                   <button
                     key={classe}
                     onClick={() => toggleClasse(classe)}
-                    className={`px-4 py-2 rounded-full text-sm transition-colors ${selectedClasses.includes(classe)
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${selectedClasses.includes(classe)
+                        ? 'bg-gradient-to-r from-primary to-primary/80 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                   >
                     {classe}
@@ -504,18 +463,11 @@ export default function GenerateCalculsPage() {
             </div>
           )}
 
-          {cycleSelectionne && (
-            <div className="mb-4">
-              <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
-                Cycle: {cycleSelectionne}
-              </span>
-            </div>
-          )}
-
+          {/* Filtres actifs */}
           {(selectedNiveaux.length > 0 || selectedClasses.length > 0 || statusFilter !== "all") && (
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-4 animate-fade-in">
               {statusFilter !== "all" && (
-                <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs flex items-center gap-1">
+                <span className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-full text-xs flex items-center gap-1">
                   Statut: {statusFilter === 'complet' ? 'Complets' : statusFilter === 'incomplet' ? 'Incomplets' : 'À finaliser'}
                   <button onClick={() => setStatusFilter("all")} className="hover:text-purple-900">
                     <X size={12} />
@@ -523,7 +475,7 @@ export default function GenerateCalculsPage() {
                 </span>
               )}
               {selectedNiveaux.map(niveau => (
-                <span key={niveau} className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs flex items-center gap-1">
+                <span key={niveau} className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs flex items-center gap-1">
                   Niveau: {niveau}
                   <button onClick={() => toggleNiveau(niveau)} className="hover:text-blue-900">
                     <X size={12} />
@@ -531,7 +483,7 @@ export default function GenerateCalculsPage() {
                 </span>
               ))}
               {selectedClasses.map(classe => (
-                <span key={classe} className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs flex items-center gap-1">
+                <span key={classe} className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs flex items-center gap-1">
                   Classe: {classe}
                   <button onClick={() => toggleClasse(classe)} className="hover:text-green-900">
                     <X size={12} />
@@ -542,9 +494,10 @@ export default function GenerateCalculsPage() {
           )}
 
           <p className="text-sm text-gray-600 mb-4">
-            Filtres : <span className="font-medium text-primary">{getFilterInfo()}</span> · <strong>{bulletinsFiltres.length}</strong> bulletin(s) trouvé(s)
+            Filtres : <span className="font-medium text-primary">{getFilterInfo()}</span> · <strong className="text-gray-800">{bulletinsFiltres.length}</strong> bulletin(s) trouvé(s)
           </p>
 
+          {/* Recherche */}
           <div className="relative mb-4">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
@@ -552,79 +505,89 @@ export default function GenerateCalculsPage() {
               placeholder="Rechercher un élève..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50"
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all duration-200"
             />
           </div>
 
-          <div className="border rounded-lg overflow-hidden">
-            <div className="bg-gray-50 px-4 py-3 border-b flex items-center justify-between">
+          {/* Liste des bulletins */}
+          <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-3 border-b flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={selectAll}
                   onChange={handleSelectAll}
-                  className="w-4 h-4 text-primary rounded"
+                  className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary/20"
                 />
-                <span className="text-sm font-medium">Tous les bulletins ({bulletinsFiltres.length})</span>
+                <span className="text-sm font-medium text-gray-700">Tous les bulletins ({bulletinsFiltres.length})</span>
               </label>
-              <span className="text-sm text-gray-500">{selectedBulletins.length} sélectionné(s)</span>
+              <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full">{selectedBulletins.length} sélectionné(s)</span>
             </div>
 
-            <div className="max-h-80 overflow-y-auto">
-              {bulletinsFiltres.map(bulletin => (
-                <div key={bulletin.id} className="px-4 py-3 border-b hover:bg-gray-50 flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedBulletins.includes(bulletin.id)}
-                    onChange={() => toggleBulletin(bulletin.id)}
-                    className="w-4 h-4 text-primary rounded mr-3"
-                  />
-                  <div>
-                    <p className="font-medium">{bulletin.eleve.prenom} {bulletin.eleve.nom}</p>
-                    <p className="text-xs text-gray-500">
-                      {bulletin.eleve.matricule} - {bulletin.eleve.classe} - {bulletin.periode}
-                    </p>
-                  </div>
-                  <div className="ml-auto">
-                    <span className={`px-2 py-1 rounded-full text-xs ${bulletin.status === 'complet' ? 'bg-green-100 text-green-700' :
-                      bulletin.status === 'incomplet' ? 'bg-orange-100 text-orange-700' :
-                        'bg-yellow-100 text-yellow-700'
-                      }`}>
-                      {bulletin.status === 'complet' ? 'Complet' :
-                        bulletin.status === 'incomplet' ? 'Incomplet' : 'À finaliser'}
-                    </span>
-                  </div>
+            <div className="max-h-80 overflow-y-auto divide-y divide-gray-100">
+              {bulletinsFiltres.map((bulletin, idx) => (
+                <div key={bulletin.id} className={`px-4 py-3 hover:bg-gray-50 transition-colors duration-200 animate-fade-in-up`} style={{ animationDelay: `${600 + idx * 20}ms` }}>
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedBulletins.includes(bulletin.id)}
+                      onChange={() => toggleBulletin(bulletin.id)}
+                      className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary/20 mr-3"
+                    />
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-800">{bulletin.eleve?.prenom} {bulletin.eleve?.nom}</p>
+                      <p className="text-xs text-gray-500">
+                        {bulletin.eleve?.matricule} - {bulletin.eleve?.classe} - {bulletin.periode}
+                      </p>
+                    </div>
+                    <div className="ml-auto">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${bulletin.status === 'complet' ? 'bg-green-100 text-green-700' :
+                          bulletin.status === 'incomplet' ? 'bg-orange-100 text-orange-700' :
+                            'bg-yellow-100 text-yellow-700'
+                        }`}>
+                        {bulletin.status === 'complet' ? 'Complet' :
+                          bulletin.status === 'incomplet' ? 'Incomplet' : 'À finaliser'}
+                      </span>
+                    </div>
+                  </label>
                 </div>
               ))}
               {bulletinsFiltres.length === 0 && (
-                <div className="text-center py-8 text-gray-500">Aucun bulletin trouvé</div>
+                <div className="text-center py-12 text-gray-500">
+                  <AlertCircle size={32} className="mx-auto mb-2 text-gray-400" />
+                  Aucun bulletin trouvé
+                </div>
               )}
             </div>
           </div>
         </div>
       )}
 
+      {/* Lancer les calculs */}
       {selectedPeriode && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">3. Lancer les calculs</h2>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '700ms' }}>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div className="w-1 h-6 bg-primary rounded-full"></div>
+            3. Lancer les calculs
+          </h2>
           <p className="text-sm text-gray-500 mb-4">
-            Calcule les moyennes pour <strong>{selectedBulletins.length}</strong> bulletin(s) sélectionné(s).
+            Calcule les moyennes pour <strong className="text-primary">{selectedBulletins.length}</strong> bulletin(s) sélectionné(s).
           </p>
 
           <button
             onClick={handleGenerate}
             disabled={!selectedPeriode || selectedBulletins.length === 0 || generating}
-            className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl hover:shadow-md transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
           >
-            <RefreshCw size={18} />
+            <RefreshCw size={18} className={generating ? "animate-spin" : ""} />
             {generating ? "Calcul en cours..." : `Lancer les calculs (${selectedBulletins.length})`}
           </button>
 
           {generateResult && generateResult.success.length > 0 && (
-            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-xl animate-fade-in">
               <div className="flex items-center gap-2 text-green-700 mb-2">
                 <CheckCircle size={18} />
-                <span>Calculs terminés</span>
+                <span className="font-medium">Calculs terminés</span>
               </div>
               <div className="flex gap-4 text-sm">
                 <span className="text-green-700">Succès: {generateResult.success.length}</span>
@@ -636,6 +599,48 @@ export default function GenerateCalculsPage() {
           )}
         </div>
       )}
+
+      <style>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s ease-out forwards;
+          opacity: 0;
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out forwards;
+          opacity: 0;
+        }
+        .animate-slide-in-right {
+          animation: slideInRight 0.3s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
