@@ -1,15 +1,32 @@
 // src/components/admin/rows/InscriptionRow.tsx
-import { MoreVertical, Calendar, User } from "lucide-react";
+import { Calendar, User } from "lucide-react";
 import { Inscription } from "../../../utils/types/data";
 import { useState } from "react";
 import { useElevePhoto } from "../../../hooks/photos/useElevePhoto";
+import TableRow from "../../ui/tables/TableRow";
 
 interface InscriptionRowProps {
   inscription: Inscription;
   onAction: (inscription: Inscription) => void;
+  onSelect?: (inscription: Inscription, isSelected: boolean) => void;
+  isSelected?: boolean;
+  selectable?: boolean;
 }
 
-export default function InscriptionRow({ inscription, onAction }: InscriptionRowProps) {
+export default function InscriptionRow({
+  inscription,
+  onAction,
+  onSelect,
+  isSelected = false,
+  selectable = false
+}: InscriptionRowProps) {
+  const [imageError, setImageError] = useState(false);
+  const { photoUrl, loading } = useElevePhoto(inscription.matricule || '');
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('fr-FR', {
@@ -18,16 +35,6 @@ export default function InscriptionRow({ inscription, onAction }: InscriptionRow
       year: 'numeric'
     });
   };
-
-
-    const [imageError, setImageError] = useState(false);
-    const { photoUrl, loading } = useElevePhoto(inscription.matricule || '');
-  
-    
-  
-    const handleImageError = () => {
-      setImageError(true);
-    };
 
   const getStatutPayementColor = (statut: string) => {
     switch (statut) {
@@ -56,16 +63,23 @@ export default function InscriptionRow({ inscription, onAction }: InscriptionRow
   };
 
   return (
-    <tr className="hover:bg-gray-50 border-b border-gray-200">
+    <TableRow
+      item={inscription}
+      onAction={onAction}
+      onSelect={onSelect}
+      isSelected={isSelected}
+      selectable={selectable}
+      actionable={true}
+    >
       <td className="py-3 px-4">
         <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
             {loading ? (
               <div className="w-full h-full animate-pulse bg-gray-200" />
             ) : photoUrl && !imageError ? (
-              <img 
-                src={photoUrl} 
-                alt={`${inscription.prenom} ${inscription.nom}`} 
+              <img
+                src={photoUrl}
+                alt={`${inscription.prenom} ${inscription.nom}`}
                 className="w-full h-full object-cover"
                 onError={handleImageError}
               />
@@ -107,14 +121,6 @@ export default function InscriptionRow({ inscription, onAction }: InscriptionRow
       <td className="py-3 px-4 text-gray-600">
         <span className="text-sm">{inscription.anneeScolaire}</span>
       </td>
-      <td className="py-3 px-4 text-right">
-        <button
-          onClick={() => onAction(inscription)}
-          className="p-1.5 rounded hover:bg-gray-200 transition-colors"
-        >
-          <MoreVertical size={18} className="text-gray-500" />
-        </button>
-      </td>
-    </tr>
+    </TableRow>
   );
 }

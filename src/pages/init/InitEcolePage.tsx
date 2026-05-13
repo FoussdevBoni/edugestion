@@ -1,11 +1,11 @@
 // src/pages/init/InitEcolePage.tsx
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { School, Info, Loader2, Check, Plus } from "lucide-react";
 import { ecoleInfosService } from "../../services/ecoleInfosService";
 import { alertServerError } from "../../helpers/alertError";
 import { initialisationService } from "../../services/initialisationService";
-
+import logo from '/logo.png'
 interface NiveauDisponible {
   nom: string;
   ordre: number;
@@ -129,12 +129,12 @@ export default function InitEcolePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-primary flex items-center justify-center p-4">
       <div className="max-w-3xl w-full bg-white rounded-xl shadow-lg p-8">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <School size={32} className="text-primary" />
-          </div>
+          <Link to={"/"} className="w-30 h-30 bg-primary/10 p-5 rounded-full flex items-center justify-center mx-auto mb-4">
+           <img src={logo} alt="" />
+          </Link>
           <h1 className="text-2xl font-bold text-gray-800">Configuration rapide</h1>
           <p className="text-gray-500 mt-2">
             Remplissez les informations essentielles pour commencer

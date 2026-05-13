@@ -10,6 +10,11 @@ export function initPhotoHandlers() {
     return await photoController.uploadPhotos(data);
   });
 
+    // Pour photo élève (upload unique)
+  ipcMain.handle('photo:uploadElevePhoto', async (_, data) => {
+    return await photoController.uploadElevePhoto(data);
+  });
+
   // Pour fichiers génériques (logo, en-tête, etc.)
   ipcMain.handle('photo:uploadFile', async (_, data) => {
     return await photoController.uploadFile(data);

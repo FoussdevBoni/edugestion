@@ -26,6 +26,8 @@ export default function BulletinsList({
     { header: "Élève", className: "w-1/4" },
     { header: "Classe", className: "w-1/6" },
     { header: "Moyenne", className: "w-1/6" },
+    { header: "Moy Ann", className: "w-1/6" },
+
     { header: "Rang", className: "w-1/6" },
     { header: "Conduite", className: "w-1/6" },
     { header: "Statut", className: "w-1/6" },

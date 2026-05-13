@@ -1,22 +1,23 @@
 // src/services/statsService.ts
 import { invokeIpc } from "../utils/invokeIpc";
 
+// src/services/statsService.ts
+
 export interface StatsComptabilite {
   periode: {
     debut: string;
     fin: string;
   };
   resume: {
-    totalPaiements: number;
-    totalAchats: number;
-    totalCharges: number;
-    totalSorties: number;
+    totalEntrees: number;      // paiements + ventes
+    totalSorties: number;      // achats + charges
     solde: number;
   };
   details: {
-    paiements: number;
-    achats: number;
-    charges: number;
+    paiements: { count: number; total: number };
+    ventes: { count: number; total: number };
+    achats: { count: number; total: number };
+    charges: { count: number; total: number };
   };
   graphiques: {
     evolution: Array<{
@@ -24,7 +25,22 @@ export interface StatsComptabilite {
       entree: number;
       sortie: number;
     }>;
-    chargesParCategorie: Record<string, number>;
+    entreesParMode: Record<string, number>;
+    sortiesParMode: Record<string, number>;
+  };
+  top: {
+    entrees: Array<{
+      id: string;
+      montant: number;
+      motif: string;
+      date: string;
+    }>;
+    sorties: Array<{
+      id: string;
+      montant: number;
+      motif: string;
+      date: string;
+    }>;
   };
 }
 
@@ -43,50 +59,32 @@ export interface StatsStock {
 
 export interface StatsDashboard {
   stats: {
-    eleves: number;
+    totalNiveauxClasse: number;
+    totalClasses: number;
+    totalEleves: number;
     enseignants: number;
-    classes: number;
     caisseMois: number;
   };
-  repartition: {
-    parClasse: Array<{
-      classeId: string;
-      nomClasse: string;
-      count: number;
-    }>;
-    parNiveauClasse: Array<{
-      niveauClasse: string;
-      count: number;
-    }>;
-    parCycle: Array<{
-      cycle: string;
-      count: number;
-    }>;
-    parNiveauScolaire: Array<{
-      niveauScolaire: string;
-      count: number;
-    }>;
-  };
-  bulletinsDisponibles: Array<{
+
+  parNiveauClasse: Array<{
+    niveauClasseId: string;
+    nomNiveauClasse: string;
+    nombreClasses: number;
+  }>;
+
+  parClasse: Array<{
     classeId: string;
     nomClasse: string;
-    count: number;
+    totalEleves: number;
+    filles: number;
+    garcons: number;
   }>;
+
   alertes: {
     impayes: Array<{
       id: string;
       eleve: string;
       montant: number;
-      classe: string;
-    }>;
-    bulletinsAFinaliser: Array<{
-      id: string;
-      eleve: {
-        nom: string;
-        prenom: string;
-        matricule: string;
-        classe: string;
-      };
       classe: string;
     }>;
     stockBas: Array<{
@@ -107,7 +105,7 @@ export const statsService = {
     return await invokeIpc('stats:stock');
   },
 
-  async getDashboard(): Promise<StatsDashboard> {
-    return await invokeIpc('stats:dashboard');
+  async getDashboard(payload: { niveauScolaire?: string }): Promise<StatsDashboard> {
+    return await invokeIpc('stats:dashboard', payload);
   }
 };

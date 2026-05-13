@@ -2,6 +2,7 @@
 import { getDb } from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
 import { transactionController } from './transactionController.js';
+import { sortDataByDate } from '../utils/sortDataByDate.js';
 
 export const chargeController = {
   async getAll() {
@@ -9,6 +10,8 @@ export const chargeController = {
       const db = getDb();
       const charges = db.data.charges || [];
       const transactions = db.data.transactions || [];
+
+            const sortedCharges = sortDataByDate(charges , "date")
 
       return charges.map(charge => ({
         ...charge,
@@ -50,7 +53,7 @@ export const chargeController = {
         montant: data.montant,
         motif: data.categorie,
         description: data.libelle,
-        date: data.date,
+        date: data.date || now,
         modePaiement: data.modePaiement,
         createdBy: data.createdBy,
         metaData: { type: 'charge', categorie: data.categorie }

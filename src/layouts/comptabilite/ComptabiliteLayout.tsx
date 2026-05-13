@@ -22,6 +22,10 @@ export default function ComptabiliteLayout({ children }: ConfigurationLayoutProp
             label: "Les achats",
             path: "/achats"
         },
+        {
+            label: "Les ventes",
+            path: "/ventes"
+        },
          {
             label: "Les charges",
             path: "/charges"

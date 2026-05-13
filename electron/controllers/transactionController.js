@@ -1,12 +1,15 @@
 // electron/controllers/transactionController.js
 import { getDb } from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
+import { sortDataByDate } from '../utils/sortDataByDate.js';
 
 export const transactionController = {
   async getAll() {
     try {
       const db = getDb();
-      return db.data.transactions || [];
+
+      const transactions = sortDataByDate(db.data.transactions || [] , 'date')
+      return transactions;
     } catch (error) {
       console.error("Erreur getAll transactions:", error);
       throw error;

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { initDb } from './db.js';
@@ -30,6 +30,7 @@ import { initConfigBulletinHandlers } from './handlers/configBulletinHandlers.js
 import { initImportHandlers } from './handlers/importHandlers.js';
 import { initInitialisationHandlers } from './handlers/initialisationHandlers.js';
 import { initResetHandlers } from './handlers/resetHandlers.js';
+import { initVenteHandlers } from './handlers/venteHandlers.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,13 +42,10 @@ function createWindow() {
     title: "EduGestion",
     // Utilise l'icône selon l'environnement
     icon: path.join(__dirname, "../assets/icon.png"),
-    titleBarStyle: 'hidden',
-    frame: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.cjs'),
-
+      preload: path.join(__dirname, 'preload.cjs')
     }
   });
 
@@ -55,7 +53,6 @@ function createWindow() {
   const isDev = !app.isPackaged;
 
   if (isDev) {
-
 
     // En développement, on charge l'URL de Vite
     win.loadURL('http://localhost:5173');
@@ -96,33 +93,15 @@ app.whenReady().then(async () => {
     initPaiementHandlers();
     initMouvementStockHandlers();
     initStatsHandlers(),
-      initBulletinHandlers();
+    initBulletinHandlers();
     initPhotoHandlers();
     initLicenceHandlers();
     initConfigBulletinHandlers();
     initImportHandlers();
     initInitialisationHandlers()
-    initResetHandlers()
+    initResetHandlers();
+    initVenteHandlers();
     createWindow();
-
-    ipcMain.on('window:minimize', () => {
-      const win = BrowserWindow.getFocusedWindow();
-      win?.minimize();
-    });
-
-    ipcMain.on('window:maximize', () => {
-      const win = BrowserWindow.getFocusedWindow();
-      if (win?.isMaximized()) {
-        win.unmaximize();
-      } else {
-        win?.maximize();
-      }
-    });
-
-    ipcMain.on('window:close', () => {
-      const win = BrowserWindow.getFocusedWindow();
-      win?.close();
-    });
   } catch (err) {
     console.error("Échec du démarrage :", err);
   }

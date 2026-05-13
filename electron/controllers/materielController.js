@@ -2,12 +2,14 @@
 import { getDb } from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
 import { mouvementStockController } from './mouvementStockController.js';
+import { sortDataByDate } from '../utils/sortDataByDate.js';
 
 export const materielController = {
   async getAll() {
     try {
       const db = getDb();
-      return db.data.materiels || [];
+      const materiels = sortDataByDate(db.data.materiels || [], "createdAt")
+      return materiels;
     } catch (error) {
       console.error("Erreur getAll materiels:", error);
       throw error;

@@ -3,6 +3,7 @@ import { getDb } from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
 import { transactionController } from './transactionController.js';
 import { inscriptionController } from './inscriptionController.js';
+import { sortDataByDate } from '../utils/sortDataByDate.js';
 
 // Fonction utilitaire pour enrichir un paiement
 async function enrichirPaiement(paiement) {
@@ -96,7 +97,7 @@ export const paiementController = {
         return paiementsEnrichis[0];
       }
       
-      return paiementsEnrichis;
+      return sortDataByDate(paiementsEnrichis , 'datePayement');
     } catch (error) {
       console.error("Erreur getData paiements:", error);
       throw error;

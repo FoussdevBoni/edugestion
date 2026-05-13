@@ -1,6 +1,7 @@
 // electron/controllers/inscriptionController.js
 import { getDb } from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
+import { sortDataByDate } from '../utils/sortDataByDate.js';
 
 // Fonction utilitaire pour enrichir une inscription
 function enrichirInscription(inscription) {
@@ -102,7 +103,8 @@ export const inscriptionController = {
         return inscriptionsEnrichies[0];
       }
 
-      return inscriptionsEnrichies;
+      const sortedData = sortDataByDate(inscriptionsEnrichies)
+      return sortedData;
     } catch (error) {
       console.error("Erreur getData inscriptions:", error);
       throw error;
@@ -123,7 +125,8 @@ export const inscriptionController = {
   },
 
   async getByEleve(eleveDataId) {
-    return this.getData({ eleveDataId }, { unique: true });
+  
+    return this.getData({ eleveDataId } , { unique: true });
   },
 
   async getByClasse(classeId) {
@@ -313,7 +316,6 @@ export const inscriptionController = {
   },
 
   async update(id, data) {
-          console.log({id , data})
 
     try {
       const db = getDb();

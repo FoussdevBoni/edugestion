@@ -15,6 +15,7 @@ import EcoleRequired from "../../components/auth/EcoleRequired"
 import MatiereNav from "./Configuration/Matiere/MatiereNav"
 import ClasseNav from "./Configuration/Classe/ClasseNav"
 import PortailScolaire from "../../pages/admin/HomePage"
+import DataNav from "./Data/DataNav"
 
 const MainNav = () => {
   return (
@@ -32,6 +33,8 @@ const MainNav = () => {
       <Route path='/notes/*' element={<NoteNav />} />
       <Route path='/comptabilite/*' element={<ComptabiliteNav />} />
       <Route path='/bulletins/*' element={<BulletinNav />} />
+      <Route path='/data/*' element={<DataNav />} />
+
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   )

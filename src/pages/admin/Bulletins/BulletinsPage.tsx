@@ -1,5 +1,5 @@
 // src/pages/admin/bulletins/BulletinsPage.tsx
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Download, Plus, Eye, RefreshCw, AlertTriangle, CheckCircle, Edit, FileText } from "lucide-react";
 
@@ -46,18 +46,38 @@ export default function BulletinsPage() {
     niveauSelectionne, cycleSelectionne, niveauClasseSelectionne, classeSelectionne
   } = useEcoleNiveau();
 
-  const { bulletins, handleDownload, loading, getStats, deleteBulletin,
+  const { bulletins, handleDownload, loading, deleteBulletin,
     deleteManyBulletins, saveBulletin } = useBulletins({});
   const { periodes } = usePeriodes();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPeriode, setSelectedPeriode] = useState("");
+  // Prendre la première période par défaut
+  const [selectedPeriode, setSelectedPeriode] = useState<string>(periodes[0]?.id);
   const [selectedBulletin, setSelectedBulletin] = useState<Bulletin | null>(null);
   const [bulletinToDelete, setBulletinToDelete] = useState<Bulletin | null>(null);
-  const stats = useMemo(() => getStats(), [bulletins, getStats]);
+
+  const stats = useMemo(() => {
+    const bulletinsDeLaPeriode = bulletins.filter(b => b.periodeId === selectedPeriode);
+
+    const total = bulletinsDeLaPeriode.length;
+    const complets = bulletinsDeLaPeriode.filter(b => b.status === "complet").length;
+    const incomplets = bulletinsDeLaPeriode.filter(b => b.status === "incomplet").length;
+    const aFinaliser = bulletinsDeLaPeriode.filter(b => b.status === "a_finaliser").length;
+
+    return { total, complets, incomplets, aFinaliser };
+  }, [bulletins, selectedPeriode]);
+
   const [itemsToDelete, setItemsToDelete] = useState<string[] | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
+  // Initialiser selectedPeriode avec la première période dès que periodes est chargé
+  useEffect(() => {
+    if (periodes.length > 0 && !selectedPeriode) {
+      setSelectedPeriode(periodes[0].id);
+    }
+  }, [periodes, selectedPeriode]);
+
+  // Filtrer les bulletins UNIQUEMENT par période sélectionnée (plus de "Toutes les périodes")
   const filteredBulletins = useMemo(() => {
     return bulletins.filter(b => {
       const el = b.eleve;
@@ -74,7 +94,8 @@ export default function BulletinsPage() {
         (el.prenom?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
         (el.matricule?.toLowerCase() || "").includes(searchTerm.toLowerCase());
 
-      const matchesPeriode = !selectedPeriode || b.periodeId === selectedPeriode;
+      // Filtrage strict par période - plus d'option "Toutes"
+      const matchesPeriode = b.periodeId === selectedPeriode;
 
       return matchesGlobal && matchesLocalTabs && matchesSearch && matchesPeriode;
     });
@@ -137,7 +158,7 @@ export default function BulletinsPage() {
   return (
     <PageLayout
       title="Bulletins"
-      description={`${filteredBulletins.length} bulletin${filteredBulletins.length > 1 ? 's' : ''} affiché${filteredBulletins.length > 1 ? 's' : ''}`}
+      description={`${filteredBulletins.length} bulletin${filteredBulletins.length > 1 ? 's' : ''} - Période : ${periodes.find(p => p.id === selectedPeriode)?.nom || ''}`}
       actions={
         <div className="flex items-center gap-3 animate-fade-in-up" style={{ animationDelay: '0ms' }}>
           <button
@@ -165,6 +186,8 @@ export default function BulletinsPage() {
         items: [
           { label: "Voir le bulletin", icon: Eye, onClick: () => navigate("/admin/bulletins/details", { state: selectedBulletin }) },
           { label: "Modifier", icon: Edit, onClick: () => navigate("/admin/bulletins/update", { state: selectedBulletin }) },
+          { label: "Voir l'aperçu PDF", icon: FileText, onClick: () => navigate("/admin/bulletins/pdf-viewer", { state: selectedBulletin }) },
+
           {
             label: "Télécharger PDF", icon: Download,
             onClick: () => { if (selectedBulletin) handleDownload(selectedBulletin); }
@@ -188,7 +211,7 @@ export default function BulletinsPage() {
         <StatCard label="À finaliser" value={stats.aFinaliser} color="yellow" icon={<Edit size={20} />} delay={400} />
       </div>
 
-      {/* Barre de recherche et Période */}
+      {/* Barre de recherche et sélection période */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
         <div className="md:col-span-2 relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -206,7 +229,6 @@ export default function BulletinsPage() {
           onChange={(e) => setSelectedPeriode(e.target.value)}
           className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-white transition-all duration-200"
         >
-          <option value="">Toutes les périodes</option>
           {periodes.map(p => (
             <option key={p.id} value={p.id}>{p.nom}</option>
           ))}
@@ -216,7 +238,7 @@ export default function BulletinsPage() {
       {/* FILTRE PAR TABS */}
       <div className="animate-fade-in-up" style={{ animationDelay: '600ms' }}>
         <ClasseFilter
-          data={bulletins}
+          data={bulletins.filter(b => b.periodeId === selectedPeriode)}
           getCycle={(b) => b.eleve?.cycle || ""}
           getNiveauClasse={(b) => b.eleve?.niveauClasse || ""}
           getClasse={(b) => b.eleve?.classe || ""}

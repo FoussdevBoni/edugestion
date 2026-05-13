@@ -10,8 +10,10 @@ import {
 
   mettreAJourTousLesRangs,
   enrichirBulletin,
-  calculerRecapitulatifAnnuel
+  calculerRecapitulatifAnnuel,
+  calculerRecapitulatifsAnnuelGroupes
 } from '../helpers/bulletinHelpers.js';
+import { sortDataByDate } from '../utils/sortDataByDate.js';
 
 export const bulletinController = {
   /**
@@ -21,7 +23,8 @@ export const bulletinController = {
     try {
       const db = getDb();
       const bulletins = db.data.bulletins || [];
-      return await Promise.all(bulletins.map(b => enrichirBulletin(b)));
+      const sortedBulletins = sortDataByDate(bulletins, "createdAt")
+      return await Promise.all(sortedBulletins.map(b => enrichirBulletin(b)));
     } catch (error) {
       console.error("[bulletinController.getAll] Erreur:", error);
       throw error;
@@ -49,7 +52,9 @@ export const bulletinController = {
     try {
       const db = getDb();
       const bulletins = db.data.bulletins?.filter(b => b.periodeId === periodeId) || [];
-      return await Promise.all(bulletins.map(b => enrichirBulletin(b)));
+      const sortedBulletins = sortDataByDate(bulletins, "createdAt")
+
+      return await Promise.all(sortedBulletins.map(b => enrichirBulletin(b)));
     } catch (error) {
       console.error(`[bulletinController.getByPeriode] Erreur:`, error);
       throw error;
@@ -68,8 +73,10 @@ export const bulletinController = {
       const bulletins = db.data.bulletins?.filter(b =>
         b.periodeId === periodeId && inscriptionIds.has(b.inscriptionId)
       ) || [];
+      const sortedBulletins = sortDataByDate(bulletins, "createdAt")
 
-      return await Promise.all(bulletins.map(b => enrichirBulletin(b)));
+
+      return await Promise.all(sortedBulletins.map(b => enrichirBulletin(b)));
     } catch (error) {
       console.error(`[bulletinController.getByClasseAndPeriode] Erreur:`, error);
       throw error;
@@ -209,13 +216,17 @@ export const bulletinController = {
   /**
    * Génère des bulletins en masse - VERSION OPTIMISÉE
    */
+
+  /**
+   * Génère des bulletins en masse - VERSION OPTIMISÉE
+   */
   async generateMultiple(data) {
     try {
       const { periodeId, bulletinIds, config } = data;
       const results = { success: [], errors: [] };
       const db = getDb();
 
-      // Récupérer tous les bulletins en une fois
+      // Récupérer tous les bulletins
       const bulletins = [];
       let classeId = null;
 
@@ -229,9 +240,7 @@ export const bulletinController = {
         }
       }
 
-      if (bulletins.length === 0) {
-        return results;
-      }
+      if (bulletins.length === 0) return results;
 
       // Récupérer toutes les inscriptions en une fois
       const inscriptionsMap = new Map();
@@ -244,96 +253,129 @@ export const bulletinController = {
 
       // Calculer l'effectif de la classe
       const effectif = await calculerEffectifClasse(classeId);
+      const now = new Date().toISOString();
 
-      // Générer chaque bulletin
-      const bulletinsGeneres = [];
+      // ÉTAPE 1: Calculer tous les bulletins en mémoire
+      const bulletinsCalcules = [];
 
       for (const bulletin of bulletins) {
-        try {
-          const inscription = inscriptionsMap.get(bulletin.inscriptionId);
-          if (!inscription) {
-            results.errors.push({ bulletinId: bulletin.id, error: "Inscription non trouvée" });
-            continue;
-          }
+        const inscription = inscriptionsMap.get(bulletin.inscriptionId);
+        if (!inscription) {
+          results.errors.push({ bulletinId: bulletin.id, error: "Inscription non trouvée" });
+          continue;
+        }
 
-          // Calculer les moyennes
-          const calculs = await calculerMoyennes(
-            bulletin.inscriptionId,
-            periodeId,
-            config,
-            bulletin.vieScolaire?.conduite
-          );
+        const calculs = await calculerMoyennes(
+          bulletin.inscriptionId,
+          periodeId,
+          config,
+          bulletin.vieScolaire?.conduite
+        );
 
-          // Calculer le récapitulatif annuel
-          const recapAnnuel = await calculerRecapitulatifAnnuel(bulletin.inscriptionId, periodeId);
+        let status;
+        let notesManquantes = [];
 
-          // Déterminer le statut
-          let status;
-          let notesManquantes = [];
+        if (!calculs.bulletinComplet) {
+          status = BULLETIN_STATUS.INCOMPLET;
+          notesManquantes = calculs.matieresManquantes || [];
+        } else {
+          const aConduite = bulletin.vieScolaire?.conduite !== null &&
+            bulletin.vieScolaire?.conduite !== undefined &&
+            bulletin.vieScolaire?.conduite !== "";
 
-          if (!calculs.bulletinComplet) {
-            status = BULLETIN_STATUS.INCOMPLET;
-            notesManquantes = calculs.matieresManquantes || [];
+          if (aConduite) {
+            status = BULLETIN_STATUS.COMPLET;
           } else {
-            const aConduite = bulletin.vieScolaire?.conduite !== null &&
-              bulletin.vieScolaire?.conduite !== undefined &&
-              bulletin.vieScolaire?.conduite !== "";
-
-            if (aConduite) {
-              status = BULLETIN_STATUS.COMPLET;
-            } else {
-              status = BULLETIN_STATUS.A_FINALISER;
-              notesManquantes = [{
-                matiereId: "conduite",
-                matiere: "CONDUITE",
-                evaluationsManquantes: ["Note de conduite à saisir"]
-              }];
-            }
+            status = BULLETIN_STATUS.A_FINALISER;
+            notesManquantes = [{
+              matiereId: "conduite",
+              matiere: "CONDUITE",
+              evaluationsManquantes: ["Note de conduite à saisir"]
+            }];
           }
+        }
 
-          // Préparer le bulletin mis à jour
-          const bulletinMisAJour = {
-            ...bulletin,
-            status,
-            moyennesParMatiere: calculs.moyennesParMatiere,
-            resultatFinal: calculs.resultatFinal ? {
-              ...calculs.resultatFinal,
-              moyenneAnnuelle: recapAnnuel.moyenneAnnuelle,
-              moyennesPeriodesAnterieures: recapAnnuel.moyennesPrecedentes
-            } : null,
-            infosDeClasse: { effectif },
-            notesManquantes,
-            updatedAt: new Date().toISOString()
-          };
+        bulletinsCalcules.push({
+          ...bulletin,
+          status,
+          moyennesParMatiere: calculs.moyennesParMatiere,
+          resultatFinal: calculs.resultatFinal,
+          infosDeClasse: { effectif },
+          notesManquantes,
+          updatedAt: now
+        });
+      }
 
-          bulletinsGeneres.push(bulletinMisAJour);
+      // ÉTAPE 2: Sauvegarder les bulletins calculés en base
+      await db.update((dbData) => {
+        for (const bulletinCalcule of bulletinsCalcules) {
+          const index = dbData.bulletins.findIndex(b => b.id === bulletinCalcule.id);
+          if (index !== -1) {
+            dbData.bulletins[index] = bulletinCalcule;
+          }
+        }
+      });
 
-          results.success.push({
-            bulletinId: bulletin.id,
-            eleve: `${inscription.prenom} ${inscription.nom}`,
-            bulletin: await enrichirBulletin(bulletinMisAJour)
-          });
+      // ÉTAPE 3: Créer la Map des bulletins actuels pour les passer à la fonction groupée
+      const bulletinsActuelsMap = new Map();
+      for (const bulletinCalcule of bulletinsCalcules) {
+        bulletinsActuelsMap.set(bulletinCalcule.inscriptionId, bulletinCalcule);
+      }
 
-        } catch (error) {
-          results.errors.push({ bulletinId: bulletin.id, error: error.message });
+      // ÉTAPE 4: Calculer les récapitulatifs annuels pour tous les élèves en une seule passe
+      const recapsMap = await calculerRecapitulatifsAnnuelGroupes(
+        bulletinsCalcules.map(b => b.inscriptionId),
+        periodeId,
+        bulletinsActuelsMap
+      );
+
+      // ÉTAPE 5: Ajouter les moyennes annuelles aux bulletins calculés
+      for (const bulletinCalcule of bulletinsCalcules) {
+        const recap = recapsMap.get(bulletinCalcule.inscriptionId);
+        if (recap && bulletinCalcule.resultatFinal) {
+          bulletinCalcule.resultatFinal.moyenneAnnuelle = recap.moyenneAnnuelle;
+          bulletinCalcule.resultatFinal.moyennesPeriodesAnterieures = recap.moyennesPrecedentes;
         }
       }
 
-      // Mettre à jour tous les bulletins en base
-      if (bulletinsGeneres.length > 0) {
-        await db.update((dbData) => {
-          for (const bulletinGenere of bulletinsGeneres) {
-            const index = dbData.bulletins.findIndex(b => b.id === bulletinGenere.id);
-            if (index !== -1) {
-              dbData.bulletins[index] = bulletinGenere;
-            }
+      // ÉTAPE 6: Resauvegarder les bulletins avec les moyennes annuelles
+      await db.update((dbData) => {
+        for (const bulletinCalcule of bulletinsCalcules) {
+          const index = dbData.bulletins.findIndex(b => b.id === bulletinCalcule.id);
+          if (index !== -1) {
+            dbData.bulletins[index] = bulletinCalcule;
           }
-        });
-
-        // Calculer et mettre à jour tous les rangs en une seule passe
-        if (classeId && periodeId && bulletinsGeneres.some(b => b.status === BULLETIN_STATUS.COMPLET)) {
-          await mettreAJourTousLesRangs(classeId, periodeId);
         }
+      });
+
+      // ÉTAPE 7: Calculer et mettre à jour les rangs en une seule passe
+      if (classeId && periodeId && bulletinsCalcules.some(b => b.status === BULLETIN_STATUS.COMPLET)) {
+        await mettreAJourTousLesRangs(classeId, periodeId);
+      }
+
+      // ÉTAPE 8: Recharger les bulletins depuis la base pour avoir les rangs à jour
+      const bulletinsFinaux = [];
+      for (const bulletinCalcule of bulletinsCalcules) {
+        const dbFinal = getDb();
+        const bulletinAvecRang = dbFinal.data.bulletins?.find(b => b.id === bulletinCalcule.id);
+        if (bulletinAvecRang) {
+          bulletinsFinaux.push(await enrichirBulletin(bulletinAvecRang));
+        } else {
+          bulletinsFinaux.push(await enrichirBulletin(bulletinCalcule));
+        }
+      }
+
+      // ÉTAPE 9: Préparer les résultats
+      for (let i = 0; i < bulletinsFinaux.length; i++) {
+        const bulletinFinal = bulletinsFinaux[i];
+        const bulletinCalcule = bulletinsCalcules[i];
+        const inscription = inscriptionsMap.get(bulletinCalcule.inscriptionId);
+
+        results.success.push({
+          bulletinId: bulletinCalcule.id,
+          eleve: `${inscription?.prenom || ''} ${inscription?.nom || ''}`,
+          bulletin: bulletinFinal
+        });
       }
 
       return results;

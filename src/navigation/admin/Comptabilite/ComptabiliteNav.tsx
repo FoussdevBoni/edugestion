@@ -7,24 +7,26 @@ import StatsPage from '../../../pages/admin/Comptabilite/StatsPage'
 import ComptabiliteLayout from '../../../layouts/comptabilite/ComptabiliteLayout'
 import ChargeNav from './Charge/ChargeNav'
 import MouvementNav from './Mouvement/MouvementNav'
+import VenteNav from './Vente/VenteNav'
 
 
 
 export default function ComptabiliteNav() {
     return (
-       <ComptabiliteLayout>
-         <Routes>
-            <Route path='/' element={<StatsPage />} />
-            <Route path='/accueil' element={<StatsPage />} />
-            <Route path='/achats/*' element={<AchatNav />} />
-            <Route path='/materiel/*' element={<MaterielNav />} />
-            <Route path='/inventaires/*' element={<InventaireNav />} />
-            <Route path='/transactions/*' element={<TransactionNav />} />
-            <Route path='/charges/*' element={<ChargeNav />} />
-            <Route path='/mouvements/*' element={<MouvementNav />} />
+        <ComptabiliteLayout>
+            <Routes>
+                <Route path='/' element={<StatsPage />} />
+                <Route path='/accueil' element={<StatsPage />} />
+                <Route path='/achats/*' element={<AchatNav />} />
+                <Route path='/ventes/*' element={<VenteNav />} />
+                <Route path='/materiel/*' element={<MaterielNav />} />
+                <Route path='/inventaires/*' element={<InventaireNav />} />
+                <Route path='/transactions/*' element={<TransactionNav />} />
+                <Route path='/charges/*' element={<ChargeNav />} />
+                <Route path='/mouvements/*' element={<MouvementNav />} />
 
 
-        </Routes>
-       </ComptabiliteLayout>
+            </Routes>
+        </ComptabiliteLayout>
     )
 }

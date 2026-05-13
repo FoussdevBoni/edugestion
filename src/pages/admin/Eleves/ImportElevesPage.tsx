@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Upload, Download, AlertCircle,
   CheckCircle, XCircle, FileSpreadsheet, HelpCircle,
-  ChevronRight, School, Trash2, Search, AlertTriangle,
+  ChevronRight, School, Trash2, Search,
   Users, Filter
 } from "lucide-react";
 import * as XLSX from 'xlsx';
@@ -15,6 +15,94 @@ import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
 import useClasses from "../../../hooks/classes/useClasses";
 import useEleves from "../../../hooks/eleves/useEleves";
 import { excludeBy } from "../../../helpers/exludeBy";
+
+// ============================================================
+// FONCTION DE NORMALISATION DES DATES
+// Convertit JJ/MM/AAAA ou JJ-MM-AAAA en AAAA-MM-JJ
+// ============================================================
+function normalizeDate(dateValue: any): string {
+  if (!dateValue) return '';
+
+  // === NOUVEAU : Gérer le cas où Excel a converti la date en nombre ===
+  // Excel stocke les dates comme un nombre de jours depuis le 01/01/1900
+  if (typeof dateValue === 'number') {
+    // Excel epoch: 1900-01-01 (mais avec un bug pour 1900)
+    const excelEpoch = new Date(1900, 0, 1);
+    // Ajouter le nombre de jours (attention: Excel considère 1900 comme année bissextile)
+    const date = new Date(excelEpoch.getTime() + (dateValue - 2) * 86400000);
+
+    // Vérifier si la date est valide
+    if (isNaN(date.getTime())) return '';
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Si c'est déjà un objet Date
+  if (dateValue instanceof Date) {
+    if (isNaN(dateValue.getTime())) return '';
+    const year = dateValue.getFullYear();
+    const month = String(dateValue.getMonth() + 1).padStart(2, '0');
+    const day = String(dateValue.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Convertir en string
+  const dateStr = String(dateValue).trim();
+  if (dateStr === '') return '';
+
+  // Si c'est déjà au format YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return dateStr;
+  }
+
+  // Essayer de parser JJ/MM/AAAA ou JJ-MM-AAAA
+  let day: string, month: string, year: string;
+
+  if (dateStr.includes('/')) {
+    const parts = dateStr.split('/');
+    if (parts.length !== 3) return dateStr;
+    [day, month, year] = parts;
+  }
+  else if (dateStr.includes('-')) {
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    [day, month, year] = parts;
+  }
+  else {
+    return dateStr;
+  }
+
+  const dayNum = parseInt(day, 10);
+  const monthNum = parseInt(month, 10);
+  const yearNum = parseInt(year, 10);
+
+  if (isNaN(dayNum) || isNaN(monthNum) || isNaN(yearNum)) {
+    return dateStr;
+  }
+
+  // Vérifier que la date existe
+  const testDate = new Date(yearNum, monthNum - 1, dayNum);
+  if (testDate.getFullYear() !== yearNum ||
+    testDate.getMonth() !== monthNum - 1 ||
+    testDate.getDate() !== dayNum) {
+    return dateStr;
+  }
+
+  const currentYear = new Date().getFullYear();
+  if (yearNum < 1900 || yearNum > currentYear + 5) {
+    return dateStr;
+  }
+
+  return `${yearNum}-${String(monthNum).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+}
+// Fonction pour valider une date normalisée
+function isValidDate(dateStr: string): boolean {
+  if (!dateStr) return false;
+  return /^\d{4}-\d{2}-\d{2}$/.test(dateStr);
+}
 
 export default function ImportElevesPage() {
   const navigate = useNavigate();
@@ -29,9 +117,9 @@ export default function ImportElevesPage() {
   const [importStatus, setImportStatus] = useState<"idle" | "preview" | "success" | "error">("idle");
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [selectedClasseId, setSelectedClasseId] = useState("");
-  const [statutScolaire, setStatutScolaire] = useState<"nouveau" | "redoublant">("nouveau");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+  const [dateErrors, setDateErrors] = useState<Map<number, string>>(new Map());
 
   const classesFiltrees = classes.filter(c => {
     if (cycleSelectionne && c.cycle !== cycleSelectionne) return false;
@@ -43,13 +131,12 @@ export default function ImportElevesPage() {
     { field: "nom", label: "Nom" },
     { field: "prenom", label: "Prénom" },
     { field: "dateNaissance", label: "Date de naissance" },
-    { field: "sexe", label: "Sexe" }
+    { field: "sexe", label: "Sexe" },
+    { field: "matricule", label: "Matricule" },
+    { field: "statutScolaire", label: "Statut" },
   ];
 
   const optionalFields = [
-    { field: "photo", label: "Photo" },
-    { field: "matricule", label: "Matricule" },
-    { field: "statut", label: "Statut" },
     { field: "lieuDeNaissance", label: "Lieu de naissance" },
     { field: "contact", label: "Contact" }
   ];
@@ -58,6 +145,7 @@ export default function ImportElevesPage() {
     const selectedFile = e.target.files?.[0];
     setError(null);
     setValidationErrors([]);
+    setDateErrors(new Map());
 
     if (!selectedFile) {
       setFile(null);
@@ -107,11 +195,14 @@ export default function ImportElevesPage() {
     setIsUploading(true);
     setError(null);
     setValidationErrors([]);
+    setDateErrors(new Map());
 
     try {
       const rawData = await readExcelFile(file);
       const errors: string[] = [];
+      const dateErrorMap = new Map<number, string>();
 
+      // Vérifier les champs obligatoires
       rawData.forEach((row: any, index) => {
         requiredFields.forEach(field => {
           if (!row[field.field]) {
@@ -120,29 +211,45 @@ export default function ImportElevesPage() {
         });
       });
 
+      // Vérifier spécifiquement les dates et les normaliser
+      rawData.forEach((row: any, index) => {
+        if (row.dateNaissance) {
+          const normalized = normalizeDate(row.dateNaissance);
+          if (!isValidDate(normalized)) {
+            dateErrorMap.set(index, row.dateNaissance);
+            errors.push(`Ligne ${index + 2}: La date de naissance "${row.dateNaissance}" n'est pas valide. Utilisez le format JJ/MM/AAAA (ex: 15/08/2015) ou JJ-MM-AAAA`);
+          }
+        }
+      });
+
       if (errors.length > 0) {
         setValidationErrors(errors);
+        setDateErrors(dateErrorMap);
         setImportStatus("error");
       } else {
-        const mappedEleves: BaseEleveData[] = rawData.map((row: any) => ({
-          nom: row.nom || '',
-          prenom: row.prenom || '',
-          dateNaissance: row.dateNaissance || '',
-          sexe: (row.sexe === 'M' || row.sexe === 'F' ? row.sexe : 'M') as Sexe,
-          photo: row.photo || undefined,
-          matricule: row.matricule || undefined,
-          statut: (row.statut === 'actif' || row.statut === 'inactif' || row.statut === 'exclu'
-            ? row.statut : undefined) as StatutEleve,
-          lieuDeNaissance: row.lieuDeNaissance || undefined,
-          contact: row.contact || undefined
-        }));
+        // Mapper les élèves avec les dates normalisées
+        const mappedEleves: BaseEleveData[] = rawData.map((row: any, index: number) => {
+          const normalizedDate = normalizeDate(row.dateNaissance);
+          return {
+            nom: row.nom || '',
+            prenom: row.prenom || '',
+            dateNaissance: normalizedDate, // ← Date normalisée en YYYY-MM-DD
+            sexe: (row.sexe === 'M' || row.sexe === 'F' ? row.sexe : 'M') as Sexe,
+            matricule: row.matricule,
+            lieuDeNaissance: row.lieuDeNaissance || undefined,
+            contact: row.contact || undefined,
+            statutScolaire: row.statutScolaire || 'redoublant'
+          };
+        });
 
+        // Filtrer les élèves déjà existants
         const nonInscrits = excludeBy(
           mappedEleves,
           elevesExistants,
           e => e.matricule,
           e => e.matricule
         );
+
         setElevesNonInscrits(nonInscrits);
         setSelectedRows(new Set(nonInscrits.map((_, index) => index)));
         setImportStatus("preview");
@@ -215,13 +322,13 @@ export default function ImportElevesPage() {
           await inscriptionService.inscrireNouvelEleve({
             nom: eleve.nom,
             prenom: eleve.prenom,
-            dateNaissance: eleve.dateNaissance,
+            dateNaissance: eleve.dateNaissance, // ← Déjà au format YYYY-MM-DD
             sexe: eleve.sexe,
             lieuDeNaissance: eleve.lieuDeNaissance || "",
             contact: eleve.contact || "",
             photo: eleve.photo || "",
             anneeScolaire: anneeCourante,
-            statutScolaire: statutScolaire,
+            statutScolaire: eleve.statutScolaire,
             classeId: selectedClasseId,
             matricule: eleve.matricule
           });
@@ -248,11 +355,43 @@ export default function ImportElevesPage() {
 
   const downloadTemplate = () => {
     const wb = XLSX.utils.book_new();
-    const headers = [["nom", "prenom", "dateNaissance", "sexe", "photo", "matricule", "statut", "lieuDeNaissance", "contact"]];
-    const sampleData = [["Leroy", "Anaïs", "2013-08-01", "F", "photo1.jpg", "MAT001", "inactif", "Paris", "+221 77 123 45 67"]];
+
+    // En-têtes avec commentaires dans la première ligne
+    const headers = [["nom", "prenom", "dateNaissance", "sexe", "matricule",
+      "statutScolaire", "lieuDeNaissance", "contact"]];
+
+    // Données d'exemple avec la date au bon format
+    const sampleData = [
+      ["Leroy", "Anaïs", "2013-08-01", "F", "MAT001", "passant", "Paris", "+221 77 123 45 67"],
+      ["Martin", "Lucas", "2012-05-15", "M", "MAT002", "redoublant", "Dakar", "+221 78 234 56 78"],
+      ["Diop", "Aminata", "15/08/2014", "F", "MAT003", "passant", "Thiès", "+221 70 345 67 89"] // Exemple avec format JJ/MM/AAAA
+    ];
+
     const wsData = [...headers, ...sampleData];
     const ws = XLSX.utils.aoa_to_sheet(wsData);
-    XLSX.utils.book_append_sheet(wb, ws, "Template");
+
+    // Définir la largeur des colonnes
+    ws['!cols'] = [
+      { wch: 15 }, // nom
+      { wch: 15 }, // prenom
+      { wch: 18 }, // dateNaissance
+      { wch: 8 },  // sexe
+      { wch: 20 }, // photo
+      { wch: 12 }, // matricule
+      { wch: 12 }, // statut
+      { wch: 20 }, // lieuDeNaissance
+      { wch: 20 }  // contact
+    ];
+
+    // Ajouter une note dans la cellule de date (commentaire)
+    if (!ws['!comments']) ws['!comments'] = [];
+    ws['!comments'].push({
+      r: 0,  // ligne 0 (en-tête)
+      c: 2,  // colonne dateNaissance (index 2)
+      t: "FORMAT ACCEPTÉ: AAAA-MM-JJ (ex: 2013-08-01) OU JJ/MM/AAAA (ex: 15/08/2014)"
+    });
+
+    XLSX.utils.book_append_sheet(wb, ws, "Template_Import_Eleves");
     XLSX.writeFile(wb, "template_import_eleves.xlsx");
   };
 
@@ -310,17 +449,6 @@ export default function ImportElevesPage() {
               ))}
             </select>
             <p className="text-xs text-gray-500 mt-1">Tous les élèves importés seront inscrits dans cette classe</p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Statut scolaire</label>
-            <select
-              value={statutScolaire}
-              onChange={(e) => setStatutScolaire(e.target.value as "nouveau" | "redoublant")}
-              className="w-full px-3 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-            >
-              <option value="nouveau">Nouveau</option>
-              <option value="redoublant">Redoublant</option>
-            </select>
           </div>
         </div>
         {(niveauSelectionne || cycleSelectionne) && (
@@ -380,6 +508,12 @@ export default function ImportElevesPage() {
               <p className="text-sm text-gray-500 mt-1">Sélectionnez votre fichier et cliquez sur "Importer"</p>
             </div>
           </div>
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-3">
+            <p className="text-xs text-blue-700 flex items-center gap-2">
+              <CheckCircle size={14} />
+              <strong>Format des dates acceptés :</strong> AAAA-MM-JJ (ex: 2013-08-01) ou JJ/MM/AAAA (ex: 15/08/2014) ou JJ-MM-AAAA
+            </p>
+          </div>
         </div>
       </div>
 
@@ -404,7 +538,13 @@ export default function ImportElevesPage() {
       {validationErrors.length > 0 && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 animate-fade-in-up">
           <h3 className="text-sm font-semibold text-red-800 flex items-center gap-2 mb-2"><XCircle size={16} />Erreurs de validation ({validationErrors.length})</h3>
-          <div className="max-h-60 overflow-y-auto"><ul className="space-y-1">{validationErrors.map((error, idx) => (<li key={idx} className="text-xs text-red-600">• {error}</li>))}</ul></div>
+          <div className="max-h-60 overflow-y-auto">
+            <ul className="space-y-1">
+              {validationErrors.map((error, idx) => (
+                <li key={idx} className="text-xs text-red-600">• {error}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
 
@@ -413,10 +553,20 @@ export default function ImportElevesPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up" style={{ animationDelay: '400ms' }}>
           <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-100">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div><h2 className="text-lg font-semibold text-gray-800">Prévisualisation ({elevesNonInscrits.length} nouveaux élèves)</h2><p className="text-sm text-gray-500">Classe: {classes.find(c => c.id === selectedClasseId)?.nom}</p></div>
-              <div className="flex items-center gap-2">{selectedRows.size > 0 && (<button onClick={handleDeleteSelected} className="flex items-center gap-2 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 text-sm"><Trash2 size={14} />Supprimer sélection</button>)}<button onClick={handleDeleteAll} className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 text-sm"><Trash2 size={14} />Tout supprimer</button></div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800">Prévisualisation ({elevesNonInscrits.length} nouveaux élèves)</h2>
+                <p className="text-sm text-gray-500">Classe: {classes.find(c => c.id === selectedClasseId)?.nom}</p>
+                <p className="text-xs text-green-600 mt-1">✓ Les dates ont été automatiquement converties au format AAAA-MM-JJ</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {selectedRows.size > 0 && (<button onClick={handleDeleteSelected} className="flex items-center gap-2 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 text-sm"><Trash2 size={14} />Supprimer sélection</button>)}
+                <button onClick={handleDeleteAll} className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 text-sm"><Trash2 size={14} />Tout supprimer</button>
+              </div>
             </div>
-            <div className="mt-4 relative"><Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" /><input type="text" placeholder="Rechercher dans la liste..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" /></div>
+            <div className="mt-4 relative">
+              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input type="text" placeholder="Rechercher dans la liste..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+            </div>
           </div>
           <div className="overflow-x-auto max-h-96 overflow-y-auto">
             <table className="w-full text-sm">
@@ -435,28 +585,57 @@ export default function ImportElevesPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filteredEleves.map((eleve, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3"><input type="checkbox" checked={selectedRows.has(idx)} onChange={() => toggleRow(idx)} className="rounded text-primary" /></td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-600">{eleve.matricule || '-'}</td>
-                    <td className="px-4 py-3 font-medium text-gray-800">{eleve.nom}</td>
-                    <td className="px-4 py-3 text-gray-700">{eleve.prenom}</td>
-                    <td className="px-4 py-3"><span className={`px-2 py-1 rounded-full text-xs font-medium ${eleve.sexe === 'M' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'}`}>{eleve.sexe}</span></td>
-                    <td className="px-4 py-3 text-gray-600">{eleve.dateNaissance}</td>
-                    <td className="px-4 py-3">{eleve.statut && (<span className={`px-2 py-1 rounded-full text-xs font-medium ${eleve.statut === 'actif' ? 'bg-green-100 text-green-700' : eleve.statut === 'inactif' ? 'bg-gray-100 text-gray-700' : 'bg-red-100 text-red-700'}`}>{eleve.statut}</span>)}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-gray-600">{eleve.contact || '-'}</td>
-                    <td className="px-4 py-3 text-gray-600">{eleve.lieuDeNaissance || '-'}</td>
-                    <td className="px-4 py-3"><button onClick={() => handleDeleteRow(idx)} className="p-1.5 hover:bg-red-100 rounded-lg text-red-500 transition-colors"><Trash2 size={16} /></button></td>
-                  </tr>
-                ))}
+                {filteredEleves.map((eleve, idx) => {
+                  const originalIndex = elevesNonInscrits.findIndex(
+                    (e, i) => e.matricule === eleve.matricule && i === idx
+                  );
+                  const hasDateError = dateErrors.has(originalIndex);
+                  return (
+                    <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-3"><input type="checkbox" checked={selectedRows.has(idx)} onChange={() => toggleRow(idx)} className="rounded text-primary" /></td>
+                      <td className="px-4 py-3 font-mono text-xs text-gray-600">{eleve.matricule || '-'}</td>
+                      <td className="px-4 py-3 font-medium text-gray-800">{eleve.nom}</td>
+                      <td className="px-4 py-3 text-gray-700">{eleve.prenom}</td>
+                      <td className="px-4 py-3"><span className={`px-2 py-1 rounded-full text-xs font-medium ${eleve.sexe === 'M' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'}`}>{eleve.sexe}</span></td>
+                      <td className="px-4 py-3">
+                        <span className={`font-mono text-xs ${hasDateError ? 'text-red-600 line-through' : 'text-green-600'}`}>
+                          {eleve.dateNaissance}
+                        </span>
+                        {hasDateError && (
+                          <span className="text-xs text-red-500 ml-1">(invalide)</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        {eleve.statutScolaire && (
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${eleve.statutScolaire === 'passant' ? 'bg-green-100 text-green-700' : eleve.statut === 'inactif' ? 'bg-gray-100 text-gray-700' : 'bg-red-100 text-red-700'}`}>
+                            {eleve.statutScolaire}
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-xs text-gray-600">{eleve.contact || '-'}</td>
+                      <td className="px-4 py-3 text-gray-600">{eleve.lieuDeNaissance || '-'}</td>
+                      <td className="px-4 py-3">
+                        <button onClick={() => handleDeleteRow(idx)} className="p-1.5 hover:bg-red-100 rounded-lg text-red-500 transition-colors">
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
-            <div className="text-sm text-gray-600"><span className="font-semibold text-primary">{selectedRows.size}</span> élève(s) sélectionné(s)</div>
+            <div className="text-sm text-gray-600">
+              <span className="font-semibold text-primary">{selectedRows.size}</span> élève(s) sélectionné(s)
+            </div>
             <div className="flex gap-3">
-              <button onClick={() => { setFile(null); setElevesNonInscrits([]); setImportStatus("idle"); }} className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">Annuler</button>
-              <button onClick={confirmAndSaveList} disabled={isUploading || selectedRows.size === 0} className="px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all disabled:opacity-50">{isUploading ? "Enregistrement..." : `Importer ${selectedRows.size} élève(s)`}</button>
+              <button onClick={() => { setFile(null); setElevesNonInscrits([]); setImportStatus("idle"); }} className="px-4 py-2 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all">
+                Annuler
+              </button>
+              <button onClick={confirmAndSaveList} disabled={isUploading || selectedRows.size === 0} className="px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-xl hover:shadow-md transition-all disabled:opacity-50">
+                {isUploading ? "Enregistrement..." : `Importer ${selectedRows.size} élève(s)`}
+              </button>
             </div>
           </div>
         </div>
@@ -467,8 +646,7 @@ export default function ImportElevesPage() {
         <div className="bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-xl p-6 text-center animate-fade-in">
           <CheckCircle size={48} className="text-green-500 mx-auto mb-3" />
           <h3 className="text-lg font-semibold text-green-800 mb-1">Importation réussie !</h3>
-          <p className="text-sm text-green-600">{selectedRows.size} élèves ont été importés 
-            avec succès.</p>
+          <p className="text-sm text-green-600">{selectedRows.size} élèves ont été importés avec succès.</p>
           <p className="text-xs text-green-500 mt-2">Redirection vers la liste des élèves...</p>
         </div>
       )}

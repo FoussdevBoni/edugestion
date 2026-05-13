@@ -1,19 +1,22 @@
 // electron/controllers/inventaireController.js
 import { getDb } from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
+import { sortDataByDate } from '../utils/sortDataByDate.js';
 
 const enrichirData = async (inventaire) => {
-    const inventaireData = {
-      ...inventaire,
-      
-    }
+  const inventaireData = {
+    ...inventaire,
+
+  }
 }
 
 export const inventaireController = {
   async getAll() {
     try {
       const db = getDb();
-      return db.data.inventaires || [];
+      const inventaires = sortDataByDate(db.data.inventaires || [], "createdAt")
+
+      return inventaires;
     } catch (error) {
       console.error("Erreur getAll inventaires:", error);
       throw error;

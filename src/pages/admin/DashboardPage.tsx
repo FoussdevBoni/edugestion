@@ -45,7 +45,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <p className="text-sm text-gray-500">Élèves</p>
-              <p className="text-2xl font-bold text-gray-800">{statsDashboard?.stats.eleves || 0}</p>
+              <p className="text-2xl font-bold text-gray-800">{statsDashboard?.stats.totalEleves || 0}</p>
             </div>
           </div>
         </div>
@@ -69,7 +69,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <p className="text-sm text-gray-500">Classes</p>
-              <p className="text-2xl font-bold text-gray-800">{statsDashboard?.stats.classes || 0}</p>
+              <p className="text-2xl font-bold text-gray-800">{statsDashboard?.stats.totalClasses || 0}</p>
             </div>
           </div>
         </div>
@@ -87,20 +87,20 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Répartition des élèves */}
+      {/* Niveaux classe et détails des classes */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '400ms' }}>
           <div className="flex items-center gap-2 mb-4">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <PieChart size={18} className="text-primary" />
+              <School size={18} className="text-primary" />
             </div>
-            <h3 className="font-semibold text-gray-800">Par niveau scolaire</h3>
+            <h3 className="font-semibold text-gray-800">Classes par niveau</h3>
           </div>
-          <div className="space-y-3">
-            {statsDashboard?.repartition.parNiveauScolaire.map((item, idx) => (
-              <div key={item.niveauScolaire} className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                <span className="text-sm text-gray-600">{item.niveauScolaire}</span>
-                <span className="font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full text-sm">{item.count} élève{item.count > 1 ? 's' : ''}</span>
+          <div className="max-h-48 overflow-y-auto space-y-3 pr-2">
+            {statsDashboard?.parNiveauClasse.map((item, idx) => (
+              <div key={item.niveauClasseId} className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                <span className="text-sm text-gray-600">{item.nomNiveauClasse}</span>
+                <span className="font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full text-sm">{item.nombreClasses} classe{item.nombreClasses > 1 ? 's' : ''}</span>
               </div>
             ))}
           </div>
@@ -109,81 +109,32 @@ export default function DashboardPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '500ms' }}>
           <div className="flex items-center gap-2 mb-4">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <BarChart3 size={18} className="text-primary" />
+              <Users size={18} className="text-primary" />
             </div>
-            <h3 className="font-semibold text-gray-800">Par cycle</h3>
-          </div>
-          <div className="space-y-3">
-            {statsDashboard?.repartition.parCycle.map((item, idx) => (
-              <div key={item.cycle} className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                <span className="text-sm text-gray-600">{item.cycle}</span>
-                <span className="font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full text-sm">{item.count} élève{item.count > 1 ? 's' : ''}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Par niveau classe et bulletins disponibles */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '600ms' }}>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <School size={18} className="text-primary" />
-            </div>
-            <h3 className="font-semibold text-gray-800">Par niveau</h3>
+            <h3 className="font-semibold text-gray-800">Effectifs par classe (Filles/Garçons)</h3>
           </div>
           <div className="max-h-48 overflow-y-auto space-y-3 pr-2">
-            {statsDashboard?.repartition.parNiveauClasse.map((item, idx) => (
-              <div key={item.niveauClasse} className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                <span className="text-sm text-gray-600">{item.niveauClasse}</span>
-                <span className="font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full text-sm">{item.count} élève{item.count > 1 ? 's' : ''}</span>
+            {statsDashboard?.parClasse.map((item, idx) => (
+              <div key={item.classeId} className="p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-medium text-gray-700">{item.nomClasse}</span>
+                  <span className="text-sm font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">
+                    {item.totalEleves} élève{item.totalEleves > 1 ? 's' : ''}
+                  </span>
+                </div>
+                <div className="flex gap-3 text-xs text-gray-500">
+                  <span>👧 Filles: {item.filles}</span>
+                  <span>👦 Garçons: {item.garcons}</span>
+                </div>
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '700ms' }}>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Eye size={18} className="text-primary" />
-            </div>
-            <h3 className="font-semibold text-gray-800">Bulletins par classe</h3>
-          </div>
-          <div className="max-h-48 overflow-y-auto space-y-3 pr-2">
-            {statsDashboard?.bulletinsDisponibles.map((item, idx) => (
-              <div key={item.classeId} className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                <span className="text-sm text-gray-600">{item.nomClasse}</span>
-                <span className="font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full text-sm">{item.count} bulletin{item.count > 1 ? 's' : ''}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Par classe (détaillé) */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '800ms' }}>
-        <div className="flex items-center gap-2 mb-4">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <Users size={18} className="text-primary" />
-          </div>
-          <h3 className="font-semibold text-gray-800">Effectifs par classe</h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {statsDashboard?.repartition.parClasse.map((item, idx) => (
-            <div key={item.classeId} className="bg-gradient-to-r from-gray-50 to-white p-3 rounded-xl flex justify-between items-center border border-gray-100 transition-all duration-300 hover:shadow-sm hover:scale-[1.01]">
-              <span className="text-sm font-medium text-gray-700">{item.nomClasse}</span>
-              <span className="text-sm font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">
-                {item.count}
-              </span>
-            </div>
-          ))}
         </div>
       </div>
 
       {/* Alertes */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-white to-red-50 rounded-xl shadow-sm border border-red-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '900ms' }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gradient-to-br from-white to-red-50 rounded-xl shadow-sm border border-red-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '600ms' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-red-500/10 rounded-lg">
@@ -212,35 +163,7 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="bg-gradient-to-br from-white to-yellow-50 rounded-xl shadow-sm border border-yellow-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '1000ms' }}>
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-yellow-500/10 rounded-lg">
-                <TrendingUp size={18} className="text-yellow-600" />
-              </div>
-              <h3 className="font-semibold text-gray-800">À finaliser</h3>
-            </div>
-            <button 
-              onClick={() => navigate('/admin/bulletins')}
-              className="text-xs text-primary hover:underline font-medium"
-            >
-              Voir tout
-            </button>
-          </div>
-          {(!statsDashboard?.alertes.bulletinsAFinaliser || statsDashboard.alertes.bulletinsAFinaliser.length === 0) ? (
-            <p className="text-sm text-gray-500 text-center py-4">✅ Aucun bulletin à finaliser</p>
-          ) : (
-            <ul className="space-y-2">
-              {statsDashboard.alertes.bulletinsAFinaliser.map((bulletin, idx) => (
-                <li key={idx} className="text-sm p-2 bg-yellow-50/50 rounded-lg text-gray-700">
-                  {bulletin.eleve?.prenom} {bulletin.eleve?.nom} - {bulletin.eleve?.classe}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="bg-gradient-to-br from-white to-orange-50 rounded-xl shadow-sm border border-orange-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '1100ms' }}>
+        <div className="bg-gradient-to-br from-white to-orange-50 rounded-xl shadow-sm border border-orange-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '700ms' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-orange-500/10 rounded-lg">
@@ -270,8 +193,32 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Stats supplémentaires */}
+      <div className="bg-gradient-to-br from-white to-indigo-50 rounded-xl shadow-sm border border-indigo-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '800ms' }}>
+        <div className="flex items-center gap-2 mb-3">
+          <div className="p-2 bg-indigo-500/10 rounded-lg">
+            <BarChart3 size={18} className="text-indigo-600" />
+          </div>
+          <h3 className="font-semibold text-gray-800">Récapitulatif</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="text-center p-3 bg-white rounded-lg">
+            <p className="text-2xl font-bold text-indigo-600">{statsDashboard?.stats.totalNiveauxClasse || 0}</p>
+            <p className="text-xs text-gray-500">Niveaux classe</p>
+          </div>
+          <div className="text-center p-3 bg-white rounded-lg">
+            <p className="text-2xl font-bold text-indigo-600">{statsDashboard?.stats.totalClasses || 0}</p>
+            <p className="text-xs text-gray-500">Classes</p>
+          </div>
+          <div className="text-center p-3 bg-white rounded-lg">
+            <p className="text-2xl font-bold text-indigo-600">{statsDashboard?.stats.totalEleves || 0}</p>
+            <p className="text-xs text-gray-500">Élèves</p>
+          </div>
+        </div>
+      </div>
+
       {/* Actions rapides */}
-      <div className="bg-gradient-to-br from-white to-indigo-50 rounded-xl shadow-sm border border-indigo-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '1200ms' }}>
+      <div className="bg-gradient-to-br from-white to-indigo-50 rounded-xl shadow-sm border border-indigo-100 p-4 transition-all duration-300 hover:shadow-md animate-fade-in-up" style={{ animationDelay: '900ms' }}>
         <h3 className="font-semibold text-gray-800 mb-3">Actions rapides</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <button
@@ -296,11 +243,11 @@ export default function DashboardPage() {
             Nouvel achat
           </button>
           <button
-            onClick={() => navigate('/admin/bulletins')}
+            onClick={() => navigate('/admin/classes')}
             className="flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-sm hover:shadow-md"
           >
             <Eye size={16} />
-            Voir bulletins
+            Voir classes
           </button>
         </div>
       </div>

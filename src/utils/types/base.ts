@@ -7,7 +7,7 @@ export type BulletinStatut = 'complet' | 'incomplet' | 'a_finaliser' | 'brouillo
 export type Sexe = "M" | "F";
 export type StatutEleve = "actif" | "inactif" | "exclu";
 export type Jour = "LUNDI" | "MARDI" | "MERCREDI" | "JEUDI" | "VENDREDI" | "SAMEDI";
-export type StatutScolaire = 'nouveau' | 'redoublant';
+export type StatutScolaire = 'passant' | 'redoublant' | 'transfere';
 export type StatutPayement = 'partiellement' | 'paye' | 'impaye';
 
 
@@ -82,6 +82,7 @@ export interface BaseEleveData {
     photo?: string;
     matricule?: string;
     statut?: StatutEleve;
+    statutScolaire?: StatutScolaire
     lieuDeNaissance?: string;
     contact?: string;
 }
@@ -171,6 +172,20 @@ export interface BaseAchat {
 
 }
 
+// src/utils/types/base.ts
+
+export interface BaseVente {
+    materielId: string;
+    quantite: number;
+    prixUnitaire: number;
+    eleveId?: string | null;
+    date: string;
+    total?: number
+    modePaiement: string;
+    referenceExterne?: string;
+    notes?: string;
+    createdBy: string;
+}
 export interface BaseTransaction {
     type: 'entree' | 'sortie'
     montant: number
@@ -217,11 +232,11 @@ export interface BaseMouvementStock {
     materielId: string;
     quantiteAvant: number;
     quantiteApres: number;
-    difference: number;  // quantiteApres - quantiteAvant
+    difference: number;
     type: TypeMouvementStock;
-    motif: string;       // "Achat", "Vente", "Correction manuelle", "Inventaire", etc.
-    referenceId?: string; // ID de l'achat, inventaire, etc.
-    referenceType?: string; // "achat", "inventaire", "correction"
+    motif: string;
+    referenceId?: string;
+    referenceType?: string;
     createdBy: string;
     notes?: string;
 }

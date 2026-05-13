@@ -1,6 +1,7 @@
 // electron/controllers/mouvementStockController.js
 import { getDb } from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
+import { sortDataByDate } from '../utils/sortDataByDate.js';
 
 export const mouvementStockController = {
   async getAll() {
@@ -9,10 +10,14 @@ export const mouvementStockController = {
       const mouvements = db.data.mouvementsStock || [];
       const materiels = db.data.materiels || [];
 
-      return mouvements.map(m => ({
+       const sortedMvmts = sortDataByDate(mouvements , "date")
+
+      return sortedMvmts.map(m => ({
         ...m,
         materiel: materiels.find(mat => mat.id === m.materielId)
       }));
+
+
     } catch (error) {
       console.error("Erreur getAll mouvementsStock:", error);
       throw error;
@@ -25,7 +30,9 @@ export const mouvementStockController = {
       const mouvements = db.data.mouvementsStock?.filter(m => m.materielId === materielId) || [];
       const materiel = db.data.materiels?.find(m => m.id === materielId);
 
-      return mouvements.map(m => ({
+
+
+      return sortDataByDate(mouvements , 'date').map(m => ({
         ...m,
         materiel
       })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

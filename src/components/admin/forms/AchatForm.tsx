@@ -242,7 +242,7 @@ export default function AchatForm({
             Date d'achat <span className="text-red-500">*</span>
           </label>
           <input
-            type="date"
+            type="datetime-local"
             value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${

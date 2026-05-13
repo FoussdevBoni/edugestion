@@ -4,6 +4,7 @@ import UpdateBulletinPage from "../../../pages/admin/Bulletins/UpdateBulletinPag
 import BulletinDetailsPage from "../../../pages/admin/Bulletins/BulletinDetailsPage";
 import GenerateCalculsPage from "../../../pages/admin/Bulletins/GenerateCalculsPage";
 import ConduitePage from "../../../pages/admin/Bulletins/ConduitePage";
+import BulletinPDFViewerPage from "../../../pages/admin/Bulletins/BulletinPDFViewerPage";
 
 export default function BulletinNav() {
     return (
@@ -13,6 +14,7 @@ export default function BulletinNav() {
             } />
             <Route path='/update' element={<UpdateBulletinPage />} />
             <Route path='/details' element={<BulletinDetailsPage />} />
+            <Route path='/pdf-viewer' element={<BulletinPDFViewerPage />} />
             <Route path='/calculate' element={<GenerateCalculsPage />} />
             <Route path='/conduite' element={<ConduitePage />} />
 

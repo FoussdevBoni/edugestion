@@ -33,7 +33,7 @@ const HomePage = () => {
     { label: "Élèves", icon: "https://cdn-icons-png.flaticon.com/512/3135/3135810.png", path: "/eleves" },
     { label: "Inscriptions", icon: "https://cdn-icons-png.flaticon.com/512/3456/3456388.png", path: "/inscriptions" },
     { label: "Enseignants", icon: "https://cdn-icons-png.flaticon.com/512/1995/1995539.png", path: "/enseignants" },
-    { label: "Emploi du temps", icon: "https://cdn-icons-png.flaticon.com/512/2693/2693507.png", path: "/emploi-temps" },
+    { label: "Emploi du temps", icon: "https://cdn-icons-png.flaticon.com/512/2693/2693507.png", path: "/emploie-temps" },
     { label: "Notes", icon: "https://cdn-icons-png.flaticon.com/512/583/583327.png", path: "/notes" },
     { label: "Bulletins", icon: "https://cdn-icons-png.flaticon.com/512/1048/1048927.png", path: "/bulletins" },
     { label: "Paiements", icon: "https://cdn-icons-png.flaticon.com/512/2489/2489756.png", path: "/paiements" },

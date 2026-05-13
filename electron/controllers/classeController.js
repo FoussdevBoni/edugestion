@@ -20,9 +20,9 @@ async function enrichirClasse(classe) {
   let effectifMInscrits = 0;
 
   for (const inscription of inscriptionsActives) {
-    if (inscription.eleve?.sexe === 'F') {
+    if (inscription?.sexe === 'F') {
       effectifFInscrits++;
-    } else if (inscription.eleve?.sexe === 'M') {
+    } else if (inscription?.sexe === 'M') {
       effectifMInscrits++;
     }
   }

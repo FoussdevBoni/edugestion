@@ -110,6 +110,12 @@ export default function BulletinRow({
           {bulletin.resultatFinal?.moyenneGenerale}
         </span>
       </td>
+
+       <td className="px-6 py-4">
+        <span className="font-mono font-bold text-primary">
+          {bulletin.resultatFinal?.moyenneAnnuelle}
+        </span>
+      </td>
       <td className="px-6 py-4">{bulletin.resultatFinal?.rang || '-'}</td>
       <td className="px-6 py-4 text-sm align-middle">
         {isEditingConduite ? (

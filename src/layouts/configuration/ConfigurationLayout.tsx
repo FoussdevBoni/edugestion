@@ -30,10 +30,7 @@ export default function ConfigurationLayout({ children }: ConfigurationLayoutPro
             label: "Niveaux de classe",
             path: "/niveaux-classe"
         },
-        {
-            label: "Classes",
-            path: "/classes"
-        },
+      
         {
             label: "Matières",  // 👈 Ajouté
             path: "/matieres"

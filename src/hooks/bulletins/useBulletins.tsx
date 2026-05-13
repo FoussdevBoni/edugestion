@@ -145,14 +145,15 @@ export default function useBulletins({ periodeId, autoLoad = true }: UseBulletin
     }
   }, []);
 
-  const getStats = useCallback(() => {
-    const complets = bulletins.filter(b => b.status === 'complet');
-    const incomplets = bulletins.filter(b => b.status === 'incomplet');
-    const aFinaliser = bulletins.filter(b => b.status === 'a_finaliser');
-    const brouillons = bulletins.filter(b => b.status === 'brouillon');
+  const getStats = useCallback((periodeId: string) => {
+     const bulletinByPeriode = bulletins.filter(b => b.periodeId === periodeId)
+    const complets = bulletinByPeriode.filter(b => b.status === 'complet');
+    const incomplets = bulletinByPeriode.filter(b => b.status === 'incomplet');
+    const aFinaliser = bulletinByPeriode.filter(b => b.status === 'a_finaliser');
+    const brouillons = bulletinByPeriode.filter(b => b.status === 'brouillon');
 
     return {
-      total: bulletins.length,
+      total: bulletinByPeriode.length,
       complets: complets.length,
       incomplets: incomplets.length,
       aFinaliser: aFinaliser.length,

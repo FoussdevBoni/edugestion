@@ -13,8 +13,8 @@ export function initStatsHandlers() {
     return await statsController.getStock();
   });
 
-  ipcMain.handle('stats:dashboard', async () => {
-    return await statsController.getDashboard();
+  ipcMain.handle('stats:dashboard', async (_, payload) => {
+    return await statsController.getDashboard(payload);
   });
 
   console.log('✅ Handlers statistiques enregistrés');

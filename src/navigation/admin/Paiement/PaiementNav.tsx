@@ -3,6 +3,7 @@ import NewPaiementPage from '../../../pages/admin/Paiements/NewPaiementPage'
 import UpdatePaiementPage from '../../../pages/admin/Paiements/UpdatePaiementPage'
 import PaiementDetailsPage from '../../../pages/admin/Paiements/PaiementDetailsPage'
 import PaiementsPage from '../../../pages/admin/Paiements/PaiementsPage'
+import PaiementPDFViewerPage from '../../../pages/admin/Paiements/PaiementPDFViewerPage'
 
 export default function PaiementNav() {
   return (
@@ -11,6 +12,7 @@ export default function PaiementNav() {
       <Route path='/new' element={<NewPaiementPage />} />
       <Route path='/update' element={<UpdatePaiementPage />} />
       <Route path='/details' element={<PaiementDetailsPage />} />
+      <Route path='/pdf-viewer' element={<PaiementPDFViewerPage />} />
 
 
     </Routes>

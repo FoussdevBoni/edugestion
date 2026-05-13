@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, AlertCircle, CheckCircle, Edit, User, BookOpen } from "lucide-react";
+import { ArrowLeft, AlertCircle, CheckCircle, Edit, User, BookOpen, Camera, X } from "lucide-react";
 import EleveForm, { EleveFormData } from "../../../components/admin/forms/EleveForm";
 import { useEcoleNiveau } from "../../../hooks/filters/useEcoleNiveau";
 import { alertSuccess, alertError } from "../../../helpers/alertError";
 import { inscriptionService } from "../../../services/inscriptionService";
 import { eleveDataService } from "../../../services/eleveDataService";
+import { useElevePhoto } from "../../../hooks/photos/useElevePhoto";
 
 export default function UpdateElevePage() {
   const navigate = useNavigate();
@@ -13,22 +14,49 @@ export default function UpdateElevePage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const location = useLocation();
   const eleve = location.state;
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { photoUrl, loading: photoLoading, uploadPhoto } = useElevePhoto(eleve?.matricule);
+
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alertError("Veuillez sélectionner une image");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alertError("L'image ne doit pas dépasser 5MB");
+      return;
+    }
+
+    setUploadingPhoto(true);
+    try {
+      await uploadPhoto(file);
+      alertSuccess("Photo modifiée avec succès");
+    } catch (error) {
+      alertError("Erreur lors de la modification de la photo");
+    } finally {
+      setUploadingPhoto(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const handleSubmit = async (data: EleveFormData) => {
     setIsSubmitting(true);
 
     try {
-      // Appel API pour mettre à jour
       await eleveDataService.update(eleve.eleveDataId, {
         ...data
-
       })
 
       await inscriptionService.update(eleve.id!, {
         ...data,
-
       });
 
       setSaved(true);
@@ -96,6 +124,49 @@ export default function UpdateElevePage() {
             <Edit size={14} />
             {eleve.prenom} {eleve.nom} • {eleve.classe} {eleve.section && `Section ${eleve.section}`}
           </p>
+        </div>
+      </div>
+
+      {/* Photo de l'élève */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 
+      animate-fade-in-up">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            {photoLoading ? (
+              <div className="w-16 h-16 rounded-full bg-gray-200 animate-pulse"></div>
+            ) : photoUrl ? (
+              <img
+                src={photoUrl}
+                alt="Photo"
+                className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center
+               justify-center border-2 border-gray-200">
+                <User size={24} className="text-gray-400" />
+              </div>
+            )}
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingPhoto}
+              className="absolute -bottom-1 -right-1 p-1.5 bg-primary text-white rounded-full shadow-md hover:bg-primary/90 transition-all duration-300 disabled:opacity-50"
+            >
+              <Camera size={12} />
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoSelect}
+              className="hidden"
+            />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium text-gray-700">Photo de l’élève (format carré recommandé)</p>
+            <p className="text-xs text-gray-500">
+              {uploadingPhoto ? "Upload en cours..." : "Cliquez sur la caméra pour modifier"}
+            </p>
+          </div>
         </div>
       </div>
 

@@ -48,6 +48,7 @@ export default function StatsPage() {
   }, [getComptabilite, getStock, periode]);
 
   const formatMoney = (montant: number) => {
+    if (isNaN(montant)) return '0 FCFA';
     return new Intl.NumberFormat('fr-FR').format(montant) + ' FCFA';
   };
 
@@ -102,11 +103,11 @@ export default function StatsPage() {
       {/* Résumé financier avec animations */}
       {statsCompta && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <StatCard 
               label="Entrées" 
-              value={formatMoney(statsCompta.resume.totalPaiements)} 
-              subValue={`${statsCompta.details.paiements} paiements`}
+              value={formatMoney(statsCompta.resume.totalEntrees)} 
+              subValue={`${statsCompta.details.paiements.count + statsCompta.details.ventes.count} opérations`}
               icon={<ArrowUpCircle size={20} />} 
               color="green" 
               delay={200}
@@ -114,7 +115,7 @@ export default function StatsPage() {
             <StatCard 
               label="Sorties" 
               value={formatMoney(statsCompta.resume.totalSorties)} 
-              subValue={`${statsCompta.details.achats + statsCompta.details.charges} opérations`}
+              subValue={`${statsCompta.details.achats.count + statsCompta.details.charges.count} opérations`}
               icon={<ArrowDownCircle size={20} />} 
               color="red" 
               delay={300}
@@ -126,14 +127,44 @@ export default function StatsPage() {
               color="blue" 
               delay={400}
             />
-            <StatCard 
-              label="Stock" 
-              value={`${statsStock?.totalUnites || 0} unités`} 
-              subValue={`${statsStock?.totalTypes || 0} types`}
-              icon={<Package size={20} />} 
-              color="purple" 
-              delay={500}
-            />
+           
+          </div>
+
+          {/* Détail des entrées par catégorie */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-up" style={{ animationDelay: '550ms' }}>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <ArrowUpCircle size={16} className="text-green-600" />
+                Détail des entrées
+              </h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-lg">
+                  <span className="text-sm text-gray-600">Paiements (frais scolaires)</span>
+                  <span className="font-semibold text-green-600">{formatMoney(statsCompta.details.paiements.total)}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-lg">
+                  <span className="text-sm text-gray-600">Ventes (matériel)</span>
+                  <span className="font-semibold text-green-600">{formatMoney(statsCompta.details.ventes.total)}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <ArrowDownCircle size={16} className="text-red-600" />
+                Détail des sorties
+              </h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-lg">
+                  <span className="text-sm text-gray-600">Achats (matériel)</span>
+                  <span className="font-semibold text-red-600">{formatMoney(statsCompta.details.achats.total)}</span>
+                </div>
+                <div className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-lg">
+                  <span className="text-sm text-gray-600">Charges (salaires, etc.)</span>
+                  <span className="font-semibold text-red-600">{formatMoney(statsCompta.details.charges.total)}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Graphique évolution avec animation */}

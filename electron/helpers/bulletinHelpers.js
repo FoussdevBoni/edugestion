@@ -109,14 +109,14 @@ export async function calculerMoyennes(inscriptionId, periodeId, config, noteCon
           matiere: mat.matiere,
           evaluationsManquantes: ["Aucune note saisie pour cette matière"]
         });
-        
+
         const itemsMatiereVide = typesActifs.map(type => ({
           evaluationId: `${type}-vide`,
           nom: type === 'interrogation' ? 'Moy. Interros' : type === 'devoir' ? 'Moy. Devoirs' : `Moy. ${type}`,
           note: "-",
           coefficient: "1"
         }));
-        
+
         moyennesParMatiere.push({
           matiereId: mat.matiereId,
           matiere: mat.matiere,
@@ -341,6 +341,108 @@ export async function calculerRecapitulatifAnnuel(inscriptionId, periodeId) {
   }
 }
 
+
+/**
+ * Calcule les récapitulatifs annuels pour plusieurs élèves en une seule passe
+ */
+export async function calculerRecapitulatifsAnnuelGroupes(inscriptionIds, periodeId, bulletinsActuelsMap = null) {
+  try {
+    const db = getDb();
+    const periodeActuelle = await periodeController.getById(periodeId);
+    if (!periodeActuelle) {
+      const result = new Map();
+      for (const id of inscriptionIds) {
+        result.set(id, { moyennesPrecedentes: [], moyenneAnnuelle: "-" });
+      }
+      return result;
+    }
+
+    const toutesPeriodes = await periodeController.getByNiveauScolaire(periodeActuelle.niveauScolaireId);
+    const periodesTriees = toutesPeriodes.sort((a, b) => a.ordre - b.ordre);
+    const estDernierePeriode = periodeActuelle.ordre === Math.max(...periodesTriees.map(p => p.ordre));
+
+    // Récupérer TOUS les bulletins de TOUS les élèves en une seule requête
+    const tousLesBulletins = db.data.bulletins?.filter(b =>
+      inscriptionIds.includes(b.inscriptionId)
+    ) || [];
+
+    // Grouper les bulletins par inscriptionId
+    const bulletinsParEleve = new Map();
+    for (const bulletin of tousLesBulletins) {
+      if (!bulletinsParEleve.has(bulletin.inscriptionId)) {
+        bulletinsParEleve.set(bulletin.inscriptionId, new Map());
+      }
+      bulletinsParEleve.get(bulletin.inscriptionId).set(bulletin.periodeId, bulletin);
+    }
+
+
+    // Ajouter les bulletins actuels (déjà calculés) s'ils sont fournis
+    if (bulletinsActuelsMap) {
+      for (const [inscriptionId, bulletinActuel] of bulletinsActuelsMap) {
+        if (!bulletinsParEleve.has(inscriptionId)) {
+          bulletinsParEleve.set(inscriptionId, new Map());
+        }
+        bulletinsParEleve.get(inscriptionId).set(periodeId, bulletinActuel);
+      }
+    }
+
+    // Calculer le récapitulatif pour chaque élève
+    const resultats = new Map();
+
+    for (const inscriptionId of inscriptionIds) {
+      const bulletinMap = bulletinsParEleve.get(inscriptionId) || new Map();
+      const moyennesPrecedentes = [];
+      let sommePointsPonderes = 0;
+      let sommeCoeffsPeriodes = 0;
+      let nbPeriodesCompletes = 0;
+
+      for (const periode of periodesTriees) {
+        const bulletin = bulletinMap.get(periode.id);
+        const estComplet = bulletin?.status === BULLETIN_STATUS.COMPLET &&
+          bulletin.resultatFinal?.moyenneGenerale !== "-";
+
+        if (estComplet) {
+          const moyenne = parseFloat(bulletin.resultatFinal.moyenneGenerale);
+          const coeff = parseFloat(periode.coefficient) || 1;
+
+          if (periode.ordre < periodeActuelle.ordre) {
+            moyennesPrecedentes.push({
+              periodeId: periode.id,
+              nom: periode.nom,
+              moyenne: formatValue(moyenne)
+            });
+          }
+
+          sommePointsPonderes += moyenne * coeff;
+          sommeCoeffsPeriodes += coeff;
+          nbPeriodesCompletes++;
+        }
+      }
+
+      let moyenneAnnuelle = "-";
+
+      if (estDernierePeriode && nbPeriodesCompletes === periodesTriees.length) {
+        moyenneAnnuelle = formatValue(sommePointsPonderes / sommeCoeffsPeriodes);
+      }
+
+      resultats.set(inscriptionId, {
+        moyennesPrecedentes,
+        moyenneAnnuelle
+      });
+    }
+
+    return resultats;
+
+  } catch (error) {
+    console.error("Erreur calculerRecapitulatifsAnnuelGroupes:", error);
+    const result = new Map();
+    for (const id of inscriptionIds) {
+      result.set(id, { moyennesPrecedentes: [], moyenneAnnuelle: "-" });
+    }
+    return result;
+  }
+}
+
 /**
  * Calcule l'effectif d'une classe
  */
@@ -374,13 +476,7 @@ export async function enrichirBulletin(bulletin) {
       ...bulletin,
       classe: classe?.nom || '',
       eleve: {
-        nom: inscription.nom,
-        prenom: inscription.prenom,
-        matricule: inscription.matricule,
-        classe: inscription.classe,
-        niveauClasse: inscription?.niveauClasse || '',
-        cycle: inscription?.cycle || '',
-        niveauScolaire: inscription?.niveauScolaire || ''
+        ...inscription
       },
       periode: periode?.nom || '',
       anneeScolaire: inscription.anneeScolaire

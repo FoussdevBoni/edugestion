@@ -15,7 +15,9 @@ interface DashboardLayoutProps {
   childrenClassName?: string
 }
 
-function DashboardContent({ children, childrenClassName }: { children: ReactNode, childrenClassName?: string }) {
+function DashboardContent({ children , childrenClassName }: 
+  { children: ReactNode ,   childrenClassName?: string
+ }) {
   const { niveauSelectionne, cycleSelectionne, setNiveau,
     setCycle, resetFiltres } = useEcoleNiveau();
   const { niveauxScolaires, loadNiveaux: loadNiveauxScolaires } = useNiveauxScolaires()
@@ -35,11 +37,13 @@ function DashboardContent({ children, childrenClassName }: { children: ReactNode
       loadCycles();
       refreshImages();
       getEcoleInfos()
+
     });
   }, [loadNiveauxScolaires, loadCycles, registerRefresh, getEcoleInfos, refreshImages]);
 
+
   return (
-    <div className="h-screen flex bg-primary">
+    <div className="h-screen flex bg-gray-100">
       <DashboardSidebar onToggle={onToggle} collapsed={collapsed} />
       <main className="flex-1 flex flex-col overflow-auto">
         <DashboardHeader
@@ -52,7 +56,7 @@ function DashboardContent({ children, childrenClassName }: { children: ReactNode
           onCycleChange={setCycle}
           onResetFiltres={resetFiltres}
         />
-        <div className={`flex-1 p-6 overflow-auto ${childrenClassName || ''}`}>
+        <div className="flex-1 p-6 overflow-auto">
           {children}
         </div>
       </main>

@@ -33,7 +33,7 @@ export const photoController = {
       for (const photo of photos) {
         try {
           const { matricule, base64 } = photo;
-          
+
           const inscription = inscriptions.find(i => i.matricule === matricule);
           if (!inscription) {
             resultats.errors.push({
@@ -46,7 +46,7 @@ export const photoController = {
 
           const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
           const buffer = Buffer.from(base64Data, 'base64');
-          
+
           const extension = base64.split(';')[0].split('/')[1] || 'jpg';
           const fileName = `${matricule}_${Date.now()}.${extension}`;
           const filePath = path.join(PHOTOS_DIR, fileName);
@@ -91,71 +91,169 @@ export const photoController = {
   },
 
   // Upload générique (logo, en-tête carte, etc.)
- async uploadFile(data) {
-  try {
-    const { base64, type, nom } = data;
-    
-    // Déterminer le dossier de destination
-    let targetDir = UPLOADS_DIR;
-    if (type === 'eleve') {
-      targetDir = PHOTOS_DIR;
-    }
+  async uploadFile(data) {
+    try {
+      const { base64, type, nom } = data;
 
-    await fs.mkdir(targetDir, { recursive: true });
-
-    // Forcer l'extension en jpg
-    const fileName = nom || `${type}_${Date.now()}.jpg`;
-    const filePath = path.join(targetDir, fileName);
-
-    // Nettoyer le base64
-    const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
-    let buffer = Buffer.from(base64Data, 'base64');
-
-    // Si c'est un PNG, le convertir en JPEG
-    if (base64.includes('image/png')) {
-      try {
-        const sharp = (await import('sharp')).default;
-        buffer = await sharp(buffer)
-          .jpeg({ quality: 90 })
-          .toBuffer();
-      } catch (error) {
-        console.warn("Sharp non disponible, sauvegarde en PNG original");
-        // Fallback: garder le format original mais avec extension .jpg
+      // Déterminer le dossier de destination
+      let targetDir = UPLOADS_DIR;
+      if (type === 'eleve') {
+        targetDir = PHOTOS_DIR;
       }
+
+      await fs.mkdir(targetDir, { recursive: true });
+
+      // Forcer l'extension en jpg
+      const fileName = nom || `${type}_${Date.now()}.jpg`;
+      const filePath = path.join(targetDir, fileName);
+
+      // Nettoyer le base64
+      const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
+      let buffer = Buffer.from(base64Data, 'base64');
+
+      // Si c'est un PNG, le convertir en JPEG
+      if (base64.includes('image/png')) {
+        try {
+          const sharp = (await import('sharp')).default;
+          buffer = await sharp(buffer)
+            .jpeg({ quality: 90 })
+            .toBuffer();
+        } catch (error) {
+          console.warn("Sharp non disponible, sauvegarde en PNG original");
+          // Fallback: garder le format original mais avec extension .jpg
+        }
+      }
+
+      // Sauvegarder le fichier
+      await fs.writeFile(filePath, buffer);
+
+      // Mettre à jour la BDD si nécessaire (logo, enTeteCarte)
+      if (type === 'logo' || type === 'enTeteCarte') {
+        const db = getDb();
+        await db.update((dbData) => {
+          if (!dbData.ecoleInfos) dbData.ecoleInfos = {};
+          dbData.ecoleInfos[type] = fileName;
+        });
+      }
+
+      return {
+        success: true,
+        fileName,
+        path: filePath
+      };
+    } catch (error) {
+      console.error("Erreur uploadFile:", error);
+      throw error;
     }
+  },
 
-    // Sauvegarder le fichier
-    await fs.writeFile(filePath, buffer);
+  async uploadElevePhoto(data) {
+    try {
+      const { matricule, base64 } = data;
 
-    // Mettre à jour la BDD si nécessaire (logo, enTeteCarte)
-    if (type === 'logo' || type === 'enTeteCarte') {
+      if (!matricule || matricule === "") {
+        throw new Error(`
+        Sans le numéro matricule , on ne peut pas ajouter une photo pour l'élève. Veillez ajouter 
+        un numéro matricule à l'élève en cliquant sur "Modifier l'élève"
+        `);
+      }
+
+      if (!base64) {
+        throw new Error("La photo (base64) est requise");
+      }
+
+      // Vérifier que l'élève existe
       const db = getDb();
-      await db.update((dbData) => {
-        if (!dbData.ecoleInfos) dbData.ecoleInfos = {};
-        dbData.ecoleInfos[type] = fileName;
-      });
-    }
+      let eleveData = null;
 
-    return {
-      success: true,
-      fileName,
-      path: filePath
-    };
-  } catch (error) {
-    console.error("Erreur uploadFile:", error);
-    throw error;
-  }
-},
+      if (db.data?.elevesData) {
+        eleveData = db.data.elevesData.find(e => e.matricule === matricule);
+      }
+
+      if (!eleveData && db.data?.inscriptions) {
+        eleveData = db.data.inscriptions.find(i => i.matricule === matricule);
+      }
+
+      if (!eleveData) {
+        throw new Error(`Élève avec matricule ${matricule} non trouvé`);
+      }
+
+      // S'assurer que le dossier existe
+      await fs.mkdir(PHOTOS_DIR, { recursive: true });
+
+      // Nettoyer le base64
+      const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
+      let buffer = Buffer.from(base64Data, 'base64');
+
+      // Déterminer l'extension
+      let extension = 'jpg';
+      if (base64.includes('image/png')) {
+        extension = 'png';
+        // Convertir PNG en JPEG si sharp disponible
+        try {
+          const sharp = (await import('sharp')).default;
+          buffer = await sharp(buffer).jpeg({ quality: 85 }).toBuffer();
+          extension = 'jpg';
+        } catch (error) {
+          console.warn("Sharp non disponible, conservation PNG");
+        }
+      }
+
+      // Générer le nom du fichier
+      const fileName = `${matricule}_${Date.now()}.${extension}`;
+      const filePath = path.join(PHOTOS_DIR, fileName);
+
+      // Sauvegarder
+      await fs.writeFile(filePath, buffer);
+
+      // Supprimer l'ancienne photo
+      if (eleveData.photo) {
+        const oldPath = path.join(PHOTOS_DIR, eleveData.photo);
+        try {
+          await fs.unlink(oldPath);
+        } catch (err) {
+          // Ignorer si le fichier n'existe pas
+        }
+      }
+
+      // Mettre à jour la BDD
+      await db.update((dbData) => {
+        if (dbData.elevesData) {
+          const index = dbData.elevesData.findIndex(e => e.matricule === matricule);
+          if (index !== -1) dbData.elevesData[index].photo = fileName;
+        }
+        if (dbData.inscriptions) {
+          const index = dbData.inscriptions.findIndex(i => i.matricule === matricule);
+          if (index !== -1) dbData.inscriptions[index].photo = fileName;
+        }
+      });
+
+      return {
+        success: true,
+        matricule,
+        fileName,
+        message: `Photo ajoutée pour ${eleveData.prenom} ${eleveData.nom}`
+      };
+
+    } catch (error) {
+      console.error("Erreur uploadElevePhoto:", error);
+      return {
+        success: false,
+        error: error.message,
+        matricule: data?.matricule
+      };
+    }
+  },
 
   async getPhoto(matricule) {
     try {
       const db = getDb();
       const eleve = db.data.elevesData?.find(e => e.matricule === matricule);
-      
+
       if (!eleve?.photo) return null;
 
       const photoPath = path.join(PHOTOS_DIR, eleve.photo);
-      
+
       try {
         await fs.access(photoPath);
         return await fs.readFile(photoPath);
@@ -172,7 +270,7 @@ export const photoController = {
     try {
       const targetDir = type === 'eleve' ? PHOTOS_DIR : UPLOADS_DIR;
       const filePath = path.join(targetDir, fileName);
-      
+
       try {
         await fs.access(filePath);
         return await fs.readFile(filePath);

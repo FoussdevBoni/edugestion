@@ -527,8 +527,9 @@ export const noteController = {
       const matriculeMap = new Map();
       for (const inscription of toutesLesInscriptions) {
         const eleve = await inscriptionController.getByEleve(inscription.eleveDataId);
-
+        
         if (eleve && eleve.matricule) {
+
           matriculeMap.set(eleve.matricule, inscription.id);
         }
       }
@@ -537,7 +538,7 @@ export const noteController = {
         try {
           const { matricule, note: noteValue } = item;
           const inscriptionId = matriculeMap.get(matricule);
-
+ 
 
           if (!inscriptionId) {
             results.errors.push({ matricule, error: `Matricule ${matricule} non trouvé` });

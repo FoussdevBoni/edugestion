@@ -47,10 +47,11 @@ const styles = StyleSheet.create({
   },
   photo: {
     width: '100%',
-    height: 120,
+    aspectRatio: 1, // Garde un ratio carré (1:1)
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
+    objectFit: 'cover', // Couvre tout le cadre sans déformer
   },
   infoColumn: {
     width: '35%',
@@ -167,17 +168,17 @@ export const IDCardPDF = ({ cardData }: IDCardPDFProps) => {
                 <Text style={styles.label}>ANNÉE SCOLAIRE</Text>
                 <Text style={styles.highlightValue}>{cardData.anneeScolaire}</Text>
               </View>
-              
+
               <View style={styles.infoRow}>
                 <Text style={styles.label}>NOM</Text>
                 <Text style={styles.value}>{cardData.eleve.nom}</Text>
               </View>
-              
+
               <View style={styles.infoRow}>
                 <Text style={styles.label}>PRÉNOM</Text>
                 <Text style={styles.value}>{cardData.eleve.prenom}</Text>
               </View>
-              
+
               <View style={styles.infoRow}>
                 <Text style={styles.label}>DATE DE NAISSANCE</Text>
                 <Text style={styles.value}>{formatDate(cardData.eleve.dateNaissance)}</Text>
@@ -190,19 +191,19 @@ export const IDCardPDF = ({ cardData }: IDCardPDFProps) => {
                 <Text style={styles.label}>MATRICULE</Text>
                 <Text style={styles.value}>{cardData.eleve.matricule}</Text>
               </View>
-              
+
               <View style={styles.infoRow}>
                 <Text style={styles.label}>SEXE</Text>
                 <Text style={styles.value}>
                   {cardData.eleve.sexe === 'M' ? 'Masculin' : 'Féminin'}
                 </Text>
               </View>
-              
+
               <View style={styles.infoRow}>
                 <Text style={styles.label}>CLASSE</Text>
                 <Text style={styles.value}>{cardData.eleve.classe}</Text>
               </View>
-              
+
               <View style={styles.infoRow}>
                 <Text style={styles.label}>LIEU DE NAISSANCE</Text>
                 <Text style={styles.value}>{cardData.eleve.lieuNaissance || '—'}</Text>

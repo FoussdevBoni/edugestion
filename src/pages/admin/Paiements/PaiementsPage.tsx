@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus, MoreVertical, FileText, Printer, Search, CreditCard } from "lucide-react";
+import { Plus, MoreVertical, FileText, Printer, Search, CreditCard, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Components
@@ -211,6 +211,15 @@ export default function PaiementsPage() {
               label: "Modifier",
               icon: Plus,
               onClick: () => { navigate("/admin/paiements/update", { state: selectedPaiement }); setSelectedPaiement(null); }
+            },
+
+            {
+              label: "Voir l'aperçu du reçu",
+              icon: Eye,
+              onClick: () => { 
+                navigate("/admin/paiements/pdf-viewer", { state: selectedPaiement });
+                 setSelectedPaiement(null); }
+
             },
             {
               label: "Imprimer le reçu",

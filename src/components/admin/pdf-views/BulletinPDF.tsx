@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
     colTotal: { width: '9%', textAlign: 'center' },
     colAppreciation: { width: '26%', borderRightWidth: 0, paddingLeft: 3 },
 
-    // Nouveau style pour la vie scolaire
     vieScolaireSection: {
         flexDirection: 'row',
         marginTop: 15,
@@ -141,6 +140,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: 30,
         textAlign: 'center',
+    },
+    paysText: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        marginBottom: 6,
     }
 });
 
@@ -151,8 +155,19 @@ interface Props {
 
 export const BulletinPDF = ({ data, ecoleInfos }: Props) => {
 
-    // Récupérer les noms des colonnes à partir de la première matière
     const colonnesNotes = data.moyennesParMatiere[0]?.notes.items.map(item => item.nom) || [];
+
+    const formatDate = (dateStr: string) => {
+        const date = new Date(dateStr);
+        if (!dateStr) {
+            return "-"
+        }
+        return date.toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
 
     return (
         <Document>
@@ -160,7 +175,7 @@ export const BulletinPDF = ({ data, ecoleInfos }: Props) => {
                 {/* 1. Header */}
                 <View style={styles.header}>
                     <View style={styles.adminBlock}>
-                        <Text style={{ fontWeight: 'bold' }}>
+                        <Text style={styles.paysText}>
                             {ecoleInfos.pays || "REPUBLIQUE DU SENEGAL"}
                         </Text>
                         {ecoleInfos.ia && <Text>IA : {ecoleInfos.ia}</Text>}
@@ -184,6 +199,8 @@ export const BulletinPDF = ({ data, ecoleInfos }: Props) => {
                     <View style={styles.studentCol}>
                         <Text>Prénom(s) : <Text style={{ fontWeight: 'bold' }}>{data.eleve.prenom}</Text></Text>
                         <Text>Nom : <Text style={{ fontWeight: 'bold' }}>{data.eleve.nom}</Text></Text>
+                        <Text>Date de naissance : <Text style={{ fontWeight: 'bold' }}>{formatDate(data.eleve.dateNaissance)}</Text></Text>
+                        <Text>Lieu de naissance : <Text style={{ fontWeight: 'bold' }}>{data.eleve.lieuDeNaissance || '-'}</Text></Text>
                     </View>
                     <View style={styles.studentCol}>
                         <Text>Classe : {data.eleve.classe}</Text>
@@ -223,7 +240,7 @@ export const BulletinPDF = ({ data, ecoleInfos }: Props) => {
                     ))}
                 </View>
 
-                {/* 5. Vie scolaire (Nouvelle section) */}
+                {/* 5. Vie scolaire */}
                 <View style={styles.vieScolaireSection}>
                     <View style={styles.vieScolaireItem}>
                         <Text style={styles.vieScolaireLabel}>ABSENCES</Text>

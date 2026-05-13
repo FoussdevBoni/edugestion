@@ -8,7 +8,7 @@ import {
   BaseClasse, BaseConfigBulletin, BaseCycle, BaseEleveData, BaseEnseignant, BaseEvaluation, BaseInscription,
   BaseInventaire,
   BaseMateriel,
-  BaseMatiere, BaseMouvementStock, BaseNiveauClasse, BaseNiveauScolaire, BaseNote, BasePaiement, BasePeriode, BaseSeance, BaseTransaction, StatutPayement
+  BaseMatiere, BaseMouvementStock, BaseNiveauClasse, BaseNiveauScolaire, BaseNote, BasePaiement, BasePeriode, BaseSeance, BaseTransaction, BaseVente, StatutPayement
 } from "./base";
 
 
@@ -113,7 +113,7 @@ export interface Classe extends BaseClasse {
   niveauScolaire: string
   effectifTotal: number,
   effectifFInscrits: number
-  effectifGInscrits: number;
+  effectifMInscrits: number;
   effectifTotalInscrits: number
   createdAt?: string;
   updatedAt?: string;
@@ -252,6 +252,26 @@ export interface Achat extends BaseAchat {
 }
 
 
+// src/utils/types/data.ts
+
+export interface Vente extends BaseVente {
+  id: string;
+  materielId: string;
+  quantite: number;
+  prixUnitaire: number;
+  total: number;
+  reference: string;
+  transactionId: string;
+  transaction?: Transaction
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  materielNom?: Materiel;
+  eleveNom?: string;
+
+}
+
+
 export interface Transaction extends BaseTransaction {
   id: string
   createdAt: string
@@ -316,15 +336,7 @@ export interface MoyenneParMatiere {
 
 export interface Bulletin extends BaseBulletin {
   id: string;
-  eleve: {
-    nom: string;
-    prenom: string;
-    matricule: string;
-    classe: string;
-    niveauClasse: string; // ex: "6ème"
-    cycle: string;        // ex: "COLLÈGE"
-    niveauScolaire: string; // ex: "SECONDAIRE"
-  };
+  eleve: Eleve;
   infosDeClasse: {
     effectif: number
 

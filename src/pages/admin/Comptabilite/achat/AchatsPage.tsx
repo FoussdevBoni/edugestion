@@ -24,9 +24,7 @@ const StatCard = ({ label, value, subValue, icon, color, delay = 0 }: any) => {
           <p className="text-2xl font-bold mt-1">{value}</p>
           {subValue && <p className="text-xs opacity-70 mt-1">{subValue}</p>}
         </div>
-        <div className="p-3 bg-white/50 rounded-xl">
-          {icon}
-        </div>
+       
       </div>
     </div>
   );
@@ -73,7 +71,8 @@ export default function AchatsPage() {
   }, [achats]);
 
   const formatMoney = (montant: number): string => {
-    return new Intl.NumberFormat('fr-FR').format(montant) + ' FCFA';
+    const value = new Intl.NumberFormat('fr-FR').format(montant)
+    return value  + ' FCFA';
   };
 
   const handleDelete = async (): Promise<void> => {

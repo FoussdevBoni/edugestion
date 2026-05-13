@@ -1,8 +1,8 @@
 // src/pages/admin/comptabilite/mouvements/MouvementsPage.tsx
 import { useState, useMemo } from "react";
 import { 
-  Search, TrendingUp, TrendingDown, 
-  FileText, Calendar, Filter, Package,
+  Search, 
+  FileText, Filter, Package,
   ArrowUpCircle, ArrowDownCircle
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -71,7 +71,6 @@ export default function MouvementsPage() {
     entree: filteredMouvements.filter(m => m.type === 'entree').length,
     sortie: filteredMouvements.filter(m => m.type === 'sortie').length,
     correction: filteredMouvements.filter(m => m.type === 'correction').length,
-    inventaire: filteredMouvements.filter(m => m.type === 'inventaire').length
   }), [filteredMouvements]);
 
   if (loading) {
@@ -100,7 +99,7 @@ export default function MouvementsPage() {
       </div>
 
       {/* Cartes statistiques */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         <StatCard 
           label="Total" 
           value={stats.total} 
@@ -129,13 +128,7 @@ export default function MouvementsPage() {
           color="orange" 
           delay={400}
         />
-        <StatCard 
-          label="Inventaires" 
-          value={stats.inventaire} 
-          icon={<Calendar size={20} />} 
-          color="purple" 
-          delay={500}
-        />
+      
       </div>
 
       {/* Filtres avec animation */}

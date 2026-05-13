@@ -3,38 +3,100 @@ import { useEffect, useState, useCallback } from 'react';
 import { inscriptionService } from '../../services/inscriptionService';
 import { Inscription } from '../../utils/types/data';
 
+interface UseInscriptionsProps {
+  classeId?: string;
+  eleveDataId?: string;
+  anneeScolaire?: string;
+  isActive?: boolean;
+  autoLoad?: boolean;
+}
 
+export default function useInscriptions(props: UseInscriptionsProps = {}) {
+  const { 
+    classeId, 
+    eleveDataId, 
+    anneeScolaire: anneeParam, 
+    isActive,
+    autoLoad = true 
+  } = props;
 
-export default function useInscriptions() {
   const [inscriptions, setInscriptions] = useState<Inscription[]>([]);
   const [inscriptionsActives, setInscriptionsActives] = useState<Inscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState({ classeId, eleveDataId, anneeScolaire: anneeParam, isActive });
 
-  // Récupère TOUTES les inscriptions (actives et inactives)
-  const loadInscriptions = useCallback(async () => {
+  // Récupère les inscriptions selon les filtres
+  const loadInscriptions = useCallback(async (overrideFilters?: Partial<typeof filters>) => {
     try {
       setLoading(true);
-      const data = await inscriptionService.getAll();
+      const currentFilters = { ...filters, ...overrideFilters };
+      let data: Inscription[] = [];
+
+      // Priorité aux filtres spécifiques
+      if (currentFilters.eleveDataId) {
+        // Récupérer par élève
+        data = await inscriptionService.getByEleve(currentFilters.eleveDataId);
+      } else if (currentFilters.classeId) {
+        // Récupérer par classe
+        data = await inscriptionService.getByClasse(currentFilters.classeId);
+      } else if (currentFilters.anneeScolaire) {
+        // Récupérer par année scolaire
+        data = await inscriptionService.getByAnneeScolaire(currentFilters.anneeScolaire);
+      } else {
+        // Récupérer toutes
+        data = await inscriptionService.getAll();
+      }
+
+      // Filtrer par statut actif si demandé
+      if (currentFilters.isActive !== undefined) {
+        data = data.filter(i => i.isActive === currentFilters.isActive);
+      }
+
       setInscriptions(data);
       
-      // Filtrer les actives
-      const actives = data.filter(i => i.isActive !== false);
-      setInscriptionsActives(actives);
+      // Filtrer les actives (si pas déjà filtré)
+      if (currentFilters.isActive === undefined) {
+        const actives = data.filter(i => i.isActive !== false);
+        setInscriptionsActives(actives);
+      } else {
+        setInscriptionsActives(data.filter(i => i.isActive !== false));
+      }
+
+      return data;
     } catch (err: any) {
       setError(err.message);
+      throw err;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filters]);
 
-  // Récupère UNIQUEMENT les inscriptions actives
-  const loadInscriptionsActives = useCallback(async () => {
+  // Met à jour les filtres et recharge
+  const updateFilters = useCallback(async (newFilters: Partial<typeof filters>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
+    return await loadInscriptions(newFilters);
+  }, [loadInscriptions]);
+
+  // Récupère UNIQUEMENT les inscriptions actives (avec filtres optionnels)
+  const loadInscriptionsActives = useCallback(async (options?: { classeId?: string; eleveDataId?: string; anneeScolaire?: string }) => {
     try {
       setLoading(true);
-      const data = await inscriptionService.getActives();
-      setInscriptionsActives(data);
-      return data;
+      let data: Inscription[];
+
+      if (options?.eleveDataId) {
+        data = await inscriptionService.getByEleve(options.eleveDataId);
+      } else if (options?.classeId) {
+        data = await inscriptionService.getByClasse(options.classeId);
+      } else if (options?.anneeScolaire) {
+        data = await inscriptionService.getByAnneeScolaire(options.anneeScolaire);
+      } else {
+        data = await inscriptionService.getActives();
+      }
+
+      const actives = data.filter(i => i.isActive !== false);
+      setInscriptionsActives(actives);
+      return actives;
     } catch (err: any) {
       setError(err.message);
       throw err;
@@ -107,8 +169,10 @@ export default function useInscriptions() {
     try {
       setLoading(true);
       const newInscription = await inscriptionService.create(data);
-      setInscriptions(prev => [...prev, newInscription]);
-      setInscriptionsActives(prev => [...prev, newInscription]);
+      
+      // Recharger selon les filtres actuels
+      await loadInscriptions();
+      
       return newInscription;
     } catch (err: any) {
       setError(err.message);
@@ -116,7 +180,7 @@ export default function useInscriptions() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [loadInscriptions]);
 
   const inscrireNouvelEleve = useCallback(async (data: any) => {
     try {
@@ -136,8 +200,11 @@ export default function useInscriptions() {
     try {
       setLoading(true);
       const updated = await inscriptionService.update(id, data);
+      
+      // Mettre à jour les listes locales
       setInscriptions(prev => prev.map(i => i.id === id ? updated : i));
       setInscriptionsActives(prev => prev.map(i => i.id === id ? updated : i));
+      
       return updated;
     } catch (err: any) {
       setError(err.message);
@@ -181,17 +248,22 @@ export default function useInscriptions() {
     );
   }, [inscriptions]);
 
+  // Chargement initial automatique seulement si autoLoad est true
   useEffect(() => {
-    loadInscriptions();
-  }, [loadInscriptions]);
+    if (autoLoad) {
+      loadInscriptions();
+    }
+  }, [autoLoad, loadInscriptions]);
 
   return {
-    inscriptions,           // Toutes les inscriptions
-    inscriptionsActives,    // Uniquement les actives
+    inscriptions,           // Inscriptions selon les filtres
+    inscriptionsActives,    // Uniquement les actives selon les filtres
     loading,
     error,
+    filters,
     loadInscriptions,
     loadInscriptionsActives,
+    updateFilters,
     getInscriptionById,
     getInscriptionsByEleve,
     getInscriptionsByClasse,

@@ -24,7 +24,7 @@ export interface EleveFormData {
   contact?: string;
   photo?: string;
   anneeScolaire: string;
-  statutScolaire: "nouveau" | "redoublant";
+  statutScolaire: "passant" | "redoublant";
   classeId: string;
   vieScolaire?: VieScolaireItem[];
   niveauScolaireId?: string;
@@ -60,7 +60,7 @@ export default function EleveForm({
       contact: "",
       photo: "",
       anneeScolaire: new Date().getFullYear() + "-" + (new Date().getFullYear() + 1),
-      statutScolaire: "nouveau",
+      statutScolaire: "passant",
       classeId: "",
       vieScolaire: [],
       niveauScolaireId: "",
@@ -313,7 +313,7 @@ export default function EleveForm({
                 onChange={(e) => handleChange("statutScolaire", e.target.value as "nouveau" | "redoublant")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg appearance-none"
               >
-                <option value="nouveau">Nouveau</option>
+                <option value="passant">Passant</option>
                 <option value="redoublant">Redoublant</option>
               </select>
               <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />

@@ -3,6 +3,7 @@ import { getDb } from '../db.js';
 import { v4 as uuidv4 } from 'uuid';
 import { transactionController } from './transactionController.js';
 import { materielController } from './materielController.js';
+import { sortDataByDate } from '../utils/sortDataByDate.js';
 
 export const achatController = {
   async getAll() {
@@ -12,10 +13,15 @@ export const achatController = {
       const materiels = db.data.materiels || [];
       const transactions = db.data.transactions || [];
 
-      return achats.map(achat => ({
+      const sortedAchats = sortDataByDate(achats , 'date')
+      const sortedTransactions = sortDataByDate(transactions , 'createdAt')
+      const sortedMateriels = sortDataByDate(materiels , 'createdAt')
+
+      return sortedAchats.map(achat => ({
         ...achat,
-        materiel: materiels.find(m => m.id === achat.materielId),
-        transaction: transactions.find(t => t.id === achat.transactionId)
+        materiel: sortedMateriels.find(m => m.id === achat.materielId),
+        transaction: sortedTransactions.find(t => t.id === achat.transactionId)
+
       }));
     } catch (error) {
       console.error("Erreur getAll achats:", error);
@@ -64,7 +70,7 @@ export const achatController = {
         montant: total,
         motif: 'Achat matériel',
         description: `Achat de ${data.quantite} ${materiel.nom}`,
-        date: data.date,
+        date: data.date || now,
         modePaiement: data.modePaiement,
         createdBy: data.createdBy,
         metaData: { type: 'achat' }
@@ -135,7 +141,6 @@ export const achatController = {
       // Utiliser ancienAchat et updatedAchat
       if (data.quantite && ancienAchat) {
         const difference = updatedAchat.quantite - ancienAchat.quantite;
-        console.log(difference)
         if (difference !== 0) {
           await materielController.updateStock(updatedAchat.materielId, difference, {
             type: difference > 0 ? 'entree' : 'sortie',

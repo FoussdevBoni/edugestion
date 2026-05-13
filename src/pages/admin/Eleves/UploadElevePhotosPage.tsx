@@ -148,7 +148,8 @@ export default function UploadElevePhotosPage() {
           <h1 className="text-2xl font-bold text-gray-800">Importation des photos</h1>
           <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
             <Image size={14} />
-            Sélectionnez une classe et importez les photos par matricule
+            Sélectionnez une classe et importez les photos par matricule. 
+           Le format carré est fortement  recommandé 
           </p>
         </div>
       </div>

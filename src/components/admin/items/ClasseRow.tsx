@@ -46,7 +46,7 @@ export default function ClasseRow({
       
       <td className="py-3 px-4 text-gray-600">
         <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
-          { classe.effectifTotal || 0} élève{ classe.effectifTotal > 1 ? 's' : ''}
+          { classe.effectifTotalInscrits || 0} élève{ classe.effectifTotalInscrits > 1 ? 's' : ''}
         </span>
       </td>
       
